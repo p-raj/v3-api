@@ -1,0 +1,268 @@
+"""Common settings and globals."""
+from __future__ import absolute_import
+
+from os.path import abspath
+from os.path import basename
+from os.path import dirname
+from os.path import join
+from os.path import normpath
+
+from sys import path
+
+
+# ######### PATH CONFIGURATION
+# Absolute filesystem path to the Django project directory:
+DJANGO_ROOT = dirname(dirname(dirname(abspath(__file__))))
+
+# Site name:
+SITE_NAME = basename(DJANGO_ROOT)
+
+# Absolute filesystem path to the top-level project folder:
+SITE_ROOT = join(dirname(DJANGO_ROOT), SITE_NAME)
+
+# Site sub-module name:
+SITE_MODULE = basename(dirname(dirname(abspath(__file__))))
+
+# Add our project to our pythonpath, this way we don't need to type our project
+# name in our dotted import paths:
+path.append(DJANGO_ROOT)
+# ######### END PATH CONFIGURATION
+
+
+# ######### DEBUG CONFIGURATION
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#debug
+DEBUG = False
+########## END DEBUG CONFIGURATION
+
+
+########## TEST RUNNER CONFIGURATION
+# See: https://docs.djangoproject.com/en/dev/releases/dev/#new-test-runner
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+########## END TEST RUNNER CONFIGURATION
+
+
+########## MANAGER CONFIGURATION
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#admins
+ADMINS = (
+)
+
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#managers
+MANAGERS = (
+)
+########## END MANAGER CONFIGURATION
+
+
+########## DATABASE CONFIGURATION
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': '',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': '',
+    }
+}
+########## END DATABASE CONFIGURATION
+
+
+# ######### ATOMICITY CONFIGURATION
+# https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-DATABASE-ATOMIC_REQUESTS
+ATOMIC_REQUESTS = True
+########## END ATOMICITY CONFIGURATION
+
+
+########## GENERAL CONFIGURATION
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#time-zone
+TIME_ZONE = 'UTC'
+
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#datetime-format
+DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S%z'
+
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#date-format
+DATE_FORMAT = 'N j, Y'
+
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#time-format
+TIME_FORMAT = 'P'
+
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#language-code
+LANGUAGE_CODE = 'en-us'
+
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#site-id
+SITE_ID = 1
+
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#use-i18n
+USE_I18N = True
+
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#use-l10n
+USE_L10N = True
+
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#use-tz
+USE_TZ = True
+
+LOCALE_PATHS = (
+    join(SITE_ROOT, 'locale'),
+)
+########## END GENERAL CONFIGURATION
+
+
+########## MEDIA CONFIGURATION
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#media-root
+MEDIA_ROOT = normpath(join(SITE_ROOT, 'media'))
+
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#media-url
+MEDIA_URL = '/media/'
+########## END MEDIA CONFIGURATION
+
+
+########## STATIC FILE CONFIGURATION
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#static-root
+STATIC_ROOT = normpath(join(SITE_ROOT, 'assets'))
+
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#static-url
+STATIC_URL = '/static/'
+
+# See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
+STATICFILES_DIRS = (
+    normpath(join(SITE_ROOT, 'static')),
+)
+
+# See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+)
+########## END STATIC FILE CONFIGURATION
+
+
+########## SECRET CONFIGURATION
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
+# Note: This key should only be used for development and testing.
+SECRET_KEY = r"ugdn_k*$*g3b_g3x$hf4mxm#l$h*si9&u-@5aokaumjz=#x5g7"
+########## END SECRET CONFIGURATION
+
+
+########## SITE CONFIGURATION
+# Hosts/domain names that are valid for this site
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
+ALLOWED_HOSTS = []
+########## END SITE CONFIGURATION
+
+
+########## FIXTURE CONFIGURATION
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-FIXTURE_DIRS
+FIXTURE_DIRS = (
+    normpath(join(SITE_ROOT, 'fixtures')),
+)
+########## END FIXTURE CONFIGURATION
+
+
+########## TEMPLATE CONFIGURATION
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-TEMPLATES
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            'templates'
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'debug': DEBUG,
+            'context_processors': [
+                'django.template.context_processors.request',
+                'django.template.context_processors.static',
+                'django.contrib.auth.context_processors.auth'
+            ]
+        }
+    }
+]
+########## END TEMPLATE CONFIGURATION
+
+
+########## MIDDLEWARE CONFIGURATION
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#middleware-classes
+MIDDLEWARE_CLASSES = (
+    # Default Django middleware.
+    # 'django.middleware.cache.UpdateCacheMiddleware',
+    # 'reversion.middleware.RevisionMiddleware',
+
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware'
+    # 'django.middleware.cache.FetchFromCacheMiddleware'
+)
+########## END MIDDLEWARE CONFIGURATION
+
+
+########## URL CONFIGURATION
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#root-urlconf
+ROOT_URLCONF = '{0}.urls'.format(SITE_NAME)
+########## END URL CONFIGURATION
+
+
+########## APP CONFIGURATION
+DJANGO_APPS = (
+    # Default Django apps:
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.sites',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'django.contrib.admin'
+    # Useful template tags:
+    # 'django.contrib.humanize'
+)
+
+THIRD_PARTY_APPS = (
+    # 'reversion',
+
+    'rest_framework',
+    'rest_framework.authtoken'
+)
+
+# Apps specific for this project go here.
+LOCAL_APPS = (
+)
+
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+########## END APP CONFIGURATION
+
+
+########## WSGI CONFIGURATION
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#wsgi-application
+WSGI_APPLICATION = '{0}.wsgi.application'.format(SITE_MODULE)
+########## END WSGI CONFIGURATION
+
+
+########## DJANGO REST FRAMEWORK CONFIGURATION
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication'
+    ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'rest_framework.filters.OrderingFilter',
+        'rest_framework.filters.SearchFilter'
+    )
+}
+########## END DJANGO REST FRAMEWORK CONFIGURATION
+
+
+########## DJANGO AUTHENTICATION BACKEND CONFIGURATION
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+)
+########## END DJANGO AUTHENTICATION BACKEND CONFIGURATION
