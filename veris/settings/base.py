@@ -257,6 +257,24 @@ AUTH_PASSWORD_VALIDATORS = [
 ########## END PASSWORD VALIDATION CONFIGURATION
 
 
+########## PASSWORD HASHER CONFIGURATION
+# See: https://docs.djangoproject.com/en/1.10/topics/auth/passwords/#password-validation
+# Argon2 is the winner of the 2015 Password Hashing Competition,
+# a community organized open competition to select a next generation hashing algorithm.
+# It's designed not to be easier to compute on custom hardware than it is to compute on an ordinary CPU.
+# Argon2 is not the default for Django because it requires a third-party library.
+# The Password Hashing Competition panel, however, recommends immediate use of Argon2 rather
+# than the other algorithms supported by Django.
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.Argon2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+    'django.contrib.auth.hashers.BCryptPasswordHasher'
+]
+########## END PASSWORD HASHER CONFIGURATION
+
+
 ########## DJANGO REST FRAMEWORK CONFIGURATION
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
