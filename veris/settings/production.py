@@ -64,7 +64,10 @@ DEFAULT_FROM_EMAIL = SERVER_EMAIL
 ########## DATABASE CONFIGURATION
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        # https://docs.djangoproject.com/en/1.10/releases/1.9/#database-backends
+        # The PostgreSQL backend (django.db.backends.postgresql_psycopg2)
+        # is also available as django.db.backends.postgresql. :)
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': get_env_setting('DATABASE_NAME'),
         'USER': get_env_setting('DATABASE_USER'),
         'PASSWORD': get_env_setting('DATABASE_PASSWORD'),
