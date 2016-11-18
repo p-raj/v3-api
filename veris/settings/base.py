@@ -9,16 +9,15 @@ from os.path import normpath
 
 from sys import path
 
-
 # ######### PATH CONFIGURATION
 # Absolute filesystem path to the Django project directory:
-DJANGO_ROOT = dirname(dirname(dirname(abspath(__file__))))
+DJANGO_ROOT = dirname(dirname(abspath(__file__)))
 
 # Site name:
 SITE_NAME = basename(DJANGO_ROOT)
 
 # Absolute filesystem path to the top-level project folder:
-SITE_ROOT = join(dirname(DJANGO_ROOT), SITE_NAME)
+SITE_ROOT = join(dirname(dirname(DJANGO_ROOT)), SITE_NAME)
 
 # Site sub-module name:
 SITE_MODULE = basename(dirname(dirname(abspath(__file__))))
