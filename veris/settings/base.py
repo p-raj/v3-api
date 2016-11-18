@@ -222,7 +222,9 @@ THIRD_PARTY_APPS = (
     # 'reversion',
 
     'rest_framework',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
+
+    'oauth2_provider',
 )
 
 # Apps specific for this project go here.
