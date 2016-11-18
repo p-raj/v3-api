@@ -20,11 +20,8 @@ EMAIL_FILE_PATH = normpath(join(SITE_ROOT, 'emails'))
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': '',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': ''
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': join(SITE_ROOT, '{}.db'.format(DJANGO_ROOT)),
     }
 }
 ########## END DATABASE CONFIGURATION
