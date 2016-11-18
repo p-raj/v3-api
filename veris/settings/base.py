@@ -241,6 +241,22 @@ WSGI_APPLICATION = '{0}.wsgi.application'.format(SITE_MODULE)
 ########## END WSGI CONFIGURATION
 
 
+########## PASSWORD VALIDATION CONFIGURATION
+# See: https://docs.djangoproject.com/en/1.10/topics/auth/passwords/#password-validation
+AUTH_PASSWORD_VALIDATORS = [
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 4,
+        }
+    },
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
+]
+########## END PASSWORD VALIDATION CONFIGURATION
+
+
 ########## DJANGO REST FRAMEWORK CONFIGURATION
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
