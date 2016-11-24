@@ -37,7 +37,8 @@ urlpatterns = [
     url(r'^api/v1/', include(remoteRouter.urls)),
 
     url(r'^admin/', admin.site.urls),
-    url(r'^auth/', include('rest_framework.urls', namespace='rest_framework'))
+    url(r'^auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^accounts/', include('allauth.urls')),
 ]
 
 if settings.DEBUG:
