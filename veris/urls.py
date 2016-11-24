@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+from apps.contrib.views import providers
 from apps.contrib.views import UserViewSet
 from apps.organizations.views import MemberViewSet, OrganizationViewSet
 
@@ -39,6 +40,8 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^accounts/', include('allauth.urls')),
+
+    url(r'^social/github/$', providers.GithubAPIView.as_view(), name='github_login')
 ]
 
 if settings.DEBUG:

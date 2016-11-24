@@ -224,11 +224,13 @@ THIRD_PARTY_APPS = (
 
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_auth',
 
     'allauth',
     'allauth.account',
-    'allauth.socialaccount',
+    'rest_auth.registration',
 
+    'allauth.socialaccount',
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.github',
     'allauth.socialaccount.providers.google',
