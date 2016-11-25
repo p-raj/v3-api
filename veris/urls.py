@@ -41,6 +41,9 @@ urlpatterns = [
     url(r'^auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^accounts/', include('allauth.urls')),
 
+    # we have our own oauth provider
+    url(r'^oauth/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+
     # {provider}_login name is used internally by django-allauth,
     # so let's use api_{provider}_login
     url(r'^social/github/$', providers.GithubAPIView.as_view(), name='api_github_login')
