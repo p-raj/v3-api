@@ -31,16 +31,16 @@ path.append(DJANGO_ROOT)
 # ######### DEBUG CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#debug
 DEBUG = False
-########## END DEBUG CONFIGURATION
+# ######### END DEBUG CONFIGURATION
 
 
-########## TEST RUNNER CONFIGURATION
+# ######### TEST RUNNER CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/releases/dev/#new-test-runner
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
-########## END TEST RUNNER CONFIGURATION
+# ######### END TEST RUNNER CONFIGURATION
 
 
-########## MANAGER CONFIGURATION
+# ######### MANAGER CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#admins
 ADMINS = (
 )
@@ -48,10 +48,10 @@ ADMINS = (
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#managers
 MANAGERS = (
 )
-########## END MANAGER CONFIGURATION
+# ######### END MANAGER CONFIGURATION
 
 
-########## DATABASE CONFIGURATION
+# ######### DATABASE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
     'default': {
@@ -63,16 +63,16 @@ DATABASES = {
         'PORT': '',
     }
 }
-########## END DATABASE CONFIGURATION
+# ######### END DATABASE CONFIGURATION
 
 
 # ######### ATOMICITY CONFIGURATION
 # https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-DATABASE-ATOMIC_REQUESTS
 ATOMIC_REQUESTS = True
-########## END ATOMICITY CONFIGURATION
+# ######### END ATOMICITY CONFIGURATION
 
 
-########## GENERAL CONFIGURATION
+# ######### GENERAL CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#time-zone
 TIME_ZONE = 'UTC'
 
@@ -103,19 +103,19 @@ USE_TZ = True
 LOCALE_PATHS = (
     join(SITE_ROOT, 'locale'),
 )
-########## END GENERAL CONFIGURATION
+# ######### END GENERAL CONFIGURATION
 
 
-########## MEDIA CONFIGURATION
+# ######### MEDIA CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#media-root
 MEDIA_ROOT = normpath(join(SITE_ROOT, 'media'))
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#media-url
 MEDIA_URL = '/media/'
-########## END MEDIA CONFIGURATION
+# ######### END MEDIA CONFIGURATION
 
 
-########## STATIC FILE CONFIGURATION
+# ######### STATIC FILE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-root
 STATIC_ROOT = normpath(join(SITE_ROOT, 'assets'))
 
@@ -132,32 +132,32 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'django.contrib.staticfiles.finders.FileSystemFinder',
 )
-########## END STATIC FILE CONFIGURATION
+# ######### END STATIC FILE CONFIGURATION
 
 
-########## SECRET CONFIGURATION
+# ######### SECRET CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 # Note: This key should only be used for development and testing.
 SECRET_KEY = r"ugdn_k*$*g3b_g3x$hf4mxm#l$h*si9&u-@5aokaumjz=#x5g7"
-########## END SECRET CONFIGURATION
+# ######### END SECRET CONFIGURATION
 
 
-########## SITE CONFIGURATION
+# ######### SITE CONFIGURATION
 # Hosts/domain names that are valid for this site
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = []
-########## END SITE CONFIGURATION
+# ######### END SITE CONFIGURATION
 
 
-########## FIXTURE CONFIGURATION
+# ######### FIXTURE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-FIXTURE_DIRS
 FIXTURE_DIRS = (
     normpath(join(SITE_ROOT, 'fixtures')),
 )
-########## END FIXTURE CONFIGURATION
+# ######### END FIXTURE CONFIGURATION
 
 
-########## TEMPLATE CONFIGURATION
+# ######### TEMPLATE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-TEMPLATES
 TEMPLATES = [
     {
@@ -177,10 +177,10 @@ TEMPLATES = [
         }
     }
 ]
-########## END TEMPLATE CONFIGURATION
+# ######### END TEMPLATE CONFIGURATION
 
 
-########## MIDDLEWARE CONFIGURATION
+# ######### MIDDLEWARE CONFIGURATION
 # See: https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-MIDDLEWARE
 MIDDLEWARE = [
     # Default Django middleware.
@@ -196,16 +196,16 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # 'django.middleware.cache.FetchFromCacheMiddleware'
 ]
-########## END MIDDLEWARE CONFIGURATION
+# ######### END MIDDLEWARE CONFIGURATION
 
 
-########## URL CONFIGURATION
+# ######### URL CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#root-urlconf
 ROOT_URLCONF = '{0}.urls'.format(SITE_NAME)
-########## END URL CONFIGURATION
+# ######### END URL CONFIGURATION
 
 
-########## APP CONFIGURATION
+# ######### APP CONFIGURATION
 DJANGO_APPS = (
     # Default Django apps:
     'django.contrib.auth',
@@ -246,16 +246,16 @@ LOCAL_APPS = (
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
-########## END APP CONFIGURATION
+# ######### END APP CONFIGURATION
 
 
-########## WSGI CONFIGURATION
+# ######### WSGI CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#wsgi-application
 WSGI_APPLICATION = '{0}.wsgi.application'.format(SITE_MODULE)
-########## END WSGI CONFIGURATION
+# ######### END WSGI CONFIGURATION
 
 
-########## PASSWORD VALIDATION CONFIGURATION
+# ######### PASSWORD VALIDATION CONFIGURATION
 # See: https://docs.djangoproject.com/en/1.10/topics/auth/passwords/#password-validation
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -268,10 +268,10 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
-########## END PASSWORD VALIDATION CONFIGURATION
+# ######### END PASSWORD VALIDATION CONFIGURATION
 
 
-########## PASSWORD HASHER CONFIGURATION
+# ######### PASSWORD HASHER CONFIGURATION
 # See: https://docs.djangoproject.com/en/1.10/topics/auth/passwords/#password-validation
 # Argon2 is the winner of the 2015 Password Hashing Competition,
 # a community organized open competition to select a next generation hashing algorithm.
@@ -286,10 +286,10 @@ PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
     'django.contrib.auth.hashers.BCryptPasswordHasher'
 ]
-########## END PASSWORD HASHER CONFIGURATION
+# ######### END PASSWORD HASHER CONFIGURATION
 
 
-########## DJANGO REST FRAMEWORK CONFIGURATION
+# ######### DJANGO REST FRAMEWORK CONFIGURATION
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
@@ -305,16 +305,16 @@ REST_FRAMEWORK = {
         'rest_framework.filters.SearchFilter'
     )
 }
-########## END DJANGO REST FRAMEWORK CONFIGURATION
+# ######### END DJANGO REST FRAMEWORK CONFIGURATION
 
 
-########## DJANGO AUTHENTICATION BACKEND CONFIGURATION
+# ######### DJANGO AUTHENTICATION BACKEND CONFIGURATION
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     # `allauth` specific authentication methods, such as login by e-mail
     'allauth.account.auth_backends.AuthenticationBackend',
 )
-########## END DJANGO AUTHENTICATION BACKEND CONFIGURATION
+# ######### END DJANGO AUTHENTICATION BACKEND CONFIGURATION
 
 LOGIN_REDIRECT_URL = '/'
 ALLOWED_REDIRECT_URI_SCHEMES = ['in.veris.terminal', 'http', 'https']
