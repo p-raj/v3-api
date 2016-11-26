@@ -46,7 +46,8 @@ urlpatterns = [
 
     # {provider}_login name is used internally by django-allauth,
     # so let's use api_{provider}_login
-    url(r'^social/github/$', providers.GithubAPIView.as_view(), name='api_github_login')
+    url(r'^social/github/$', providers.GithubAPIView.as_view(), name='api_github_login'),
+    url(r'^social/google/$', providers.GoogleAPIView.as_view(), name='api_google_login')
 ]
 
 if settings.DEBUG:
