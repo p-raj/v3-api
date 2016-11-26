@@ -316,12 +316,17 @@ AUTHENTICATION_BACKENDS = (
 )
 # ######### END DJANGO AUTHENTICATION BACKEND CONFIGURATION
 
-LOGIN_REDIRECT_URL = '/'
-ALLOWED_REDIRECT_URI_SCHEMES = ['in.veris.terminal', 'http', 'https']
+
+# ######### DJANGO ALLAUTH CONFIGURATION
+# See: https://django-allauth.readthedocs.io/en/latest/configuration.html
+SOCIALACCOUNT_ADAPTER = 'veris.adapters.SocialAccountAdapter'
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': ['profile', 'email'],
-        'AUTH_PARAMS': {'access_type': 'online'}
+        'AUTH_PARAMS': {
+            'access_type': 'online'
+        }
     }
 }
+# ######### END DJANGO ALLAUTH CONFIGURATION
