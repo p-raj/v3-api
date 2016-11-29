@@ -16,6 +16,7 @@ Including another URLconf
 from apps.contrib.views import providers
 from apps.contrib.views import UserViewSet
 from apps.organizations.views import MemberViewSet, OrganizationViewSet
+from apps.terminals.views import WidgetViewSet
 
 from django.conf import settings
 from django.conf.urls import url, include
@@ -26,16 +27,15 @@ from rest_framework import routers
 
 # let's keep a list of routes separate
 # these route might reside on a remote server
-remoteRouter = routers.DefaultRouter()
-remoteRouter.register('users', UserViewSet)
 
 router = routers.DefaultRouter()
+router.register('users', UserViewSet)
 router.register('members', MemberViewSet)
 router.register('organizations', OrganizationViewSet)
+router.register('widgets', WidgetViewSet)
 
 urlpatterns = [
-    url(r'^', include(router.urls)),
-    url(r'^api/v1/', include(remoteRouter.urls)),
+    url(r'^api/v1/', include(router.urls)),
 
     url(r'^admin/', admin.site.urls),
     url(r'^auth/', include('rest_framework.urls', namespace='rest_framework')),
