@@ -7,6 +7,7 @@ handles user authentication for us (somewhat similar to Auth0 service).
 """
 from django.conf import settings
 from django.contrib import admin
+from django.contrib.sites.models import Site
 from django.db import models
 
 
@@ -49,6 +50,13 @@ class Organization(models.Model):
 
      * A ``User`` may have multiple organizations registered.
     """
+    # the reference to the site module
+    # why? we are using django-allauth to manage the social applications
+    # and it takes good care of it using the sites framework,
+    # so yes basically this relation is just an interface to the power of django-allauth
+    # teramatrix.veris.in <---> teramatrix
+    site = models.OneToOneField(Site)
+
     # let's consider the we are enabling organization management
     # i.e a user can manage resources provided by Veris himself or
     # he can create an organization, & add users to help him do the same.
