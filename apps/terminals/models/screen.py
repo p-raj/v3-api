@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.db import models
 
 from .widget import Widget
+from .widget_container import WidgetContainerInline
 
 
 class Screen(models.Model):
@@ -13,9 +14,14 @@ class Screen(models.Model):
 
     order = models.PositiveIntegerField()
 
+    def __str__(self):
+        return self.name
+
 
 class ScreenAdmin(admin.ModelAdmin):
-    pass
+    inlines = [
+        WidgetContainerInline
+    ]
 
 
 admin.site.register(Screen, ScreenAdmin)

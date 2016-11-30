@@ -16,7 +16,7 @@ Including another URLconf
 from apps.contrib.views import providers
 from apps.contrib.views import UserViewSet
 from apps.organizations.views import MemberViewSet, OrganizationViewSet
-from apps.terminals.views import WidgetViewSet
+from apps.terminals.views import WidgetViewSet, ScreenViewSet, WidgetContainerViewSet
 
 from django.conf import settings
 from django.conf.urls import url, include
@@ -32,7 +32,11 @@ router = routers.DefaultRouter()
 router.register('users', UserViewSet)
 router.register('members', MemberViewSet)
 router.register('organizations', OrganizationViewSet)
+
+router.register('screens', ScreenViewSet)
 router.register('widgets', WidgetViewSet)
+router.register('widget-containers', WidgetContainerViewSet)
+
 
 urlpatterns = [
     url(r'^api/v1/', include(router.urls)),
