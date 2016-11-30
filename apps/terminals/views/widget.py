@@ -1,5 +1,10 @@
 import importlib
 
+from allauth.socialaccount.models import SocialApp
+from apps.contrib.serializers.social_app import SocialAppSerializer
+
+from django.contrib.sites.models import Site
+
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
@@ -56,4 +61,19 @@ class WidgetViewSet(viewsets.ModelViewSet):
         from apps.contrib.serializers.users import UserSerializer
         serializer = UserSerializer(instance=request.user,
                                     context=self.get_serializer_context())
+        return Response(serializer.data)
+
+    @detail_route(methods=['GET'])
+    def providers(self, request, pk=None):
+        # TODO
+        # filtering social app should
+        # be according to widget config
+        site = Site.objects.get_current(request)
+        social_apps = SocialApp.objects.filter(
+            sites=site,
+            # from the widget config
+            # provider__in=[]
+        )
+        serializer = SocialAppSerializer(instance=social_apps, many=True,
+                                         context=self.get_serializer_context())
         return Response(serializer.data)

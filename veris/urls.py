@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from apps.contrib.views import providers
-from apps.contrib.views import UserViewSet
+from apps.contrib.views import UserViewSet, SocialAppViewSet
 from apps.organizations.views import MemberViewSet, OrganizationViewSet
 from apps.terminals.views import WidgetViewSet, ScreenViewSet, WidgetContainerViewSet
 
@@ -36,6 +36,8 @@ router.register('organizations', OrganizationViewSet)
 router.register('screens', ScreenViewSet)
 router.register('widgets', WidgetViewSet)
 router.register('widget-containers', WidgetContainerViewSet)
+
+router.register('social-apps', SocialAppViewSet)
 
 
 urlpatterns = [
