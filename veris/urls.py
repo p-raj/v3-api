@@ -23,12 +23,13 @@ from django.conf.urls import url, include
 
 from django.contrib import admin
 
-from rest_framework import routers
 
 # let's keep a list of routes separate
 # these route might reside on a remote server
 
-router = routers.DefaultRouter()
+from .router import Router
+
+router = Router()
 router.register('users', UserViewSet)
 router.register('members', MemberViewSet)
 router.register('organizations', OrganizationViewSet)

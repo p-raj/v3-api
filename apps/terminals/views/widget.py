@@ -34,6 +34,20 @@ class WidgetViewSet(viewsets.ModelViewSet):
     queryset = Widget.objects.all()
     serializer_class = WidgetAdminSerializer
 
+    @detail_route()
+    def action(self, request, pk=None):
+        # this route is just to make sure
+        # we can distribute the application logic
+        # in widget processes
+        widget = self.get_object()
+        config = json.loads(widget.config)
+        action = request._request.path.split('/')[-2]
+
+        if action not in config.get('private').get('actions'):
+            return Response(status=HTTP_405_METHOD_NOT_ALLOWED)
+
+        return getattr(self, action)(request, pk)
+
     def _get_config(self, request, pk=None):
         if hasattr(self, '_widget_config'):
             return self._widget_config
