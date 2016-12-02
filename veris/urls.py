@@ -16,7 +16,8 @@ Including another URLconf
 from apps.contrib.views import providers
 from apps.contrib.views import UserViewSet, SocialAppViewSet
 from apps.organizations.views import MemberViewSet, OrganizationViewSet
-from apps.terminals.views import WidgetViewSet, ScreenViewSet, WidgetContainerViewSet
+from apps.terminals.views import ScreenViewSet, TerminalViewSet, \
+    WidgetViewSet, WidgetContainerViewSet
 
 from django.conf import settings
 from django.conf.urls import url, include
@@ -34,6 +35,7 @@ router.register('members', MemberViewSet)
 router.register('organizations', OrganizationViewSet)
 
 router.register('screens', ScreenViewSet)
+router.register('terminals', TerminalViewSet)
 router.register('widgets', WidgetViewSet)
 router.register('widget-containers', WidgetContainerViewSet)
 

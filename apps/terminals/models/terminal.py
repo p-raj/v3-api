@@ -44,8 +44,28 @@ Let's encounter some cases / doubts:
 
 """
 
+from django.conf import settings
+from django.contrib import admin
 from django.db import models
+
+User = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
 
 class Terminal(models.Model):
-    pass
+    # a user may add N number of terminals
+    # let's assume terminal creation is meant to be free
+    # we'll think about the business model later
+    user = models.ForeignKey(User)
+
+    # let's just keep a name for terminal :)
+    name = models.CharField(max_length=64, null=False, blank=False)
+
+    def __str__(self):
+        return self.name
+
+
+class TerminalAdmin(admin.ModelAdmin):
+    raw_id_fields = ['user']
+
+
+admin.site.register(Terminal, TerminalAdmin)
