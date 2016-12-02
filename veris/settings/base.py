@@ -194,6 +194,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'django_otp.middleware.OTPMiddleware',
+    'two_factor.middleware.threadlocals.ThreadLocals',
     # 'django.middleware.cache.FetchFromCacheMiddleware'
 ]
 # ######### END MIDDLEWARE CONFIGURATION
@@ -237,6 +240,11 @@ THIRD_PARTY_APPS = (
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.openid',
     'allauth.socialaccount.providers.twitter',
+
+    'django_otp',
+    'django_otp.plugins.otp_static',
+    'django_otp.plugins.otp_totp',
+    'two_factor'
 )
 
 # Apps specific for this project go here.
@@ -331,3 +339,7 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 # ######### END DJANGO ALLAUTH CONFIGURATION
+
+
+TWO_FACTOR_CALL_GATEWAY = 'veris.gateways.Messages'
+TWO_FACTOR_SMS_GATEWAY = 'veris.gateways.Messages'

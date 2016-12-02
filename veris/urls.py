@@ -23,7 +23,6 @@ from django.conf.urls import url, include
 
 from django.contrib import admin
 
-
 # let's keep a list of routes separate
 # these route might reside on a remote server
 
@@ -40,7 +39,6 @@ router.register('widget-containers', WidgetContainerViewSet)
 
 router.register('social-apps', SocialAppViewSet)
 
-
 urlpatterns = [
     url(r'^api/v1/', include(router.urls)),
 
@@ -50,6 +48,9 @@ urlpatterns = [
 
     # we have our own oauth provider
     url(r'^oauth/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+
+    # we'll provide multi factor authentication
+    url(r'', include('two_factor.urls', 'two_factor')),
 
     # {provider}_login name is used internally by django-allauth,
     # so let's use api_{provider}_login

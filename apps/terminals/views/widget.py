@@ -76,7 +76,7 @@ class WidgetViewSet(viewsets.ModelViewSet):
 
         if bool(config.get('is_mfa_enabled')):
             return Response(status=HTTP_200_OK, headers={
-                'X-HTTP-MFA': 'totp',
+                'X-HTTP-MFA': config.get('mfa_type'),
                 'X-MFA-TOKEN': 'mfa-token-of-user'
             })
 
@@ -88,12 +88,22 @@ class WidgetViewSet(viewsets.ModelViewSet):
 
     @detail_route(methods=['GET', 'POST'])
     def mfa(self, request, pk=None):
+        # FIXME
+        # validate user using mfa-token-of-user
+
         config = self._get_config(request, pk)
         if not bool(config.get('is_mfa_enabled')):
             return Response(status=HTTP_405_METHOD_NOT_ALLOWED)
 
+        device = None
+        if config.get('mfa_type', 'otp') == 'otp':
+            device = request.user.phonedevice_set.first()
+
+        if config.get('mfa_type') == 'totp':
+            device = request.user.totpdevice_set.first()
+
         data = request.query_params.dict()
-        if data.get('otp') != '112233':
+        if device is None or not device.verify_token(data.get('otp', '')):
             return Response(status=HTTP_401_UNAUTHORIZED)
 
         from apps.contrib.serializers.users import UserSerializer
