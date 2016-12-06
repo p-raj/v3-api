@@ -1,6 +1,7 @@
 from django.contrib.sites.models import Site
 
 from rest_framework import viewsets
+from veris.router import Router
 
 from ..serializers.social_app import SocialApp, SocialAppSerializer
 
@@ -15,3 +16,7 @@ class SocialAppViewSet(viewsets.ModelViewSet):
         queryset = super(SocialAppViewSet, self).get_queryset()
         site = Site.objects.get_current(self.request)
         return queryset.filter(sites=site)
+
+
+router = Router()
+router.register('social-apps', SocialAppViewSet)

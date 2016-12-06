@@ -1,5 +1,6 @@
 from django.http.response import Http404
 from rest_framework import viewsets
+from veris.router import Router
 
 from ..serializers.users import User, UserSerializer
 
@@ -19,3 +20,7 @@ class UserViewSet(viewsets.ModelViewSet):
             self.perform_create(serializer)
 
         return super(UserViewSet, self).retrieve(request, *args, **kwargs)
+
+
+router = Router()
+router.register('users', UserViewSet)

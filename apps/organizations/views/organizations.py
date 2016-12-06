@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from veris.router import Router
 
 from ..serializers.organizations import Organization, OrganizationSerializer
 
@@ -12,3 +13,7 @@ class OrganizationViewSet(viewsets.ModelViewSet):
         # in sync with the remote server's authentication
         # ``request.user`` is always authentic
         serializer.save(user_id=self.request.user.id)
+
+
+router = Router()
+router.register('organizations', OrganizationViewSet)

@@ -12,6 +12,7 @@ from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_401_UNAUTHORIZED, \
     HTTP_405_METHOD_NOT_ALLOWED
+from veris.router import Router
 
 from ..serializers.widget import Widget, WidgetAdminSerializer
 
@@ -123,3 +124,7 @@ class WidgetViewSet(viewsets.ModelViewSet):
         serializer = SocialAppSerializer(instance=social_apps, many=True,
                                          context=self.get_serializer_context())
         return Response(serializer.data)
+
+
+router = Router()
+router.register('widgets', WidgetViewSet)

@@ -29,20 +29,8 @@ from django.contrib import admin
 
 from .router import Router
 
-router = Router()
-router.register('users', UserViewSet)
-router.register('members', MemberViewSet)
-router.register('organizations', OrganizationViewSet)
-
-router.register('screens', ScreenViewSet)
-router.register('terminals', TerminalViewSet)
-router.register('widgets', WidgetViewSet)
-router.register('widget-containers', WidgetContainerViewSet)
-
-router.register('social-apps', SocialAppViewSet)
-
 urlpatterns = [
-    url(r'^api/v1/', include(router.urls)),
+    url(r'^api/v1/', include(Router.shared_router.urls)),
 
     url(r'^admin/', admin.site.urls),
     url(r'^auth/', include('rest_framework.urls', namespace='rest_framework')),
