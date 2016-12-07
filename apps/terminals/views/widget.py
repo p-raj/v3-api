@@ -2,7 +2,7 @@ import importlib
 import json
 
 from allauth.socialaccount.models import SocialApp
-from apps.libs.serializers.social_app import SocialAppSerializer
+from apps.libs.allauth.social_apps import SocialAppSerializer
 
 from django.contrib.sites.models import Site
 
@@ -81,7 +81,7 @@ class WidgetViewSet(viewsets.ModelViewSet):
                 'X-MFA-TOKEN': 'mfa-token-of-user'
             })
 
-        from apps.libs.serializers.users import UserSerializer
+        from apps.libs.django.users import UserSerializer
         serializer = UserSerializer(instance=user,
                                     context=self.get_serializer_context())
 
@@ -107,7 +107,7 @@ class WidgetViewSet(viewsets.ModelViewSet):
         if device is None or not device.verify_token(data.get('otp', '')):
             return Response(status=HTTP_401_UNAUTHORIZED)
 
-        from apps.libs.serializers.users import UserSerializer
+        from apps.libs.django.users import UserSerializer
         serializer = UserSerializer(instance=request.user,
                                     context=self.get_serializer_context())
         return Response(serializer.data)

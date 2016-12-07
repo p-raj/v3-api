@@ -9,7 +9,7 @@ if not getattr(settings, 'DEBUG', False):
 
 class Router(DefaultRouter):
     """
-    Credits: https://stackoverflow.com/questions/20825029
+    Credits: http://stackoverflow.com/a/22684199/1796173
     """
     shared_router = DefaultRouter()
 

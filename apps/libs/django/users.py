@@ -1,8 +1,22 @@
+from django.contrib.auth import get_user_model
 from django.http.response import Http404
-from rest_framework import viewsets
+
+from rest_framework import serializers, viewsets
 from veris.router import Router
 
-from ..serializers.users import User, UserSerializer
+User = get_user_model()
+
+
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'url', 'username']
+
+        extra_kwargs = {
+            'url': {
+                'lookup_field': 'username'
+            }
+        }
 
 
 class UserViewSet(viewsets.ModelViewSet):
