@@ -22,6 +22,7 @@ The Service need to register all the events that can be fired.
 Any Event that is fired and is not registered will be missed.
 
 """
+from django.contrib import admin
 from django.db import models
 
 from apps.pubsub.models.service import Service
@@ -44,3 +45,8 @@ class Event(models.Model):
 
     def __str__(self):
         return self.name
+
+
+@admin.register(Event)
+class EventAdmin(admin.ModelAdmin):
+    pass

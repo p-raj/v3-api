@@ -5,6 +5,7 @@ TriggerAction is just mapping between
 Fire these `Action`s when this `Trigger` happens.
 
 """
+from django.contrib import admin
 from django.db import models
 
 from apps.pubsub.models.action import Action
@@ -28,3 +29,8 @@ class TriggerAction(models.Model):
 
     def __str__(self):
         return '{trigger}: {actions}'
+
+
+@admin.register(TriggerAction)
+class TriggerActionAdmin(admin.ModelAdmin):
+    pass

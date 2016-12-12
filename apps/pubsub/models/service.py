@@ -14,6 +14,7 @@ Example Service:
     - Invites (provided by Teramatrix)
 
 """
+from django.contrib import admin
 from django.db import models
 
 
@@ -36,3 +37,8 @@ class Service(models.Model):
 
     def __str__(self):
         return self.name
+
+
+@admin.register(Service)
+class ServiceAdmin(admin.ModelAdmin):
+    pass

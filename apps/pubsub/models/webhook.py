@@ -5,6 +5,7 @@ We need web hooks to make sure the events are
 transmitted to our server that orchestrates things.
 
 """
+from django.contrib import admin
 from django.db import models
 
 from apps.pubsub.models.event import Event
@@ -25,3 +26,8 @@ class WebHook(models.Model):
 
     def __str__(self):
         return self.endpoint
+
+
+@admin.register(WebHook)
+class WebHookAdmin(admin.ModelAdmin):
+    list_display = ['endpoint', 'is_active']

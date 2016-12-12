@@ -23,7 +23,7 @@ class TerminalLog(models.Model):
     data = models.CharField(max_length=64, null=False, blank=False)
 
     def __str__(self):
-        return self.terminal
+        return self.terminal.name
 
 
 class LogAdmin(admin.ModelAdmin):

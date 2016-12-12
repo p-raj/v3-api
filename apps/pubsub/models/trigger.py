@@ -5,6 +5,7 @@ Resource Server fires `WebHook` when an event occurs.
 The `WebHook` invokes a `Trigger` on Orchestration Server.
 
 """
+from django.contrib import admin
 from django.db import models
 
 from apps.pubsub.models.event import Event
@@ -16,3 +17,8 @@ class Trigger(models.Model):
     # let's just keep the data RAW
     # TODO: move to django.contrib.postgres.fields.JSONField
     payload = models.CharField(max_length=64, null=False, blank=False)
+
+
+@admin.register(Trigger)
+class TriggerAdmin(admin.ModelAdmin):
+    pass

@@ -251,6 +251,7 @@ THIRD_PARTY_APPS = (
 LOCAL_APPS = (
     'apps.organizations',
     'apps.terminals',
+    'apps.pubsub',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

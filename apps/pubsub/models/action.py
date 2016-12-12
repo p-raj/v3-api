@@ -11,13 +11,19 @@ Examples:
     - Fetch Invite Details          - GET /invite/:id
 
 """
+from django.utils.translation import ugettext_lazy as _
+from django.contrib import admin
 from django.db import models
 
 HTTP_METHODS = [
-    'GET', 'POST',
-    'PUT', 'PATCH',
-    'DELETE',
-    'OPTIONS', 'HEAD', 'TRACE'
+    ('GET', _('GET')),
+    ('POST', _('POST')),
+    ('PUT', _('PUT')),
+    ('PATCH', _('PATCH')),
+    ('DELETE', _('DELETE')),
+    ('OPTIONS', _('OPTIONS')),
+    ('HEAD', _('HEAD')),
+    ('TRACE', _('TRACE'))
 ]
 
 
@@ -28,15 +34,20 @@ class Action(models.Model):
     # http://stackoverflow.com/a/417184/1796173
     endpoint = models.URLField(max_length=2048)
 
-    # GET, PUT, POST, ....
-    http_method = models.CharField(choices=HTTP_METHODS)
+    # GET,_()) PUT,_()) POST,_()) ....
+    http_method = models.CharField(max_length=32, choices=HTTP_METHODS)
 
-    # let's keep things simple for now,
+    # let's keep things simple for now,_())
     # this thing can get pretty complex
     # for instance
     # some endpoints may work asynchronously and give callbacks when done
-    # data, params, caching, filters, content-type, scheme
-    # authorization headers, etc....
+    # data,_()) params,_()) caching,_()) filters,_()) content-type,_()) scheme
+    # authorization headers,_()) etc....
 
     def __str__(self):
         return self.name
+
+
+@admin.register(Action)
+class ActionAdmin(admin.ModelAdmin):
+    pass
