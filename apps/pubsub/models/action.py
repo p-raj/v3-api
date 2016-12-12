@@ -34,15 +34,15 @@ class Action(models.Model):
     # http://stackoverflow.com/a/417184/1796173
     endpoint = models.URLField(max_length=2048)
 
-    # GET,_()) PUT,_()) POST,_()) ....
+    # GET, PUT, POST, ....
     http_method = models.CharField(max_length=32, choices=HTTP_METHODS)
 
-    # let's keep things simple for now,_())
+    # let's keep things simple for now,
     # this thing can get pretty complex
     # for instance
     # some endpoints may work asynchronously and give callbacks when done
-    # data,_()) params,_()) caching,_()) filters,_()) content-type,_()) scheme
-    # authorization headers,_()) etc....
+    # data, params, caching, filters, content-type, scheme
+    # authorization headers, etc....
 
     def __str__(self):
         return self.name
