@@ -1,11 +1,11 @@
 import importlib
 import json
 
-from allauth.socialaccount.models import SocialApp
-from apps.libs.allauth.social_apps import SocialAppSerializer
-
 from django.contrib.sites.models import Site
 
+from allauth.socialaccount.models import SocialApp
+from apps.libs.allauth.social_apps import SocialAppSerializer
+from apps.pubsub.serializers.widget import Widget, WidgetAdminSerializer
 from apps.terminals.models.widget_container import WidgetContainer
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route
@@ -13,8 +13,6 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_401_UNAUTHORIZED, \
     HTTP_405_METHOD_NOT_ALLOWED
 from veris.router import Router
-
-from ..serializers.widget import Widget, WidgetAdminSerializer
 
 
 def import_from_string(val):

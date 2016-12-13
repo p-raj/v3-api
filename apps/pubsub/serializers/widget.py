@@ -1,8 +1,7 @@
 import json
 
+from apps.pubsub.models.widget import Widget
 from rest_framework import serializers
-
-from ..models.widget import Widget
 
 
 class WidgetSerializer(serializers.HyperlinkedModelSerializer):
@@ -18,4 +17,4 @@ class WidgetAdminSerializer(WidgetSerializer):
         fields = ['id', 'url', 'name', 'code', 'config']
 
     def get_config(self, obj):
-        return json.loads(obj.config)
+        return json.loads(obj.config) if obj.config else None

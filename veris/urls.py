@@ -17,8 +17,8 @@ from apps.libs.rest_auth import providers
 from apps.libs.allauth import EmailAddressViewSet, SocialAppViewSet
 from apps.libs.django import UserViewSet
 from apps.organizations.views import MemberViewSet, OrganizationViewSet
-from apps.terminals.views import ScreenViewSet, TerminalViewSet, \
-    WidgetViewSet, WidgetContainerViewSet
+from apps.pubsub.views import WidgetViewSet
+from apps.terminals.views import ScreenViewSet, TerminalViewSet, WidgetContainerViewSet
 
 from django.conf import settings
 from django.conf.urls import url, include

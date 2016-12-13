@@ -4,7 +4,9 @@ from django.db import models
 
 class WidgetContainer(models.Model):
     screen = models.ForeignKey('terminals.Screen')
-    widget = models.ForeignKey('terminals.Widget')
+
+    # the unique code representing the widget
+    widget = models.CharField(max_length=64)
 
     order = models.PositiveIntegerField()
     is_required = models.BooleanField(default=True)
@@ -22,11 +24,10 @@ class WidgetContainer(models.Model):
 
 class WidgetContainerInline(admin.StackedInline):
     model = WidgetContainer
-    raw_id_fields = ['widget']
 
 
 class WidgetContainerAdmin(admin.ModelAdmin):
-    raw_id_fields = ['widget', 'screen']
+    raw_id_fields = ['screen']
 
 
 admin.site.register(WidgetContainer, WidgetContainerAdmin)
