@@ -89,7 +89,7 @@ TIME_FORMAT = 'P'
 LANGUAGE_CODE = 'en-us'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#site-id
-# SITE_ID = 1
+SITE_ID = 1
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#use-i18n
 USE_I18N = True
@@ -227,31 +227,12 @@ THIRD_PARTY_APPS = (
     'oauth2_provider',
 
     'rest_framework',
-    'rest_framework.authtoken',
-    'rest_auth',
-
-    'allauth',
-    'allauth.account',
-    'rest_auth.registration',
-
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.facebook',
-    'allauth.socialaccount.providers.github',
-    'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.openid',
-    'allauth.socialaccount.providers.twitter',
-
-    'django_otp',
-    'django_otp.plugins.otp_static',
-    'django_otp.plugins.otp_totp',
-    'two_factor'
+    'rest_framework.authtoken'
 )
 
 # Apps specific for this project go here.
 LOCAL_APPS = (
     'apps.organizations',
-    'apps.terminals',
-    'apps.pubsub',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -316,31 +297,3 @@ REST_FRAMEWORK = {
     )
 }
 # ######### END DJANGO REST FRAMEWORK CONFIGURATION
-
-
-# ######### DJANGO AUTHENTICATION BACKEND CONFIGURATION
-AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
-    # `allauth` specific authentication methods, such as login by e-mail
-    'allauth.account.auth_backends.AuthenticationBackend',
-)
-# ######### END DJANGO AUTHENTICATION BACKEND CONFIGURATION
-
-
-# ######### DJANGO ALLAUTH CONFIGURATION
-# See: https://django-allauth.readthedocs.io/en/latest/configuration.html
-SOCIALACCOUNT_ADAPTER = 'veris.adapters.SocialAccountAdapter'
-
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': ['profile', 'email'],
-        'AUTH_PARAMS': {
-            'access_type': 'online'
-        }
-    }
-}
-# ######### END DJANGO ALLAUTH CONFIGURATION
-
-
-TWO_FACTOR_CALL_GATEWAY = 'veris.gateways.Messages'
-TWO_FACTOR_SMS_GATEWAY = 'veris.gateways.Messages'
