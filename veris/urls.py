@@ -26,7 +26,15 @@ from django.contrib import admin
 
 from .router import Router
 
+
+from django.conf.urls import url
+from rest_framework_swagger.views import get_swagger_view
+
+schema_view = get_swagger_view(title='Veris Organizations API')
+
+
 urlpatterns = [
+    url(r'^swagger/$', schema_view),
     url(r'^api/v1/', include(Router.shared_router.urls)),
 
     url(r'^admin/', admin.site.urls),

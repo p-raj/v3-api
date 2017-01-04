@@ -227,7 +227,9 @@ THIRD_PARTY_APPS = (
     'oauth2_provider',
 
     'rest_framework',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
+
+    'rest_framework_swagger'
 )
 
 # Apps specific for this project go here.
@@ -284,6 +286,14 @@ PASSWORD_HASHERS = [
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+        'rest_framework.renderers.CoreJSONRenderer',
+
+        'rest_framework_swagger.renderers.OpenAPIRenderer',
+        'rest_framework_swagger.renderers.SwaggerUIRenderer',
+    ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
