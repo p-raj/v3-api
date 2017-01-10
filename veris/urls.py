@@ -13,6 +13,8 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+from rest_framework_nested import routers
+
 from apps.libs.django import UserViewSet
 from apps.organizations.views import MemberViewSet, OrganizationViewSet
 
@@ -21,21 +23,19 @@ from django.conf.urls import url, include
 
 from django.contrib import admin
 
-# let's keep a list of routes separate
-# these route might reside on a remote server
+from rest_framework_swagger.views import get_swagger_view
 
 from .router import Router
 
-
-from django.conf.urls import url
-from rest_framework_swagger.views import get_swagger_view
-
 schema_view = get_swagger_view(title='Veris Organizations API')
 
+routes_organization = routers.NestedSimpleRouter(Router.shared_router, 'organizations', lookup='organization')
+routes_organization.register('members', MemberViewSet, base_name='organizations')
 
 urlpatterns = [
     url(r'^swagger/$', schema_view),
     url(r'^api/v1/', include(Router.shared_router.urls)),
+    url(r'^api/v1/', include(routes_organization.urls)),
 
     url(r'^admin/', admin.site.urls),
     url(r'^auth/', include('rest_framework.urls', namespace='rest_framework')),

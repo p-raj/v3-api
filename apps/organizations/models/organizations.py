@@ -7,9 +7,7 @@ handles user authentication for us (somewhat similar to Auth0 service).
 """
 from django.conf import settings
 from django.contrib import admin
-from django.contrib.sites.models import Site
 from django.db import models
-
 
 User = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
@@ -55,7 +53,8 @@ class Organization(models.Model):
     # and it takes good care of it using the sites framework,
     # so yes basically this relation is just an interface to the power of django-allauth
     # teramatrix.veris.in <---> teramatrix
-    site = models.OneToOneField(Site)
+    # this might turn out to be a separate service in itself :)
+    # site = models.OneToOneField(Site)
 
     # let's consider the we are enabling organization management
     # i.e a user can manage resources provided by Veris himself or
@@ -71,7 +70,7 @@ class Organization(models.Model):
     # lets change the default manager
     # why? we need to add the organization creator as a member by default
     # will ease things out for access management, at least it seems like it for now
-    objects = OrganizationQuerySet.as_manager()
+    # objects = OrganizationQuerySet.as_manager()
 
     def __str__(self):
         return self.name
