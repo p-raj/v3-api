@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from veris.fields import RemoteUserField
+from asap.fields import RemoteUserField
 
 from ..models.members import Member
 

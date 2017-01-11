@@ -52,7 +52,7 @@ class Organization(models.Model):
     # why? we are using django-allauth to manage the social applications
     # and it takes good care of it using the sites framework,
     # so yes basically this relation is just an interface to the power of django-allauth
-    # teramatrix.veris.in <---> teramatrix
+    # teramatrix.asap.in <---> teramatrix
     # this might turn out to be a separate service in itself :)
     # site = models.OneToOneField(Site)
 

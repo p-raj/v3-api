@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 
-from veris.router import Router
+from asap.router import Router
 from ..serializers.organizations import Organization, OrganizationSerializer
 
 

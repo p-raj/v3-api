@@ -1,6 +1,6 @@
 from rest_framework import response, status, viewsets
 
-from veris.router import Router
+from asap.router import Router
 from ..serializers.members import Member, MemberSerializer
 
 

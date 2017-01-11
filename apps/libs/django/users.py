@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.http.response import Http404
 
 from rest_framework import serializers, viewsets
-from veris.router import Router
+from asap.router import Router
 
 User = get_user_model()
 
