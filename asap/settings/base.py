@@ -14,13 +14,13 @@ from sys import path
 DJANGO_ROOT = dirname(dirname(abspath(__file__)))
 
 # Site name:
-SITE_NAME = basename(DJANGO_ROOT)
+SITE_NAME = basename(dirname(DJANGO_ROOT))
 
 # Absolute filesystem path to the top-level project folder:
-SITE_ROOT = join(dirname(dirname(DJANGO_ROOT)), SITE_NAME)
+SITE_ROOT = dirname(DJANGO_ROOT)
 
 # Site sub-module name:
-SITE_MODULE = basename(dirname(dirname(abspath(__file__))))
+SITE_MODULE = basename(DJANGO_ROOT)
 
 # Add our project to our pythonpath, this way we don't need to type our project
 # name in our dotted import paths:
@@ -204,7 +204,7 @@ MIDDLEWARE = [
 
 # ######### URL CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#root-urlconf
-ROOT_URLCONF = '{0}.urls'.format(SITE_NAME)
+ROOT_URLCONF = '{0}.urls'.format(SITE_MODULE)
 # ######### END URL CONFIGURATION
 
 
