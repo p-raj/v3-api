@@ -39,6 +39,9 @@ urlpatterns = [
     url(r'^oauth/', include('oauth2_provider.urls', namespace='oauth2_provider')),
 
     url(r'^api/auth/', include('asap.apps.authentication.urls', namespace='auth')),
+
+    # micro services routers
+    url(r'', include('asap.apps.urls', namespace='micro_service')),
 ]
 
 if settings.DEBUG:
