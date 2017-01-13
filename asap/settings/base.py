@@ -6,8 +6,30 @@ from os.path import basename
 from os.path import dirname
 from os.path import join
 from os.path import normpath
+from os import environ
+from os import getenv
 
 from sys import path
+
+# Normally you should not import ANYTHING from Django directly
+# into your settings, but ImproperlyConfigured is an exception.
+from django.core.exceptions import ImproperlyConfigured
+
+
+def get_env_setting(key):
+    """
+    Get the environment setting or return exception,
+    if default is not set
+
+    :param key:
+    """
+    try:
+        return environ[key]
+    except KeyError:
+        error_msg = 'Set the {0} env variable'.format(key)
+        raise ImproperlyConfigured(error_msg)
+
+
 
 # ######### PATH CONFIGURATION
 # Absolute filesystem path to the Django project directory:
@@ -194,9 +216,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-    'django_otp.middleware.OTPMiddleware',
-    'two_factor.middleware.threadlocals.ThreadLocals',
     # 'django.middleware.cache.FetchFromCacheMiddleware'
 ]
 # ######### END MIDDLEWARE CONFIGURATION
