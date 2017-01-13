@@ -37,6 +37,8 @@ urlpatterns = [
 
     # we have our own oauth provider
     url(r'^oauth/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+
+    url(r'^api/auth/', include('asap.apps.authentication.urls', namespace='auth')),
 ]
 
 if settings.DEBUG:

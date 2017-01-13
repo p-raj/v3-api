@@ -246,8 +246,6 @@ THIRD_PARTY_APPS = (
     'oauth2_provider',
 
     'rest_framework',
-    'rest_framework.authtoken',
-
     'rest_framework_swagger'
 )
 
@@ -336,8 +334,8 @@ REST_FRAMEWORK = {
 }
 # ######### END DJANGO REST FRAMEWORK CONFIGURATION
 
-LOGIN_URL = '/auth/login/'
 
+# ######### DJANGO OAUTH TOOLKIT CONFIGURATION
 OAUTH2_PROVIDER = {
     # this is the list of available scopes
     'SCOPES': {
@@ -345,3 +343,17 @@ OAUTH2_PROVIDER = {
         'write': 'Write scope'
     }
 }
+# ######### END DJANGO OAUTH TOOLKIT CONFIGURATION
+
+# ######### ASAP AUTHENTICATION CONFIGURATION
+# the veris client is a special oauth client
+# with all the permissions/scopes
+# create one using /oauth/applications url
+# and put the credentials in env
+# the login mechanism uses the same access token
+
+# not using get_env_key, since this conf will be generated
+# by our server only (only for now)
+VERIS_CLIENT_ID = environ.get('VERIS_CLIENT_ID')
+VERIS_CLIENT_SECRET = environ.get('VERIS_CLIENT_SECRET')
+# ######### END ASAP AUTHENTICATION CONFIGURATION
