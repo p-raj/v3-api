@@ -16,7 +16,7 @@ urlpatterns = [
         
         url(r'', include('asap.apps.vrt.routers')),
         url(r'', include('asap.apps.widgets.routers')),
-        url(r'', include('asap.apps.process_gw.routers')),
+        url(r'', include('asap.apps.process.routers')),
         url(r'', include('asap.apps.store.routers')),
 ]
 
