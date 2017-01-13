@@ -1,3 +1,26 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+"""
+"""
+
+# future
+from __future__ import unicode_literals
+
+# django
 from django.contrib import admin
 
-# Register your models here.
+# own app
+from asap.apps.store import models
+
+class ResourceAdmin(admin.ModelAdmin):
+    list_display = ('name', 'upstream_url', 'token', )
+    list_display_links = ('name', 'upstream_url', )
+
+class ResourceLogsAdmin(admin.ModelAdmin):
+    list_display = ('resource', 'logId', 'status', )
+    list_display_links = ('resource', 'logId', )
+
+
+admin.site.register(models.Resource, ResourceAdmin)
+admin.site.register(models.ResourceLogs, ResourceLogsAdmin)
