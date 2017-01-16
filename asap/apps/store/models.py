@@ -2,6 +2,10 @@
 # -*- coding: utf-8 -*-
 
 """
+store.models
+~~~~~~~~~~~~~~
+
+This file contains the Resource models that will map into DB tables and will store data of Resources
 """
 
 # future
@@ -113,7 +117,7 @@ class ResourceSchema(models.Model):
 
 class ResourceLogs(models.Model):
     """
-    Resource will also log its own life cycle using this model.
+    Resource will also log its own life cycle using logging model.
     """
     # Relations
     resource = models.ForeignKey(Resource,
