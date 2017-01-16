@@ -12,7 +12,11 @@ class MemberViewSet(viewsets.ModelViewSet):
         if not kwargs.get('organization_pk'):
             # let's disable the direct access of this url :)
             # saves a lot of permission checking etc etc
-            return response.Response(status=status.HTTP_404_NOT_FOUND)
+            # update:
+            # let's assume if the organization pk is missing
+            # the user wants to access all of its memberships
+            self.queryset = self.queryset.filter(user=request.user)
+            return super(MemberViewSet, self).list(request, *args, **kwargs)
 
         self.queryset = self.queryset.filter(organization=kwargs.get('organization_pk'))
         return super(MemberViewSet, self).list(request, *args, **kwargs)
