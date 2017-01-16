@@ -1,9 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-"""
+ """
+-store.models
+-~~~~~~~~~~~~~~
 
-"""
+
+-This file contains the Resource models that will map into DB tables and will store data of Resources
+ """
 
 # future
 from __future__ import unicode_literals
