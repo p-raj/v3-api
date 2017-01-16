@@ -5,6 +5,8 @@
 # <footer (Provide links to any relevant tickets, articles or other resources)>
 
 # ** TYPES **
+# add : a new class/function added
+# update : updating existig fucntion (neither due to any bug or feat but due to update in requirement)
 # feat (new feature)
 # fix (bug fix)
 # docs (changes to documentation)
@@ -22,6 +24,8 @@
 # Work hard, play hard!  Consider suffixing your commit messages with a relevant emoji for
 # greater good:
 #
+#   :hammer: `:hammer:` when adding new class/fucntion
+#   :construction_worker: `:construction_worker:` changes to update in requirement
 #   :art: `:art:` when improving the format/structure of the code
 #   :racehorse: `:racehorse:` when improving performance
 #   :non-potable_water: `:non-potable_water:` when plugging memory leaks
