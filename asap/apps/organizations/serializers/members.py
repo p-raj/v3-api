@@ -9,3 +9,9 @@ class MemberSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['id', 'url',
                   'organization',
                   'user']
+
+        extra_kwargs = {
+            'user': {
+                'lookup_field': 'username'
+            }
+        }
