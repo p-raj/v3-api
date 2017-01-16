@@ -2,10 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-store.models
-~~~~~~~~~~~~~~
 
-This file contains the Resource models that will map into DB tables and will store data of Resources
 """
 
 # future
@@ -47,6 +44,10 @@ class Resource(models.Model):
                     _('upstream url of resource.'),
                     max_length=200,
                     help_text=_('Required. 200 characters or fewer.'),
+    )
+    schema = JSONField(
+             _('Resource schema'),
+             help_text=_('Resource swagger client schema.'),
     )
     token = models.UUIDField(
             _('Resource token, to be bind with process, Process will access Resource with the help of this \
