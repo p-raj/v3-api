@@ -3,7 +3,7 @@
 
 """
 -store.models
--~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
 
 
 -This file contains the Resource models that will map into DB tables and will store data of Resources
