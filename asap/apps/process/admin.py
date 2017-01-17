@@ -14,8 +14,8 @@ from django.contrib import admin
 from asap.apps.process import models
 
 class ProcessAdmin(admin.ModelAdmin):
-    list_display = ('name', 'code', 'resource_token', )
-    list_display_links = ('name', 'code', )
+    list_display = ('name', 'code', 'resource_token', 'operation', )
+    list_display_links = ('name', 'code', 'operation', )
 
 class ProcessLockerAdmin(admin.ModelAdmin):
     list_display = ('name', 'token', 'is_publish', )
