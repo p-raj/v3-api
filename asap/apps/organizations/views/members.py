@@ -13,6 +13,15 @@ class MemberViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelVi
         ('organization_pk', 'organization')
     ]
 
+    def make_queryset(self):
+        queryset = super(MemberViewSet, self).make_queryset()
+        if self.is_nested:
+            return queryset
+
+        # return all the memberships
+        # available to the requesting user
+        return queryset.filter(user=self.request.user)
+
 
 # we have created the nested routes as well
 router = Router()
