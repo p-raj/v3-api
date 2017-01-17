@@ -39,18 +39,16 @@ class BravadoLib(object):
         """
         return SwaggerClient.from_spec(spec_dict, origin_url, config={'also_return_response': True})
 
-    def execute_operation(self, operation, data={}):
+    def callable_operation(self, operation, data={}):
         """
 
         :param operation: operation of swagger client
         :param data: payload to be sent with operation
         :return: depends on operation
         """
-        _request_options = {'headers': {'Authorization': 'Bearer F4ZCjqiUHVNoSBH8mhwnKzuP25Vqzc'}}
-        data.update({'_request_options': _request_options})
 
-        aa = CallableOperation(operation)
-        aa.__call__(**data)
+        opt = CallableOperation(operation)
+        opt.__call__(**data)
         try:
             result, response = operation(**data).result()
             return response.json()
