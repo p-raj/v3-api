@@ -30,11 +30,7 @@ class DRFNestedViewMixin(mixins.ListModelMixin, viewsets.GenericViewSet):
     lookup_parent = [
     ]
 
-    def list(self, request, *args, **kwargs):
-        """
-        allow support for nested urls
-
-        """
+    def nest_queryset(self, **kwargs):
         queryset_filters = Q()
 
         for lookup, query in self.lookup_parent:
@@ -45,4 +41,11 @@ class DRFNestedViewMixin(mixins.ListModelMixin, viewsets.GenericViewSet):
         # lets not re-invent the wheel, follow DRY approach and let drf
         # handle the response once the queryset has been filtered
         self.queryset = self.get_queryset().filter(queryset_filters)
+
+    def list(self, request, *args, **kwargs):
+        self.nest_queryset(**kwargs)
         return super(DRFNestedViewMixin, self).list(request, *args, **kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        self.nest_queryset(**kwargs)
+        return super(DRFNestedViewMixin, self).retrieve(request, *args, **kwargs)
