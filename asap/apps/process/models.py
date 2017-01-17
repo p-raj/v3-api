@@ -46,12 +46,14 @@ class Process(models.Model):
             unique=True,
             help_text=_('Required & Unique. 30 characters or fewer.'),
     )
-    resource_token = models.CharField(
+    resource_token = models.UUIDField(
                         _('Resource Token'),
-                        max_length=30,
-                        null=True,
-                        blank=True,
-                        help_text=_('Toke of Resource to which this Process belongs too.')
+                        help_text=_('Token of Resource to which this Process belongs too.')
+    )
+    operation = models.CharField(
+                        _('Resource operation'),
+                        max_length=255,
+                        help_text=_('Operation of Resource to which this Process will call')
     )
     created_at = models.DateTimeField(
                  _('created at'),
@@ -79,7 +81,7 @@ class ProcessLocker(models.Model):
 
     # Attributes
     name = models.CharField(
-            _('Process Locker Name'),
+            _('Locker Name'),
             max_length=30,
             help_text=_('Required. 30 characters or fewer.'),
     )
@@ -88,7 +90,7 @@ class ProcessLocker(models.Model):
              help_text=_('Rules config, tells us which process will be called based on what rules.'),
     )
     token = models.UUIDField(
-        _('Process token'),
+        _('Locker token'),
         null=True,
         blank=True,
         unique=True,
