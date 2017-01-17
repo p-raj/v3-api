@@ -15,6 +15,8 @@ Including another URLconf
 """
 from asap.apps.organizations.views import MemberViewSet
 from asap.apps.libs.django.users import UserViewSet
+from asap.apps.vrt.views.runtime import RuntimeViewSet
+from asap.apps.vrt.views.runtime_locker import RuntimeLockerViewSet
 
 from django.conf import settings
 from django.conf.urls import url, include
@@ -30,10 +32,14 @@ schema_view = get_swagger_view(title='Veris Organizations API')
 routes_organization = routers.NestedSimpleRouter(Router.shared_router, 'organizations', lookup='organization')
 routes_organization.register('members', MemberViewSet, base_name='organizations')
 
+routes_runtime = routers.NestedSimpleRouter(Router.shared_router, 'runtime-lockers', lookup='runtime_locker')
+routes_runtime.register('runtimes', RuntimeViewSet, base_name='runtime-lockers')
+
 urlpatterns = [
     url(r'^swagger/$', schema_view),
     url(r'^api/v1/', include(Router.shared_router.urls)),
     url(r'^api/v1/', include(routes_organization.urls)),
+    url(r'^api/v1/', include(routes_runtime.urls)),
 
     url(r'^admin/', admin.site.urls),
     url(r'^auth/', include('rest_framework.urls', namespace='rest_framework')),
