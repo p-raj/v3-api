@@ -49,6 +49,6 @@ class ResourceViewSet(viewsets.GenericViewSet):
         operation_response = resource_cls.execute_operation(resourse_db_obj.upstream_url,
                                                          resourse_db_obj.schema,
                                                          operation_id,
-                                                            data={'organization_pk':'1', 'id':'1'})
-
-        return Response({'detail':operation_response}, status=status.HTTP_200_OK)
+                                                         data=request.data.dict()
+                                                        )
+        return Response(operation_response, status=status.HTTP_200_OK)

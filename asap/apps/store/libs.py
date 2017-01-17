@@ -19,7 +19,7 @@ from __future__ import unicode_literals
 # 3rd party libs
 from bravado.client import SwaggerClient,  CallableOperation
 from bravado_core.exception import SwaggerMappingError
-
+from bravado.exception import HTTPNotFound, HTTPBadRequest
 # rest-framework
 from rest_framework.exceptions import ValidationError
 
@@ -46,11 +46,13 @@ class BravadoLib(object):
         :param data: payload to be sent with operation
         :return: depends on operation
         """
-
         opt = CallableOperation(operation)
-        opt.__call__(**data)
         try:
+            opt.__call__(**data)
             result, response = operation(**data).result()
             return response.json()
         except (SwaggerMappingError) as e:
             raise ValidationError({'detail': ' {0}'.format(e)})
+        except (HTTPNotFound, HTTPBadRequest) as e:
+            raise ValidationError({'detail': ' {0}'.format(e)})
+
