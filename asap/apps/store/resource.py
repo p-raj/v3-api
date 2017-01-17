@@ -43,9 +43,13 @@ class Resource(object):
         :param url: the url used to retrieve the resource schema
         :param resource_schema: resource swagger schema
         :param operation_id: resource operation
+        :param data : payload to be sent with operation
         :return: depends on operation response
         """
+        _request_options = {'headers': {'Authorization': 'Bearer F4ZCjqiUHVNoSBH8mhwnKzuP25Vqzc'}}
+        data.update({'_request_options': _request_options})
+
         client = self.get_swagger_client(url, resource_schema)
         operation = getattr(client.v1, operation_id)
 
-        return self.get_bravado_cls().execute_operation(operation, data)
+        return self.get_bravado_cls().callable_operation(operation, data)
