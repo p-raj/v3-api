@@ -34,6 +34,17 @@ class Member(models.Model):
     # no point in keeping members after the organization has been deleted
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
 
+    # the organization service has decided to integrate with VRT service
+    # and provide VRTs to the members of the organization if requested by admin
+    # so, the membership information may additionally contain
+    # a reference to the runtimes made available by the organization
+    # to this member
+    # the VRT service provide a way to group the runtimes together,
+    # so no need to maintain multiple runtimes for a member here,
+    # we'll keep a reference to the locker (group)
+    # provided by the runtime service instead for each member
+    runtime_locker_uuid = models.CharField(max_length=64, null=True, blank=True)
+
     # let's keep the date member was added,
     # although the name says date_joined
     # TODO
