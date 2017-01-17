@@ -13,8 +13,8 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+from asap.apps.authentication.views.users import UserViewSet
 from asap.apps.organizations.views import MemberViewSet
-from asap.apps.libs.django.users import UserViewSet
 from asap.apps.vrt.views.runtime import RuntimeViewSet
 from asap.apps.vrt.views.runtime_locker import RuntimeLockerViewSet
 
@@ -25,6 +25,8 @@ from django.contrib import admin
 from rest_framework_nested import routers
 from rest_framework_swagger.views import get_swagger_view
 
+from asap.apps.organizations.views import MemberViewSet
+from asap.apps.vrt.views.runtime import RuntimeViewSet
 from .router import Router
 
 schema_view = get_swagger_view(title='Veris Organizations API')
