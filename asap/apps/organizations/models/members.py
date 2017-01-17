@@ -7,13 +7,13 @@ from django.conf import settings
 from django.contrib import admin
 from django.db import models
 
+from asap.core.models import Authorable, Timestampable
 from .organizations import Organization
-
 
 User = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
 
-class Member(models.Model):
+class Member(Authorable, Timestampable, models.Model):
     """
     Member model should be seen as a through mapping between
     users from the authentication server and the organizations on this server.

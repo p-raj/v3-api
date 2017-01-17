@@ -1,11 +1,11 @@
 from rest_framework import viewsets
 
-from asap.core.views import DRFNestedViewMixin
+from asap.core.views import DRFNestedViewMixin, AuthorableModelViewSet
 from asap.router import Router
 from ..serializers.members import Member, MemberSerializer
 
 
-class MemberViewSet(DRFNestedViewMixin, viewsets.ModelViewSet):
+class MemberViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelViewSet):
     queryset = Member.objects.all()
     serializer_class = MemberSerializer
 

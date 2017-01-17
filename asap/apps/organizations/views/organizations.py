@@ -1,21 +1,16 @@
 from rest_framework import viewsets
 
+from asap.core.views import AuthorableModelViewSet
 from asap.router import Router
 from ..serializers.organizations import Organization, OrganizationSerializer
 
 
-class OrganizationViewSet(viewsets.ModelViewSet):
+class OrganizationViewSet(AuthorableModelViewSet, viewsets.ModelViewSet):
     queryset = Organization.objects.all()
     serializer_class = OrganizationSerializer
 
     def filter_queryset(self, queryset):
-        return self.queryset.filter(user=self.request.user)
-
-    def perform_create(self, serializer):
-        # let's assume the we have a middleware that keeps us
-        # in sync with the remote server's authentication
-        # ``request.user`` is always authentic
-        serializer.save(user_id=self.request.user.id)
+        return self.queryset.authored_by(self.request.user)
 
 
 router = Router()
