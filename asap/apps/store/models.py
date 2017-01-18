@@ -73,5 +73,3 @@ class Resource(models.Model):
     # Functions
     def __str__(self):
         return "Resource {0}".format(self.name)
-
-     )
