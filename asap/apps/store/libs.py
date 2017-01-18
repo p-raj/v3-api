@@ -39,20 +39,29 @@ class BravadoLib(object):
         """
         return SwaggerClient.from_spec(spec_dict, origin_url, config={'also_return_response': True})
 
-    def callable_operation(self, operation, data={}):
+    def callable_operation(self, operation, logging_cls, data={}):
         """
 
         :param operation: operation of swagger client
         :param data: payload to be sent with operation
+        :param logging_cls: Logging class instance
         :return: depends on operation
         """
+        api_token = None # in case of resource actor token is allowed null.
+        logging_cls.handshake(api_token, data)  # execution handover initiated
+
         opt = CallableOperation(operation)
         try:
             opt.__call__(**data)
             result, response = operation(**data).result()
+            logging_cls.handshake_succeed(api_token, data, response)  # execution handover status
             return response.json()
-        except (SwaggerMappingError) as e:
-            raise ValidationError({'detail': ' {0}'.format(e)})
+        except SwaggerMappingError as e:
+            err = {'detail': ' {0}'.format(e)}
+            logging_cls.handshake_failed(api_token, data, 400, err)  # execution handover status
+            raise ValidationError()
         except (HTTPNotFound, HTTPBadRequest) as e:
+            err = {'detail': ' {0}'.format(e)}
+            logging_cls.handshake_failed(api_token, data, 400, err)  # execution handover status
             raise ValidationError({'detail': ' {0}'.format(e)})
 

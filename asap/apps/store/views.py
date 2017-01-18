@@ -11,13 +11,20 @@
 # future
 from __future__ import unicode_literals
 
+# 3rd party
+import uuid
+
 # rest-framework
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework import permissions
 
+# local
+from asap.apps.logs import logging
+
 # own app
-from  asap.apps.store import models, resource
+from asap.apps.store import models, resource
+
 
 class ResourceViewSet(viewsets.GenericViewSet):
     """Resource Viewset, every resource http request handles by this class
@@ -27,6 +34,9 @@ class ResourceViewSet(viewsets.GenericViewSet):
     """
     model = models.Resource
     permission_classes = (permissions.AllowAny, )
+    actor = 'resource'
+    session = uuid.uuid4()
+    logging_cls = None
 
     def get_resource_object(self, token):
         """
@@ -44,11 +54,38 @@ class ResourceViewSet(viewsets.GenericViewSet):
         :param operation_id : represents a specific operation of respective resource
         :return:
         """
+
+        # Start logging of resource
+        self.logging_cls = logging.ServiceLogging(
+            self.actor,
+            token,
+            self.session,
+            payload=request.data or dict())
+        self.logging_cls.initialize()  # initialize resource logging
+
         resourse_db_obj = self.get_resource_object(token)
-        resource_cls = resource.Resource()
+        resource_cls = resource.Resource(self.logging_cls)
         operation_response = resource_cls.execute_operation(resourse_db_obj.upstream_url,
-                                                         resourse_db_obj.schema,
-                                                         operation_id,
-                                                         data=request.data.dict()
-                                                        )
+                                                            resourse_db_obj.schema,
+                                                            operation_id,
+                                                            data=request.data.dict(),
+                                                            )
         return Response(operation_response, status=status.HTTP_200_OK)
+
+    def finalize_response(self, request, response, *args, **kwargs):
+        """Log Process before sending final response
+
+        :param request: django request object
+        :param response: response to be sent to client
+        :param args: function arguments
+        :param kwargs: function keyword arguments
+        :return: returns final response
+
+        Note :
+            if response code is 2xx then we call success log method else false method will be called
+        """
+        if str(response.status_code).startswith('2'):
+            self.logging_cls.success(response)  # logged as success
+        else:
+            self.logging_cls.fail(response)  # logged as failure
+        return super(ResourceViewSet, self).finalize_response(request, response, *args, **kwargs)

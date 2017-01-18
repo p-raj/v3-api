@@ -20,6 +20,14 @@ class Resource(object):
     """A Resource object for accessing various resource operations and RESTful service.
 
     """
+    logging_cls = None
+
+    def __init__(self, logging_cls):
+        """
+
+        :param logging_cls: Logging class instance.
+        """
+        self.logging_cls = logging_cls
 
     def get_bravado_cls(self):
         """
@@ -52,4 +60,4 @@ class Resource(object):
         client = self.get_swagger_client(url, resource_schema)
         operation = getattr(client.v1, operation_id)
 
-        return self.get_bravado_cls().callable_operation(operation, data)
+        return self.get_bravado_cls().callable_operation(operation, self.logging_cls, data)
