@@ -1,12 +1,13 @@
 from asap.apps.vrt.models.runtime import Runtime
+from asap.core.serializers import TimestampableModelSerializer
 
 from rest_framework import serializers
 
 
-class RuntimeSerializer(serializers.HyperlinkedModelSerializer):
+class RuntimeSerializer(TimestampableModelSerializer, serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Runtime
-        exclude = ('user',)
+        exclude = ('author',)
 
         extra_kwargs = {
             'url': {

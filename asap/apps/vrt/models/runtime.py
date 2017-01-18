@@ -5,14 +5,12 @@ from django.contrib import admin
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+from asap.core.models import Authorable, Timestampable
+
 User = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
 
-class Runtime(models.Model):
-    # the user who created the runtime
-    # just for audit purpose
-    user = models.ForeignKey(User)
-
+class Runtime(Authorable, Timestampable, models.Model):
     uuid = models.UUIDField(
         default=uuid.uuid4,
         unique=True,
@@ -27,4 +25,4 @@ class Runtime(models.Model):
 
 @admin.register(Runtime)
 class RuntimeAdmin(admin.ModelAdmin):
-    raw_id_fields = ['user']
+    raw_id_fields = ['author']

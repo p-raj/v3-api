@@ -1,11 +1,12 @@
 from asap.apps.vrt.models.runtime_locker import RuntimeLocker
 from asap.apps.vrt.serializers.runtime_locker import RuntimeLockerSerializer
+from asap.core.views import AuthorableModelViewSet
 from asap.router import Router
 
 from rest_framework import viewsets
 
 
-class RuntimeLockerViewSet(viewsets.ModelViewSet):
+class RuntimeLockerViewSet(AuthorableModelViewSet, viewsets.ModelViewSet):
     queryset = RuntimeLocker.objects.all()
     serializer_class = RuntimeLockerSerializer
 

@@ -10,9 +10,10 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from asap.apps.vrt.models.runtime import Runtime
+from asap.core.models import Authorable, Timestampable
 
 
-class RuntimeLocker(models.Model):
+class RuntimeLocker(Authorable, Timestampable, models.Model):
     uuid = models.UUIDField(
         default=uuid.uuid4,
         editable=False,
@@ -24,11 +25,6 @@ class RuntimeLocker(models.Model):
     # each runtime may have a unique token associated to it
     # we'll do that in the through mapping
     runtimes = models.ManyToManyField(Runtime)
-
-    # timestamps for auditing
-    # move these to a mixin for greater good
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return '{0}'.format(self.uuid)
