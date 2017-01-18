@@ -1,5 +1,20 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+"""
+- core.models
+~~~~~~~~~~~~~~
+
+- This file contains Abstract models of Veris Project.
+"""
+
+# future
+from __future__ import unicode_literals
+
+# Django
 from django.conf import settings
 from django.db import models
+
 
 User = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
