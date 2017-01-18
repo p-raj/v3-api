@@ -21,11 +21,5 @@ class ProcessLockerAdmin(admin.ModelAdmin):
     list_display = ('name', 'token', 'is_publish', )
     list_display_links = ('name', 'token', )
 
-class ProcessLogsAdmin(admin.ModelAdmin):
-    list_display = ('process', 'logId', 'status', )
-    list_display_links = ('process', 'logId', )
-
-
 admin.site.register(models.Process, ProcessAdmin)
 admin.site.register(models.ProcessLocker, ProcessLockerAdmin)
-admin.site.register(models.ProcessLogs, ProcessLogsAdmin)
