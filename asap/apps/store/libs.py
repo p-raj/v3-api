@@ -49,7 +49,6 @@ class BravadoLib(object):
         """
         api_token = None # in case of resource actor token is allowed null.
         logging_cls.handshake(api_token, data)  # execution handover initiated
-        import ipdb;ipdb.set_trace()
 
         opt = CallableOperation(operation)
         try:
