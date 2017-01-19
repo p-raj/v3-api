@@ -5,12 +5,18 @@ Currently lets assume that any django user is both authentic and verified,
 we'll later pass the authentication mechanism to a different server that
 handles user authentication for us (somewhat similar to Auth0 service).
 """
+
+from asap.core.models import Authorable, Timestampable
+from asap.core.querysets import AuthorableQuerySet
+from asap.utils import media_folder
+
 from django.conf import settings
 from django.contrib import admin
 from django.db import models
 
-from asap.core.models import Authorable, Timestampable
-from asap.core.querysets import AuthorableQuerySet
+from imagekit.models.fields import ProcessedImageField
+
+from pilkit.processors.resize import ResizeToFit
 
 User = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
@@ -33,6 +39,10 @@ class Organization(Authorable, Timestampable, models.Model):
 
     # organizations need to have a name at least :)
     name = models.CharField(max_length=64, null=False, blank=False)
+
+    # each organization might have a logo associated with it
+    logo = ProcessedImageField(upload_to=media_folder, null=True, blank=True,
+                               processors=[ResizeToFit(1024, 1024, upscale=False)])
 
     # lets add other attributes as and when required and necessary
     # lazy is the new awesome :P
