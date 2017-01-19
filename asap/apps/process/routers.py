@@ -22,7 +22,7 @@ process_locker_resolve = views.ProcessLockerViewSet.as_view({
 })
 
 urlpatterns = [
-        url(r'^process/(?P<token>[0-9a-z-]+)/$',
+        url(r'^process-locker/(?P<token>[0-9a-z-]+)/$',
             process_locker_resolve,
             name='process-locker-resolve'),
 ]

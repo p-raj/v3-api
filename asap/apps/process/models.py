@@ -12,13 +12,14 @@
 # future
 from __future__ import unicode_literals
 
-# django
+# 3rd party
+import uuid
+
+# Django
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.postgres.fields import JSONField
 
-# 3rd party
-import uuid
 
 class Process(models.Model):
     """
@@ -65,6 +66,7 @@ class Process(models.Model):
     def __str__(self):
         return "Process {0}".format(self.code)
 
+
 class ProcessLocker(models.Model):
     """
         Process Locker is the collection of Processes which will be called based on some rules.
@@ -93,7 +95,7 @@ class ProcessLocker(models.Model):
     is_publish = models.BooleanField(
                     _('Publish Locker'),
                     default=False,
-                    help_text=_('Only Publish When you are sure. Once published Lolcker cannot be updated.')
+                    help_text=_('Only Publish When you are sure. Once published Locker cannot be updated.')
     )
     created_at = models.DateTimeField(
                  _('created at'),

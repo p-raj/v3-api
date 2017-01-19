@@ -37,6 +37,7 @@ class ProcessLockerViewSet(viewsets.GenericViewSet):
     actor = 'process'
     session = uuid.uuid4()
     logging_cls = None
+    token = None
 
     def get_locker_object(self, token):
         """
@@ -60,6 +61,18 @@ class ProcessLockerViewSet(viewsets.GenericViewSet):
             process_response.append(process_cls.execute_process(data))
         return process_response
 
+    def _create_log_instance(self, request, token):
+        """
+
+        :param request : Django request object.
+        :return:
+        """
+        self.logging_cls = logging.ServiceLogging(
+                                    self.actor,
+                                    token,
+                                    self.session,
+                                    payload=request.data or dict())
+
     def process_locker_resolve(self, request, token):
         """Process POST request handles by this method
 
@@ -68,11 +81,7 @@ class ProcessLockerViewSet(viewsets.GenericViewSet):
         :return: depends on process response/execution
         """
         # Start logging of Process
-        self.logging_cls = logging.ServiceLogging(
-                                    self.actor,
-                                    token,
-                                    self.session,
-                                    payload=request.data or dict())
+        self._create_log_instance(request, token)
         self.logging_cls.initialize()  # initialize process logging
 
         process_locker_obj = self.get_locker_object(token)
@@ -93,6 +102,9 @@ class ProcessLockerViewSet(viewsets.GenericViewSet):
         Note :
             if response code is 2xx then we call success log method else false method will be called
         """
+        if self.logging_cls is None:
+            self._create_log_instance(request, kwargs.get('token'))
+
         if str(response.status_code).startswith('2'):
             self.logging_cls.success(response)  # logged as success
         else:

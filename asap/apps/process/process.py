@@ -49,7 +49,6 @@ class Process(object):
             resource_token=resource_token,
             operation=self.process_obj.operation,
         )
-
         self.logging_cls.handshake(resource_token, data)  # execution handover initiated
 
         rq = requests.post(url=url,

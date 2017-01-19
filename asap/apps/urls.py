@@ -10,7 +10,6 @@ from __future__ import unicode_literals
 # Django
 from django.conf.urls import url, include
 
-
 urlpatterns = [
         
         url(r'', include('asap.apps.vrt.routers')),
@@ -18,5 +17,4 @@ urlpatterns = [
         url(r'', include('asap.apps.process.routers')),
         url(r'', include('asap.apps.store.routers')),
 ]
-
 
