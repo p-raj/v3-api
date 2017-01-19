@@ -16,6 +16,7 @@ from __future__ import unicode_literals
 # own app
 from asap.apps.store import libs
 
+
 class Resource(object):
     """A Resource object for accessing various resource operations and RESTful service.
 
