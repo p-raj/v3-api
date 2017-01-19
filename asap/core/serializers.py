@@ -21,7 +21,7 @@ class AuthorableModelSerializer(serializers.HyperlinkedModelSerializer):
         return user_serializer.data
 
 
-class TimestampableModelSerializer(serializers.HyperlinkedModelSerializer):
+class TimestampableModelSerializer(serializers.ModelSerializer):
     """
     Serializer Mixin for models using Timestampable Mixins.
     """

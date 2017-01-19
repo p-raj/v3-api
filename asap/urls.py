@@ -37,15 +37,15 @@ routes_organization.register('members', MemberViewSet, base_name='organizations'
 routes_runtime = routers.NestedSimpleRouter(Router.shared_router, 'runtime-lockers', lookup='runtime_locker')
 routes_runtime.register('runtimes', RuntimeViewSet, base_name='runtime-lockers')
 
-routes_widget = routers.NestedSimpleRouter(Router.shared_router, 'widget-lockers', lookup='widget_locker')
-routes_widget.register('widgets', RuntimeViewSet, base_name='widget-lockers')
+# routes_widget = routers.NestedSimpleRouter(Router.shared_router, 'widget-lockers', lookup='widget_locker')
+# routes_widget.register('widgets', RuntimeViewSet, base_name='widget-lockers')
 
 urlpatterns = [
     url(r'^swagger/$', schema_view),
     url(r'^api/v1/', include(Router.shared_router.urls)),
     url(r'^api/v1/', include(routes_organization.urls)),
     url(r'^api/v1/', include(routes_runtime.urls)),
-    url(r'^api/v1/', include(routes_widget.urls)),
+    # url(r'^api/v1/', include(routes_widget.urls)),
 
     url(r'^admin/', admin.site.urls),
     url(r'^auth/', include('rest_framework.urls', namespace='rest_framework')),
@@ -56,7 +56,7 @@ urlpatterns = [
     url(r'^api/auth/', include('asap.apps.authentication.urls', namespace='auth')),
 
     # micro services routers
-    url(r'', include('asap.apps.urls', namespace='micro_service')),
+    url(r'api/v1/', include('asap.apps.urls', namespace='micro_service_v1')),
 ]
 
 if settings.DEBUG:
