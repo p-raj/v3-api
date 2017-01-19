@@ -1,18 +1,34 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from rest_framework import response
-from rest_framework import status
-from rest_framework import viewsets
+"""
+- widgets.views.widget
+~~~~~~~~~~~~~~
+
+- This file contains the Widget service views, Every incoming http request to resolve any widget will come here.
+
+ """
+
+# future
+from __future__ import unicode_literals
+
+# DRF
+from rest_framework import response, status, viewsets
 from rest_framework.decorators import detail_route
 
-from asap.apps.widgets.models.widget import Widget
-from asap.apps.widgets.serializers.widget import WidgetSerializer
+# local
 from asap.core.views import AuthorableModelViewSet, DRFNestedViewMixin
 from asap.router import Router
 
+# own app
+from asap.apps.widgets.models.widget import Widget
+from asap.apps.widgets.serializers.widget import WidgetSerializer
+
 
 class WidgetViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelViewSet):
+    """Widget Viewset , responsible for resolving and fetching a widget or fetch multiple widgets.
+
+    """
     queryset = Widget.objects.all()
     serializer_class = WidgetSerializer
 
@@ -22,6 +38,10 @@ class WidgetViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelVi
     ]
 
     def make_queryset(self):
+        """
+
+        :return: queryset
+        """
         queryset = super(WidgetViewSet, self).make_queryset()
         if self.is_nested:
             return queryset
@@ -33,9 +53,16 @@ class WidgetViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelVi
 
     @detail_route(methods=['POST'])
     def execute(self, request, pk=None):
+        """
+
+        :param request: Django request object.
+        :param pk: Widget primary key
+        :return:
+        """
         # TODO execute/resume process
         return response.Response(status=status.HTTP_200_OK)
 
 
+# Widget Routers
 router = Router()
 router.register('widgets', WidgetViewSet)

@@ -12,13 +12,14 @@
 # future
 from __future__ import unicode_literals
 
-# django
+# 3rd party
+import uuid
+
+# Django
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.postgres.fields import JSONField
 
-# 3rd party
-import uuid
 
 class Process(models.Model):
     """
@@ -64,6 +65,7 @@ class Process(models.Model):
     # Functions
     def __str__(self):
         return "Process {0}".format(self.code)
+
 
 class ProcessLocker(models.Model):
     """

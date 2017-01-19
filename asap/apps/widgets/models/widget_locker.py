@@ -2,31 +2,45 @@
 # -*- coding: utf-8 -*-
 
 """
-Widget Locker provides an interface to manage multiple widgets
+- widgets.models.widget_locker
+~~~~~~~~~~~~~~
+
+- Widget Locker provides an interface to manage multiple widgets
 corresponding to a single identifier.
 
-The identifier will exchanged with the Veris Runtime service that
+- The identifier will exchanged with the Veris Runtime service that
 may allow multiple runtimes to access the same set of widgets.
 
-Each Widget however should be able identify the `Entity` accessing itself.
+- Each Widget however should be able identify the `Entity` accessing itself.
 
-We need to implement a functionality like [Referer] Header of HTTP Protocol.
+- We need to implement a functionality like [Referer] Header of HTTP Protocol.
 
 [Referer]: https://www.w3.org/Protocols/HTTP/HTRQ_Headers.html#z14
 
 """
 
+# 3rd party
 import uuid
 
+# Django
 from django.contrib import admin
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from asap.apps.widgets.models.widget import Widget
+# local
 from asap.core.models import Authorable, Timestampable
+
+# own app
+from asap.apps.widgets.models.widget import Widget
 
 
 class WidgetLocker(Authorable, Timestampable, models.Model):
+    """Widget Locker model, collection of widgets which will be called based on some rules.
+        Every Locker will have a token which will be shared with VRT.
+
+    """
+
+    # Attributes
     uuid = models.UUIDField(
         default=uuid.uuid4,
         editable=False,
@@ -39,6 +53,7 @@ class WidgetLocker(Authorable, Timestampable, models.Model):
     # we'll do that in the through mapping
     widgets = models.ManyToManyField(Widget)
 
+    # Functions
     def __str__(self):
         return '{0}'.format(self.uuid)
 
