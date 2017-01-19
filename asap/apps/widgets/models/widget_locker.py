@@ -79,6 +79,7 @@ class WidgetLocker(Authorable, Timestampable, models.Model):
         """
         if self.is_publish is True:
             self.token = str(uuid.uuid4())
+        return super(WidgetLocker, self).save(*args, **kwargs)
 
 
 @admin.register(WidgetLocker)
