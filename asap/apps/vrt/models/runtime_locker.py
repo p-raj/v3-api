@@ -1,6 +1,18 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 """
 Runtime Locker provides an interface to manage multiple runtimes
 corresponding to a single token.
+
+The token/identifier might be exchanged with various Veris Services. Currently Organizations.
+The Organization Service may allow a single runtime to be accessed by multiple user.
+Runtime should be able to gather additional data about the requesting party (user).
+
+We need to implement a functionality like [Referer] Header of HTTP Protocol.
+
+[Referer]: https://www.w3.org/Protocols/HTTP/HTRQ_Headers.html#z14
+
 """
 
 import uuid
@@ -32,5 +44,5 @@ class RuntimeLocker(Authorable, Timestampable, models.Model):
 
 @admin.register(RuntimeLocker)
 class RuntimeLockerAdmin(admin.ModelAdmin):
+    raw_id_fields = ['author']
     readonly_fields = ['uuid']
-    fields = ['runtimes']

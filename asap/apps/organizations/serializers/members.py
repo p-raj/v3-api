@@ -6,9 +6,7 @@ from ..models.members import Member
 class MemberSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Member
-        fields = ['id', 'url',
-                  'organization',
-                  'user']
+        exclude = ('author',)
 
         extra_kwargs = {
             'user': {
