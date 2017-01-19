@@ -95,7 +95,7 @@ class ProcessLocker(models.Model):
     is_publish = models.BooleanField(
                     _('Publish Locker'),
                     default=False,
-                    help_text=_('Only Publish When you are sure. Once published Lolcker cannot be updated.')
+                    help_text=_('Only Publish When you are sure. Once published Locker cannot be updated.')
     )
     created_at = models.DateTimeField(
                  _('created at'),
