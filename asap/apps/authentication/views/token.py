@@ -1,31 +1,26 @@
 import logging
-
 import requests
 
 from django.conf import settings
-
 from rest_framework import response
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import AllowAny
 
-from asap.apps.authentication.serializers import LoginSerializer
+from asap.apps.authentication.serializers.token import RefreshTokenSerializer
 
 VERIS_CLIENT_ID = getattr(settings, 'VERIS_CLIENT_ID', None)
-VERIS_CLIENT_SECRET = getattr(settings, 'VERIS_CLIENT_SECRET', None)
 
 logger = logging.getLogger(__name__)
 
 if not VERIS_CLIENT_ID:
     logger.warning('VERIS_CLIENT_ID setting not available')
-if not VERIS_CLIENT_SECRET:
-    logger.warning('VERIS_CLIENT_SECRET setting not available')
 
 
-class LoginView(GenericAPIView):
+class RefreshTokenView(GenericAPIView):
     """
-    We'll keep the LoginView simple for now.
+    We'll keep the RefreshTokenView simple for now.
     """
-    serializer_class = LoginSerializer
+    serializer_class = RefreshTokenSerializer
     permission_classes = (AllowAny,)
 
     def post(self, request):
@@ -48,9 +43,8 @@ class LoginView(GenericAPIView):
         """
         data = serializer.data
         data.update(**{
-            'grant_type': 'password',
-            'client_id': VERIS_CLIENT_ID,
-            'client_secret': VERIS_CLIENT_SECRET
+            'grant_type': 'refresh_token',
+            'client_id': VERIS_CLIENT_ID
         })
         resp = requests.post(self._token_url(), data=data)
         return response.Response(data=resp.json(), status=resp.status_code)
