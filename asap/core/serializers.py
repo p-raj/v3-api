@@ -27,5 +27,5 @@ class TimestampableModelSerializer(serializers.HyperlinkedModelSerializer):
     """
     # strip off milli seconds,
     # some clients don't handle this properly :/
-    created_on = serializers.DateTimeField(read_only=True, format=DATETIME_FORMAT)
-    modified_on = serializers.DateTimeField(read_only=True, format=DATETIME_FORMAT)
+    created_at = serializers.DateTimeField(read_only=True, format=DATETIME_FORMAT)
+    modified_at = serializers.DateTimeField(read_only=True, format=DATETIME_FORMAT)

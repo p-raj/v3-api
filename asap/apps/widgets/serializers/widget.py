@@ -1,12 +1,15 @@
-from asap.apps.vrt.models.runtime import Runtime
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+from asap.apps.widgets.models.widget import Widget
 from asap.core.serializers import TimestampableModelSerializer
 
 from rest_framework import serializers
 
 
-class RuntimeSerializer(TimestampableModelSerializer, serializers.HyperlinkedModelSerializer):
+class WidgetSerializer(TimestampableModelSerializer, serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = Runtime
+        model = Widget
         exclude = ('author',)
 
         extra_kwargs = {
