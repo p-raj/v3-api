@@ -23,7 +23,7 @@ from asap.core.serializers import TimestampableModelSerializer
 from asap.apps.widgets.models.widget import Widget
 
 
-class WidgetSerializer(TimestampableModelSerializer, serializers.HyperlinkedModelSerializer):
+class WidgetSerializer(TimestampableModelSerializer, serializers.ModelSerializer):
     """Widget Serializer
 
     """
@@ -35,6 +35,6 @@ class WidgetSerializer(TimestampableModelSerializer, serializers.HyperlinkedMode
 
         extra_kwargs = {
             'url': {
-                'lookup_field': 'uuid'
+                'lookup_field': 'token'
             }
         }

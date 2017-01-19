@@ -13,12 +13,11 @@
 from __future__ import unicode_literals
 
 # DRF
-from rest_framework import response, status, viewsets
+from rest_framework import response, status, viewsets, permissions
 from rest_framework.decorators import detail_route
 
 # local
 from asap.core.views import AuthorableModelViewSet, DRFNestedViewMixin
-from asap.router import Router
 
 # own app
 from asap.apps.widgets.models.widget import Widget
@@ -31,11 +30,9 @@ class WidgetViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelVi
     """
     queryset = Widget.objects.all()
     serializer_class = WidgetSerializer
+    permission_classes = (permissions.AllowAny, )
 
-    lookup_field = 'uuid'
-    lookup_parent = [
-        ('widget_locker_uuid', 'widgetlocker__uuid')
-    ]
+    lookup_field = 'token'
 
     def make_queryset(self):
         """
@@ -51,18 +48,13 @@ class WidgetViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelVi
         # available to the requesting user for direct access
         return queryset
 
-    @detail_route(methods=['POST'])
-    def execute(self, request, pk=None):
+    @detail_route(methods=['post'], )
+    def resolve_widget(self, request, token):
         """
 
         :param request: Django request object.
-        :param pk: Widget primary key
+        :param token: Widget token
         :return:
         """
-        # TODO execute/resume process
+
         return response.Response(status=status.HTTP_200_OK)
-
-
-# Widget Routers
-router = Router()
-router.register('widgets', WidgetViewSet)

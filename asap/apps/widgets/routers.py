@@ -11,10 +11,11 @@ from __future__ import unicode_literals
 from asap.router import Router
 
 # own app
-from asap.apps.widgets.views import widget_locker
+from asap.apps.widgets.views import widget_locker, widget
 #
 router = Router()
 router.register('widget-lockers', widget_locker.WidgetLockerViewSet)
+router.register('widgets', widget.WidgetViewSet)
 
 urlpatterns = [
 ]
