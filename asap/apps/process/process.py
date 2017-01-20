@@ -12,11 +12,14 @@
 # future
 from __future__ import unicode_literals
 
-# DRF
-from rest_framework.exceptions import ValidationError
-
 # 3rd party
 import requests
+
+# Django
+from django.shortcuts import get_object_or_404
+
+# DRF
+from rest_framework.exceptions import ValidationError
 
 # own app
 from asap.apps.process import models, RESOURCE_UPSTREAM_URL
@@ -29,14 +32,14 @@ class Process(object):
     model = models.Process
     logging_cls = None
 
-    def __init__(self, code, logging_cls):
+    def __init__(self, token, logging_cls):
         """
 
-        :param code: process code
+        :param token: process token
         :param logging_cls: Logging class instance.
         """
         self.logging_cls = logging_cls
-        self.process_obj = self.model.objects.get(code=code)
+        self.process_obj = get_object_or_404(self.model, token=token)
 
     def execute_process(self, data={}):
         """
@@ -52,8 +55,8 @@ class Process(object):
         self.logging_cls.handshake(resource_token, data)  # execution handover initiated
 
         rq = requests.post(url=url,
-                           data=data
-        )
+                           data=data)
+
         if rq.status_code == requests.codes.ok:
             self.logging_cls.handshake_succeed(resource_token, data, rq)  # execution handover status
             return rq.json()

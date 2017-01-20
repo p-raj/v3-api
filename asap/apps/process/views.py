@@ -14,6 +14,9 @@ from __future__ import unicode_literals
 # 3rd party
 import uuid
 
+# Django
+from django.shortcuts import get_object_or_404
+
 # rest-framework
 from rest_framework import viewsets, status
 from rest_framework.response import Response
@@ -26,13 +29,13 @@ from asap.apps.logs import logging
 from asap.apps.process import models, process
 
 
-class ProcessLockerViewSet(viewsets.GenericViewSet):
-    """Process Locker Viewset, every process http request handles by this class
+class ProcessViewSet(viewsets.GenericViewSet):
+    """This viewset handles both Process-locker and process http request.
 
     TODO : remove AllowAny permission with proper permission class
 
     """
-    model = models.ProcessLocker
+    model = models.ProcessLocker  # Process model didn't used because we will perform process related operation in process.py
     permission_classes = (permissions.AllowAny, )
     actor = 'process'
     session = uuid.uuid4()
@@ -44,21 +47,7 @@ class ProcessLockerViewSet(viewsets.GenericViewSet):
         :param token: process locker token
         :return: Process locker object
         """
-        return self.model.objects.get(token=token)
-
-    def _read_process_locker_rules(self, obj):
-        """Read rules defined for locker
-
-        :param obj: process locker object.
-        :return: all process combined response
-        """
-        data = {'organization_id': '1', 'id': '1'}
-
-        process_response = []
-        for process_token in obj.rules:
-            process_cls = process.Process(process_token, self.logging_cls)
-            process_response.append(process_cls.execute_process(data))
-        return process_response
+        return get_object_or_404(self.model, token=token)
 
     def _create_log_instance(self, request, token):
         """
@@ -73,8 +62,32 @@ class ProcessLockerViewSet(viewsets.GenericViewSet):
                                     self.session,
                                     payload=request.data or dict())
 
-    def process_locker_resolve(self, request, token):
+    def _create_process_cls_object(self, token):
+        """
+
+        :param token: process token
+        :return: process class instance
+        """
+        return process.Process(token, self.logging_cls)
+
+    def process_resolve(self, request, token):
         """Process POST request handles by this method
+
+        :param request : Django request object.
+        :param token: process token, helps in identifying the locker
+        :return: depends on process response/execution
+        """
+        # Start logging of Process
+        self._create_log_instance(request, token)
+        self.logging_cls.initialize()  # initialize process logging
+
+        process_cls = self._create_process_cls_object(token)
+        response = process_cls.execute_process(request.data)
+
+        return Response(response, status=status.HTTP_200_OK)
+
+    def process_locker_resolve(self, request, token):
+        """Process Locker POST request handles by this method
 
         :param request : Django request object.
         :param token: process locker token, helps in identifying the locker
@@ -89,6 +102,18 @@ class ProcessLockerViewSet(viewsets.GenericViewSet):
         response = self._read_process_locker_rules(process_locker_obj)
 
         return Response(response, status=status.HTTP_200_OK)
+
+    def _read_process_locker_rules(self, obj):
+        """Read rules defined for locker
+
+        :param obj: process locker object.
+        :return: all process combined response
+        """
+        process_response = []
+        for process_token in obj.rules:
+            process_cls = self._create_process_cls_object(process_token)
+            process_response.append(process_cls.execute_process(self.request.data))
+        return process_response
 
     def finalize_response(self, request, response, *args, **kwargs):
         """Log Process before sending final response
@@ -109,4 +134,4 @@ class ProcessLockerViewSet(viewsets.GenericViewSet):
             self.logging_cls.success(response)  # logged as success
         else:
             self.logging_cls.fail(response)  # logged as failure
-        return super(ProcessLockerViewSet, self).finalize_response(request, response, *args, **kwargs)
+        return super(ProcessViewSet, self).finalize_response(request, response, *args, **kwargs)
