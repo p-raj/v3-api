@@ -17,6 +17,8 @@ from asap.apps.authentication.views.users import UserViewSet
 from asap.apps.organizations.views import MemberViewSet
 from asap.apps.vrt.views import RuntimeViewSet, RuntimeLockerViewSet
 from asap.apps.widgets.views import WidgetViewSet, WidgetLockerViewSet
+from asap.apps.vrt.views.widget_service import WidgetListProxyViewSet, WidgetDetailProxyViewSet, \
+    WidgetDetailActionProxyViewSet
 
 from django.conf import settings
 from django.conf.urls import url, include
@@ -26,8 +28,6 @@ from django.contrib import admin
 from rest_framework_nested import routers
 from rest_framework_swagger.views import get_swagger_view
 
-from asap.apps.organizations.views import MemberViewSet
-from asap.apps.vrt.views.runtime import RuntimeViewSet
 from .router import Router
 
 schema_view = get_swagger_view(title='Veris Organizations API')
@@ -40,6 +40,9 @@ routes_runtime.register('runtimes', RuntimeViewSet, base_name='runtime-lockers')
 
 # routes_widget = routers.NestedSimpleRouter(Router.shared_router, 'widget-lockers', lookup='widget_locker')
 # routes_widget.register('widgets', RuntimeViewSet, base_name='widget-lockers')
+
+
+UUID_REGEX = '[0-9a-fA-F]{8}-(?:[0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}'
 
 urlpatterns = [
     url(r'^swagger/$', schema_view),
@@ -58,6 +61,13 @@ urlpatterns = [
 
     # micro services routers
     url(r'api/v1/', include('asap.apps.urls', namespace='micro_service_v1')),
+
+    url(r'api/v1/runtimes/(?P<uuid>{uuid})/widgets/$'.format(uuid=UUID_REGEX),
+        WidgetListProxyViewSet.as_view(), name='runtime-widget-proxy-list'),
+    url(r'api/v1/runtimes/(?P<uuid>{uuid})/widgets/(?P<widget_uuid>{uuid})/$'.format(uuid=UUID_REGEX),
+        WidgetDetailProxyViewSet.as_view(), name='runtime-widget-proxy-detail'),
+    url(r'api/v1/runtimes/(?P<uuid>{uuid})/widgets/(?P<widget_uuid>{uuid})/(?P<action>.*)/$'.format(uuid=UUID_REGEX),
+        WidgetDetailActionProxyViewSet.as_view(), name='runtime-widget-proxy-detail-action'),
 ]
 
 if settings.DEBUG:
