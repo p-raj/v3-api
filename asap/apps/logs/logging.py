@@ -13,7 +13,7 @@
 from __future__ import unicode_literals
 
 # core
-from datetime import datetime
+from django.utils import timezone
 
 # own app
 from asap.apps.logs.models import ServiceLogs
@@ -66,7 +66,7 @@ class ServiceLogging(object):
 
         :return: Logging object
         """
-        self.fields.update({'started_at': datetime.now()})
+        self.fields.update({'started_at': timezone.now()})
 
         data.update(**self.fields)
         return self.model.objects.create(**data)
@@ -165,7 +165,7 @@ class ServiceLogging(object):
                 'handshake_status': False,
                 'status_code': response.status_code,
                 'dataOut': response.data,
-                'ended_at': datetime.now()
+                'ended_at': timezone.now()
         }  # set life cycle state = failed
         return self._log_db_entry(data)
 
@@ -181,7 +181,7 @@ class ServiceLogging(object):
                 'handshake_status': False,
                 'status_code': response.status_code,
                 'dataOut': response.data,
-                'ended_at': datetime.now()
+                'ended_at': timezone.now()
         }  # set life cycle state = succeeded
         return self._log_db_entry(data)
 
@@ -191,5 +191,5 @@ class ServiceLogging(object):
         :param instance: log object you want to update.
         :return: updated log object
         """
-        instance.ended_at = datetime.now()
+        instance.ended_at = timezone.now()
         return instance.save()
