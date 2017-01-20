@@ -59,7 +59,7 @@ class BravadoLib(object):
         except SwaggerMappingError as e:
             err = {'detail': ' {0}'.format(e)}
             logging_cls.handshake_failed(api_token, data, 400, err)  # execution handover status
-            raise ValidationError()
+            raise ValidationError({'detail': ' {0}'.format(e)})
         except (HTTPNotFound, HTTPBadRequest) as e:
             err = {'detail': ' {0}'.format(e)}
             logging_cls.handshake_failed(api_token, data, 400, err)  # execution handover status
