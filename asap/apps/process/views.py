@@ -37,7 +37,6 @@ class ProcessLockerViewSet(viewsets.GenericViewSet):
     actor = 'process'
     session = uuid.uuid4()
     logging_cls = None
-    token = None
 
     def get_locker_object(self, token):
         """
@@ -65,7 +64,8 @@ class ProcessLockerViewSet(viewsets.GenericViewSet):
         """
 
         :param request : Django request object.
-        :return:
+        :param token : process token.
+        :return: logging class instance
         """
         self.logging_cls = logging.ServiceLogging(
                                     self.actor,
