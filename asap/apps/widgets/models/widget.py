@@ -56,7 +56,7 @@ class Widget(Authorable, Timestampable, models.Model):
 
     # Functions
     def __str__(self):
-        return '{0}'.format(self.code)
+        return '{0}'.format(self.token)
 
 
 @admin.register(Widget)
