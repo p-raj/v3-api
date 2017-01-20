@@ -15,8 +15,8 @@ from asap.apps.process import models
 
 
 class ProcessAdmin(admin.ModelAdmin):
-    list_display = ('name', 'code', 'resource_token', 'operation', )
-    list_display_links = ('name', 'code', 'operation', )
+    list_display = ('name', 'token', 'resource_token', 'operation', )
+    list_display_links = ('name', 'token', 'operation', )
 
 
 class ProcessLockerAdmin(admin.ModelAdmin):

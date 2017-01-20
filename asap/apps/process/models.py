@@ -33,11 +33,10 @@ class Process(models.Model):
             max_length=30,
             help_text=_('Required. 30 characters or fewer.'),
     )
-    code = models.CharField(
-            _('Process code'),
-            max_length=30,
-            unique=True,
-            help_text=_('Required & Unique. 30 characters or fewer.'),
+    token = models.UUIDField(
+        _('Process token'),
+        default=uuid.uuid4,
+        help_text=_('Process token, process is accessed via this token.'),
     )
     resource_token = models.UUIDField(
                         _('Resource Token'),
@@ -64,7 +63,7 @@ class Process(models.Model):
 
     # Functions
     def __str__(self):
-        return "Process {0}".format(self.code)
+        return "Process {0}".format(self.token)
 
 
 class ProcessLocker(models.Model):
