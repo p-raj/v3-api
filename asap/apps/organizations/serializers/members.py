@@ -6,6 +6,7 @@ from ..models.members import Member
 
 
 class MemberSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.ReadOnlyField()
     organization = HyperlinkedSerializedRelatedField(
         read_only=True,
         view_name='organization-detail',
