@@ -1,9 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-
 """
 - widgets.views.widget_locker
 ~~~~~~~~~~~~~~
@@ -33,6 +30,6 @@ class WidgetLockerViewSet(AuthorableModelViewSet, viewsets.ModelViewSet):
     """
     queryset = WidgetLocker.objects.all()
     serializer_class = WidgetLockerSerializer
-    permission_classes = (permissions.AllowAny, )
+    permission_classes = (permissions.AllowAny,)
 
     lookup_field = 'token'
