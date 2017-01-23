@@ -1,17 +1,17 @@
-from django.conf import settings
-from django.conf.urls import include, url
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+from django.conf.urls import url
 
 from asap.apps.authentication.views.login import LoginView
 from asap.apps.authentication.views.token import RefreshTokenView
+from asap.apps.authentication.views.users import UserViewSet
+from asap.router import Router
+
+router = Router()
+router.register('users', UserViewSet)
 
 urlpatterns = [
     url(r'^login/$', LoginView.as_view()),
     url(r'^token/$', RefreshTokenView.as_view()),
 ]
-
-if settings.DEBUG:
-    import debug_toolbar
-
-    urlpatterns += [
-        url(r'^__debug__/', include(debug_toolbar.urls)),
-    ]
