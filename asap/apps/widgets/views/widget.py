@@ -71,15 +71,15 @@ class WidgetViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelVi
                                     payload=request.data or dict())
 
     @detail_route(methods=['post'], )
-    def resolve_widget(self, request, token):
+    def resolve_widget(self, request, **kwargs):
         """Widget POST request handles by this method
 
         :param request : Django request object.
-        :param token: widget token, helps in identifying the widget
+        :param kwargs: kwargs includes widget token, helps in identifying the widget
         :return: depends on widget response/execution
         """
         # Start logging of Widget
-        self._create_log_instance(request, token)
+        self._create_log_instance(request, kwargs.get('token'))
         self.logging_cls.initialize()  # initialize widget logging
 
         response = self._execute_process_locker(request.data or dict())

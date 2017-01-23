@@ -6,6 +6,8 @@ from rest_framework.permissions import AllowAny
 
 from rest_framework_proxy.views import ProxyView
 
+from asap.apps.vrt.models.runtime import Runtime
+
 
 class LoggingProxyViewSet(ProxyView):
     permission_classes = (AllowAny,)
@@ -62,7 +64,30 @@ class LoggingProxyViewSet(ProxyView):
         return super(LoggingProxyViewSet, self).proxy(request, *args, **kwargs)
 
 
-class WidgetListProxyViewSet(LoggingProxyViewSet):
+class WidgetProxyViewSet(LoggingProxyViewSet):
+    """
+    A Proxy ViewSet to fetch data from the Widgets Service
+    while maintaining a session.
+
+    Example:
+        - `/runtimes/<r_id>/widgets/` should internally call
+            `/widget-lockers/<wl_id>/widgets/` and start a session for the `Runtime`.
+        - `/runtimes/<r_id>/widgets/<w_id>/` should internally call
+            `/widgets/<w_id>/` and update the session for the `Runtime`.
+    """
+
+    def get_source_path(self):
+        runtime = Runtime.objects.filter(uuid=self.kwargs.get('uuid')).first()
+        if not runtime or not runtime.widget_locker_uuid:
+            return None
+
+        # get source path maps the kwargs to the path
+        # let's add widget_locker_uuid to it
+        self.kwargs.update(widget_locker_uuid=runtime.widget_locker_uuid)
+        return super(WidgetProxyViewSet, self).get_source_path()
+
+
+class WidgetListProxyViewSet(WidgetProxyViewSet):
     """
     A Proxy ViewSet to fetch data from the Widgets Service
     while maintaining a session.
@@ -74,10 +99,10 @@ class WidgetListProxyViewSet(LoggingProxyViewSet):
             `/widgets/<w_id>/` and update the session for the `Runtime`.
     """
     proxy_host = 'http://localhost:8000'
-    source = '/api/v1/widgets/'
+    source = 'api/v1/widget-lockers/%(widget_locker_uuid)s/widgets/'
 
 
-class WidgetDetailProxyViewSet(LoggingProxyViewSet):
+class WidgetDetailProxyViewSet(WidgetProxyViewSet):
     """
     A Proxy ViewSet to fetch data from the Widgets Service
     while maintaining a session.
@@ -89,10 +114,10 @@ class WidgetDetailProxyViewSet(LoggingProxyViewSet):
             `/widgets/<w_id>/` and update the session for the `Runtime`.
     """
     proxy_host = 'http://localhost:8000'
-    source = 'api/v1/widgets/%(widget_uuid)s'
+    source = 'api/v1/widget-lockers/%(widget_locker_uuid)s/widgets/%(widget_uuid)s/'
 
 
-class WidgetDetailActionProxyViewSet(LoggingProxyViewSet):
+class WidgetDetailActionProxyViewSet(WidgetProxyViewSet):
     """
     A Proxy ViewSet to fetch data from the Widgets Service
     while maintaining a session.
@@ -104,4 +129,4 @@ class WidgetDetailActionProxyViewSet(LoggingProxyViewSet):
             `/widgets/<w_id>/` and update the session for the `Runtime`.
     """
     proxy_host = 'http://localhost:8000'
-    source = 'api/v1/widgets/%(widget_uuid)s/%(action)s/'
+    source = 'api/v1/widget-lockers/%(widget_locker_uuid)s/widgets/%(widget_uuid)s/%(action)s/'
