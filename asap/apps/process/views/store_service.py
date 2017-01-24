@@ -29,14 +29,17 @@ from asap.apps.logs import logging
 from asap.apps.process import models, process
 
 
-class ProcessViewSet(viewsets.GenericViewSet):
-    """This viewset handles both Process-locker and process http request.
+class ResourceProxyViewSet(viewsets.GenericViewSet):
+    """
+    This viewset handles both Process-locker and process http request.
 
     TODO : remove AllowAny permission with proper permission class
 
     """
-    model = models.ProcessLocker  # Process model didn't used because we will perform process related operation in process.py
-    permission_classes = (permissions.AllowAny, )
+    # Process model didn't used because we will perform process related operation in process.py
+    model = models.ProcessLocker
+    permission_classes = (permissions.AllowAny,)
+
     actor = 'process'
     session = uuid.uuid4()
     logging_cls = None
@@ -57,10 +60,10 @@ class ProcessViewSet(viewsets.GenericViewSet):
         :return: logging class instance
         """
         self.logging_cls = logging.ServiceLogging(
-                                    self.actor,
-                                    token,
-                                    self.session,
-                                    payload=request.data or dict())
+            self.actor,
+            token,
+            self.session,
+            payload=request.data or dict())
 
     def _create_process_cls_object(self, token):
         """
@@ -134,4 +137,4 @@ class ProcessViewSet(viewsets.GenericViewSet):
             self.logging_cls.success(response)  # logged as success
         else:
             self.logging_cls.fail(response)  # logged as failure
-        return super(ProcessViewSet, self).finalize_response(request, response, *args, **kwargs)
+        return super(ResourceProxyViewSet, self).finalize_response(request, response, *args, **kwargs)

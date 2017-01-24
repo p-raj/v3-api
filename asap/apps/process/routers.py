@@ -8,29 +8,31 @@
 - This file contains process routers.
 """
 
-# future
-from __future__ import unicode_literals
-
 # Django
-from django.conf.urls import url
+from django.conf.urls import include, url
 
 # own app
-from asap.apps.process import views
+from asap.apps.process.views import ProcessViewSet, ProcessLockerViewSet
+from asap.apps.process.views.store_service import ResourceProxyViewSet
+from asap.router import Router
 
+from rest_framework_nested import routers
 
-process_resolve = views.ProcessViewSet.as_view({
+router = Router()
+router.register('process-lockers', ProcessLockerViewSet)
+router.register('processes', ProcessViewSet)
+
+routes_process = routers.NestedSimpleRouter(Router.shared_router, 'process-lockers', lookup='process_locker')
+routes_process.register('processes', ProcessViewSet, base_name='process-lockers')
+
+UUID_REGEX = '[0-9a-fA-F]{8}-(?:[0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}'
+
+process_resolve = ResourceProxyViewSet.as_view({
     'post': 'process_resolve',
-})
-process_locker_resolve = views.ProcessViewSet.as_view({
-    'post': 'process_locker_resolve',
 })
 
 urlpatterns = [
-        url(r'^process/(?P<token>[0-9a-z-]+)/$',
-            process_resolve,
-            name='process-resolve'),
-        url(r'^process-locker/(?P<token>[0-9a-z-]+)/$',
-            process_locker_resolve,
-            name='process-locker-resolve'),
+    url('', include(routes_process.urls)),
+    url(r'^processes/(?P<token>{uuid})/resolve/$'.format(uuid=UUID_REGEX),
+        process_resolve, name='process-resolve'),
 ]
-
