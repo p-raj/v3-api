@@ -76,8 +76,11 @@ class Process(models.Model):
         # reject any malicious input string
         bad_strings_json = validator._get_bad_strings_json().get('rejected_list')
 
-        if self.name in bad_strings_json or self.operation in bad_strings_json:
-            raise ValidationError(_('malicious input string found.'))
+        if self.name in bad_strings_json:
+            raise ValidationError(_('malicious input string sent in name. {0}'.format(self.name)))
+
+        if self.operation in bad_strings_json:
+            raise ValidationError(_('malicious input string found in operation. {0}'.format(self.operation)))
 
         # clean or bleach fields data
         self.name, self.operation = bleach.clean(self.name), bleach.clean(self.operation)
@@ -87,6 +90,10 @@ class Process(models.Model):
             raise ValidationError({'name': _('Length of name cannot be greater then 30')})
         if len(self.operation) > 255:
             raise ValidationError({'name': _('Length of name cannot be greater then 255')})
+
+    def save(self, **kwargs):
+        self.clean()
+        return super(Process, self).save(**kwargs)
 
 
 class ProcessLocker(models.Model):
