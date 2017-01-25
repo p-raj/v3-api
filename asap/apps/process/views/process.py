@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 
 from asap.apps.process.models import Process
 from asap.apps.process.serializers import ProcessSerializer
@@ -11,6 +11,7 @@ from asap.core.views import AuthorableModelViewSet, DRFNestedViewMixin
 class ProcessViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelViewSet):
     queryset = Process.objects.all()
     serializer_class = ProcessSerializer
+    permission_classes = (permissions.AllowAny,)
 
     lookup_field = 'token'
     lookup_parent = [

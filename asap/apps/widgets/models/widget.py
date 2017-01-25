@@ -51,6 +51,7 @@ class Widget(Authorable, Timestampable, models.Model):
     )
     schema = JSONField(
              _('Widget Schema'),
+             null=True, blank=True,
              help_text=_('Rules config, tells us which widget will be called based on what rules.'),
     )
 

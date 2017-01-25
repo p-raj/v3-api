@@ -3,3 +3,5 @@
 
 from . import widget
 from . import widget_locker
+
+from .. import signals
