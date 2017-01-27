@@ -1,4 +1,7 @@
 import uuid
+import logging
+
+from django.core.exceptions import PermissionDenied
 
 from asap.apps.logs.logging import ServiceLogging
 
@@ -7,6 +10,9 @@ from rest_framework.permissions import AllowAny
 from rest_framework_proxy.views import ProxyView
 
 from asap.apps.vrt.models.runtime import Runtime
+from asap.apps.vrt.models.session import Session
+
+logger = logging.getLogger(__name__)
 
 
 class LoggingProxyViewSet(ProxyView):
@@ -130,3 +136,35 @@ class WidgetDetailActionProxyViewSet(WidgetProxyViewSet):
     """
     proxy_host = 'http://localhost:8000'
     source = 'api/v1/widget-lockers/%(widget_locker_uuid)s/widgets/%(widget_uuid)s/%(action)s/'
+
+    def update_session(self, response):
+        # a proxy can't be created if the session is not known
+        # session will either be created when fetching widgets info
+        # or through a separate initialization
+        # subjected to change :D
+        wsgi = getattr(self.request, '_request')
+
+        try:
+            session_uuid = wsgi.META['HTTP_X_VRT_SESSION']
+        except KeyError as e:
+            logger.warning(e)
+            raise PermissionDenied
+
+        session = Session.objects.filter(uuid=session_uuid).first()
+        if not session:
+            raise PermissionDenied
+
+        session.data.update(**{
+            self.widget_uuid: response.data
+        })
+        session.save()
+
+    def create_response(self, response):
+        response = super(LoggingProxyViewSet, self).create_response(response)
+        self.update_session(response)
+        return response
+
+    def create_error_response(self, body, status):
+        response = super(LoggingProxyViewSet, self).create_error_response(body, status)
+        self.update_session(response)
+        return response
