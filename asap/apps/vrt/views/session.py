@@ -7,6 +7,9 @@ from asap.core.views import DRFNestedViewMixin
 
 
 class SessionViewSet(DRFNestedViewMixin, viewsets.ModelViewSet):
+    """
+
+    """
     queryset = Session.objects.all()
     serializer_class = SessionSerializer
 

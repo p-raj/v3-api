@@ -27,6 +27,7 @@ class WidgetViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelVi
     """
     queryset = Widget.objects.all()
     serializer_class = WidgetSerializer
+    # TODO : remove AllowAny permission with proper permission class
     permission_classes = (permissions.AllowAny,)
 
     lookup_field = 'token'

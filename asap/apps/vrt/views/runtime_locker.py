@@ -8,6 +8,9 @@ from rest_framework.decorators import detail_route
 
 
 class RuntimeLockerViewSet(AuthorableModelViewSet, viewsets.ModelViewSet):
+    """
+
+    """
     queryset = RuntimeLocker.objects.all()
     serializer_class = RuntimeLockerSerializer
 

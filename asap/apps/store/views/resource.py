@@ -29,10 +29,9 @@ from asap.apps.store.core import resource
 class ResourceViewSet(viewsets.GenericViewSet):
     """Resource Viewset, every resource http request handles by this class
 
-    TODO : remove AllowAny permission with proper permission class
-
     """
     model = models.Resource
+    # TODO : remove AllowAny permission with proper permission class
     permission_classes = (permissions.AllowAny, )
     actor = 'resource'
     session = uuid.uuid4()

@@ -9,8 +9,12 @@ from asap.core.views import AuthorableModelViewSet, DRFNestedViewMixin
 
 
 class ProcessViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelViewSet):
+    """
+
+    """
     queryset = Process.objects.all()
     serializer_class = ProcessSerializer
+    # TODO : remove AllowAny permission with proper permission class
     permission_classes = (permissions.AllowAny,)
 
     lookup_field = 'token'

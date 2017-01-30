@@ -35,13 +35,11 @@ class ResourceProxyViewSet(viewsets.GenericViewSet):
     """
     This viewset handles both Process-locker and process http request.
 
-    TODO : remove AllowAny permission with proper permission class
-
     """
     # Process model didn't used because we will perform process related operation in process.py
     model = models.ProcessLocker
+    # TODO : remove AllowAny permission with proper permission class
     permission_classes = (permissions.AllowAny,)
-
     actor = 'process'
     session = uuid.uuid4()
     logging_cls = None

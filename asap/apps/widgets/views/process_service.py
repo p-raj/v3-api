@@ -10,6 +10,10 @@ from asap.apps.logs.logging import ServiceLogging
 
 
 class LoggingProxyViewSet(ProxyView):
+    """
+
+    """
+    # TODO : remove AllowAny permission with proper permission class
     permission_classes = (AllowAny,)
 
     logger = None
