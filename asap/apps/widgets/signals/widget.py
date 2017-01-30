@@ -1,3 +1,16 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+"""
+- widgets.signals.widget
+~~~~~~~~~~~~~~
+
+- This file contains the Widget signals.
+
+ """
+
+# future
+from __future__ import unicode_literals
 import requests
 
 from django.db.models.signals import post_save
@@ -21,6 +34,12 @@ swagger_dict = {
 
 @receiver(post_save, sender=Widget)
 def create_widget_schema(sender, **kwargs):
+    """this signal is used to generate schema for sender-widget of this signal.
+
+    :param sender: sender or initiator og this signal
+    :param kwargs: keyword arguments
+    :return:
+    """
     if not kwargs.get('created'):
         return
 
