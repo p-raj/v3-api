@@ -19,7 +19,7 @@ class ProcessViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelV
 
     lookup_field = 'token'
     lookup_parent = [
-        ('process_locker_uuid', 'processlocker__uuid')
+        ('process_locker_token', 'processlocker__token')
     ]
 
     def make_queryset(self):

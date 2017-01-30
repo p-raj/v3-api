@@ -29,6 +29,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.postgres.fields import JSONField
 
 # local
+from asap.apps.widgets.models.widget import Widget
 from asap.core.models import Authorable, Timestampable
 
 
@@ -62,6 +63,12 @@ class WidgetLocker(Authorable, Timestampable, models.Model):
                     default=False,
                     help_text=_('Only Publish When you are sure. Once published Locker cannot be updated.')
     )
+
+    # this token may be used to access many widgets
+    # associated with it
+    # each widget may have a unique token associated to it
+    # we'll do that in the through mapping
+    widgets = models.ManyToManyField(Widget)
 
     # Meta
     class Meta:

@@ -31,6 +31,9 @@ class WidgetViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelVi
     permission_classes = (permissions.AllowAny,)
 
     lookup_field = 'token'
+    lookup_parent = [
+        ('widget_locker_token', 'widgetlocker__token')
+    ]
 
     def make_queryset(self):
         """

@@ -7,7 +7,7 @@ from rest_framework import serializers
 class ProcessLockerSerializer(TimestampableModelSerializer, serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ProcessLocker
-        exclude = ()
+        exclude = ('processes',)
 
         extra_kwargs = {
             'url': {
