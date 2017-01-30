@@ -15,9 +15,8 @@ from __future__ import unicode_literals
 import uuid
 
 # rest-framework
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, permissions
 from rest_framework.response import Response
-from rest_framework import permissions
 
 # local
 from asap.apps.logs import logging
@@ -25,6 +24,7 @@ from asap.apps.logs import logging
 # own app
 from asap.apps.store import models
 from asap.apps.store.core import resource
+
 
 class ResourceViewSet(viewsets.GenericViewSet):
     """Resource Viewset, every resource http request handles by this class
