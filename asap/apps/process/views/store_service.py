@@ -19,9 +19,8 @@ import uuid
 from django.shortcuts import get_object_or_404
 
 # rest-framework
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, permissions, serializers
 from rest_framework.response import Response
-from rest_framework import permissions
 
 # local
 from asap.apps.logs import logging
@@ -29,6 +28,12 @@ from asap.apps.logs import logging
 # own app
 from asap.apps.process import models
 from asap.apps.process.core import process
+
+
+class NoneSerializer(serializers.Serializer):
+    """
+    """
+    pass
 
 
 class ResourceProxyViewSet(viewsets.GenericViewSet):
@@ -40,6 +45,7 @@ class ResourceProxyViewSet(viewsets.GenericViewSet):
     model = models.ProcessLocker
     # TODO : remove AllowAny permission with proper permission class
     permission_classes = (permissions.AllowAny,)
+    serializer_class = NoneSerializer  # FIXME : Temporary solution of required serializer_class error.
     actor = 'process'
     session = uuid.uuid4()
     logging_cls = None
