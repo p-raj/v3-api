@@ -11,6 +11,7 @@
 
 # future
 from __future__ import unicode_literals
+import copy
 import requests
 
 from django.db.models.signals import post_save
@@ -51,7 +52,7 @@ def create_widget_schema(sender, **kwargs):
     # move these lame tasks to some place else
     # and make these smart
     processes = response.json().get('results')
-    schema = swagger_dict.copy()
+    schema = copy.deepcopy(swagger_dict)
 
     # update the open API spec title to match the widget uuid
     schema.get('info').update(title=str(instance.token))
