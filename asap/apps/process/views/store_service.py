@@ -2,10 +2,11 @@
 # -*- coding: utf-8 -*-
 
 """
-- process.views
+- process.views.store_service
 ~~~~~~~~~~~~~~
 
-- This file contains process views means all http request/routers points to this file.
+- This file holds the code for resolving any Store service like Resource etc, to resolve any service every request
+ will go through here.
 """
 
 # future
@@ -26,20 +27,19 @@ from rest_framework import permissions
 from asap.apps.logs import logging
 
 # own app
-from asap.apps.process import models, process
+from asap.apps.process import models
+from asap.apps.process.core import process
 
 
 class ResourceProxyViewSet(viewsets.GenericViewSet):
     """
     This viewset handles both Process-locker and process http request.
 
-    TODO : remove AllowAny permission with proper permission class
-
     """
     # Process model didn't used because we will perform process related operation in process.py
     model = models.ProcessLocker
+    # TODO : remove AllowAny permission with proper permission class
     permission_classes = (permissions.AllowAny,)
-
     actor = 'process'
     session = uuid.uuid4()
     logging_cls = None

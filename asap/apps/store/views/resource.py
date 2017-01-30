@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 
 """
-- store.views
+- store.views.resource
 ~~~~~~~~~~~~~~
 
-- This file contains store views means all http request/routers points to this file.
+- This file contains resource views means all http request/routers points to this file.
 """
 
 # future
@@ -23,16 +23,15 @@ from rest_framework import permissions
 from asap.apps.logs import logging
 
 # own app
-from asap.apps.store import models, resource
-
+from asap.apps.store import models
+from asap.apps.store.core import resource
 
 class ResourceViewSet(viewsets.GenericViewSet):
     """Resource Viewset, every resource http request handles by this class
 
-    TODO : remove AllowAny permission with proper permission class
-
     """
     model = models.Resource
+    # TODO : remove AllowAny permission with proper permission class
     permission_classes = (permissions.AllowAny, )
     actor = 'resource'
     session = uuid.uuid4()
@@ -46,6 +45,19 @@ class ResourceViewSet(viewsets.GenericViewSet):
         """
         return self.model.objects.get(token=token)
 
+    def _create_log_instance(self, request, token):
+        """
+
+        :param request : Django request object.
+        :param token : process token.
+        :return: logging class instance
+        """
+        self.logging_cls = logging.ServiceLogging(
+            self.actor,
+            token,
+            self.session,
+            payload=request.data or dict())
+
     def resource_resolve(self, request, token, operation_id):
         """Resource POST request handles by this method
 
@@ -55,20 +67,17 @@ class ResourceViewSet(viewsets.GenericViewSet):
         :return:
         """
 
-        # Start logging of resource
-        self.logging_cls = logging.ServiceLogging(
-            self.actor,
-            token,
-            self.session,
-            payload=request.data or dict())
-        self.logging_cls.initialize()  # initialize resource logging
+        # Start logging of Process
+        self._create_log_instance(request, token)
+        self.logging_cls.initialize()  # initialize process logging
 
         resourse_db_obj = self.get_resource_object(token)
+
         resource_cls = resource.Resource(self.logging_cls)
         operation_response = resource_cls.execute_operation(resourse_db_obj.upstream_url,
                                                             resourse_db_obj.schema,
                                                             operation_id,
-                                                            data=request.data.dict(),
+                                                            data=request.data,
                                                             )
         return Response(operation_response, status=status.HTTP_200_OK)
 
@@ -84,6 +93,9 @@ class ResourceViewSet(viewsets.GenericViewSet):
         Note :
             if response code is 2xx then we call success log method else false method will be called
         """
+        if self.logging_cls is None:
+            self._create_log_instance(request, kwargs.get('token'))
+
         if str(response.status_code).startswith('2'):
             self.logging_cls.success(response)  # logged as success
         else:

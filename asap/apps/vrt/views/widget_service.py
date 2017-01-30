@@ -16,6 +16,9 @@ logger = logging.getLogger(__name__)
 
 
 class SessionMixin(ProxyView):
+    """
+
+    """
     # the session can't be initiated
     # in the middle of runtime calls
     # for instance the widgets rendering API may start a new session
@@ -60,6 +63,10 @@ class SessionMixin(ProxyView):
 
 
 class LoggingProxyViewSet(SessionMixin, ProxyView):
+    """
+
+    """
+    # TODO : remove AllowAny permission with proper permission class
     permission_classes = (AllowAny,)
 
     logger = None

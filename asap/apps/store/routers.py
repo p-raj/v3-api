@@ -15,10 +15,10 @@ from __future__ import unicode_literals
 from django.conf.urls import url
 
 # own app
-from asap.apps.store import views
+from asap.apps.store.views import resource
 
 
-resource_resolve = views.ResourceViewSet.as_view({
+resource_resolve = resource.ResourceViewSet.as_view({
     'post': 'resource_resolve',
 })
 

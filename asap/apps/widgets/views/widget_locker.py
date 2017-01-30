@@ -30,6 +30,7 @@ class WidgetLockerViewSet(AuthorableModelViewSet, viewsets.ModelViewSet):
     """
     queryset = WidgetLocker.objects.all()
     serializer_class = WidgetLockerSerializer
+    # TODO : remove AllowAny permission with proper permission class
     permission_classes = (permissions.AllowAny,)
 
     lookup_field = 'token'

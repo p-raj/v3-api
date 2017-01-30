@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 
 """
--store.libs
+-store.libs.bravado
 ~~~~~~~~~~~~~~
 
--   This file contains the third party library classes/functions which we are going to use in store module.
+-   This file contains the Bravdo third party library classes/functions which we are going to use in store module.
     so every request to third party will goes from here so in future if we replace any lib with another our
     core code will not be changed , wer just needs to update this file.
 

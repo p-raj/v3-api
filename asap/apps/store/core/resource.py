@@ -14,7 +14,7 @@ from __future__ import unicode_literals
 
 
 # own app
-from asap.apps.store import libs
+from asap.apps.store.libs import bravdo
 
 
 class Resource(object):
@@ -35,7 +35,7 @@ class Resource(object):
 
         :return: Bravado class instance.
         """
-        return libs.BravadoLib()
+        return bravdo.BravadoLib()
 
     def get_swagger_client(self, url, resource_schema,):
         """
