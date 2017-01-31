@@ -27,18 +27,13 @@ class ProcessAPITestCase(base.ProcessTestCase):
 
     """
 
-    def setUp(self):
-        self.model.objects.create(name="lion", resource_token=uuid.uuid4(), operation="no_op", endpoint_schema=dict())
-
     def test_proces_objcet_api(self):
         """
         :return:
         """
-        process = self.model.objects.get(name='lion')
-
         # test case for process-detail (single object)
 
-        router = reverse('process-detail', args=[str(process.token), ])
+        router = reverse('process-detail', args=[str(self.process_obj.token), ])
         url = '{0}{1}'.format(self.upstream_url(), router)
         response = client.get(url)
         self.assertEqual(response.status_code, 200)

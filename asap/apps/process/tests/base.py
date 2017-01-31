@@ -9,9 +9,9 @@ from __future__ import unicode_literals
 
 # 3rd party
 import ujson as json
-
+import uuid
 # Django
-from django.test import TestCase, TransactionTestCase
+from django.test import TransactionTestCase
 from django.conf import settings
 
 # own app
@@ -33,6 +33,8 @@ class ProcessTestCase(TransactionTestCase):
         """
 
         """
+        self.process_obj = self.model.objects.create(name="lion", resource_token=uuid.uuid4(), operation="no_op", endpoint_schema=dict())
+
         self.bad_strings_clean_list = self._get_bad_strings_json().get('cleaned_list')
         self.bad_strings_reject_list = self._get_bad_strings_json().get('rejected_list')
 
@@ -49,40 +51,3 @@ class ProcessTestCase(TransactionTestCase):
         """
         return getattr(settings, 'PROCESS_MICRO_SERVICE', 'http://localhost:8000')
 
-
-    #
-    # def test_add_process_object(self):
-    #     """validate creation of process object @ model level, no naughty strings are allowed.
-    #
-    #     """
-    #     pass
-    #
-    # def test_update_process_object(self):
-    #     """validate updation of process object @ model level, no naughty strings are allowed and process token must not be changed.
-    #
-    #     """
-    #     pass
-    #
-    # def test_delete_process_object(self):
-    #     """validate deletion of process object @ model level, no naughty strings are allowed.
-    #
-    #     """
-    #     pass
-    #
-    # def test_process_resolve_api(self):
-    #     """validate process resolve API
-    #
-    #     """
-    #     pass
-    #
-    # def test_object_level_api(self):
-    #     """validate Process object level API.
-    #
-    #     """
-    #     pass
-    #
-    # def test_authorization(self):
-    #     """validate authorization of any request trying to access any Process, whether that request is allowed or not.
-    #
-    #     """
-    #     pass

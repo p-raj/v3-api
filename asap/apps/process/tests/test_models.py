@@ -27,13 +27,6 @@ class ProcessModelTestCase(base.ProcessTestCase):
 
     """
 
-    def setUp(self):
-        """
-
-        """
-        self.process_obj = self.model.objects.create(name="lion", resource_token=uuid.uuid4(), operation="no_op", endpoint_schema=dict())
-        super(ProcessModelTestCase, self).setUp()
-
     def test_add_process_object(self):
         """validate creation of process object @ model level, no naughty strings are allowed.
 
@@ -67,7 +60,7 @@ class ProcessModelTestCase(base.ProcessTestCase):
             self.assertDictEqual(response, d, response)
 
     def test_delete_process_object(self):
-        """validate deletion of process object @ model level, no naughty strings are allowed.
+        """validate deletion of process object @ model level.
 
         """
         self.assertRaisesMessage(ValidationError, self.process_obj.delete())

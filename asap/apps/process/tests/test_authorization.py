@@ -24,9 +24,6 @@ class ProcessAuthorizationTestCase(base.ProcessTestCase):
 
     """
 
-    def setUp(self):
-        self.model.objects.create(name="lion", resource_token=uuid.uuid4(), operation="no_op", endpoint_schema=dict())
-
     def test_authorization(self):
         """validate authorization of any request trying to access any Process, whether that request is allowed or not.
 
