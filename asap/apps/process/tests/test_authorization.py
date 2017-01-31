@@ -10,10 +10,6 @@ from __future__ import unicode_literals
 # 3rd party
 import uuid
 
-# Django
-from django.urls import reverse
-from django.conf import settings
-
 # DRF
 from rest_framework.test import RequestsClient
 
@@ -29,10 +25,11 @@ class ProcessAuthorizationTestCase(base.ProcessTestCase):
     """
 
     def setUp(self):
-        self.model.objects.create(name="lion", resource_token=uuid.uuid4(), operation="no_op")
+        self.model.objects.create(name="lion", resource_token=uuid.uuid4(), operation="no_op", endpoint_schema=dict())
 
     def test_authorization(self):
         """validate authorization of any request trying to access any Process, whether that request is allowed or not.
 
         """
+        # TODO : Need to write test-cases whenever proper authorization will be implemented on Process service.
         pass
