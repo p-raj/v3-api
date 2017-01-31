@@ -14,8 +14,8 @@ from asap.router import Router
 from rest_framework_nested import routers
 
 router = Router()
-router.register('widget-lockers', WidgetLockerViewSet)
-router.register('widgets', WidgetViewSet)
+router.register('widget-lockers', WidgetLockerViewSet, base_name="widgetlocker")
+router.register('widgets', WidgetViewSet, base_name="widget")
 
 routes_widget = routers.NestedSimpleRouter(Router.shared_router, 'widget-lockers', lookup='widget_locker')
 routes_widget.register('widgets', WidgetViewSet, base_name='widget-lockers')
