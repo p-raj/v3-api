@@ -94,14 +94,14 @@ class Process(models.Model):
         if self.operation in bad_strings_json:
             raise ValidationError(_('malicious input string found in operation. {0}'.format(self.operation)))
 
-        # clean or bleach fields data
-        self.name, self.operation = bleach.clean(self.name), bleach.clean(self.operation)
-
         # validate char fields data length
         if len(self.name) > 30:
             raise ValidationError({'name': _('Length of name cannot be greater then 30')})
         if len(self.operation) > 255:
             raise ValidationError({'name': _('Length of name cannot be greater then 255')})
+
+        # clean or bleach fields data
+        self.name, self.operation = bleach.clean(self.name), bleach.clean(self.operation)
 
     def save(self, **kwargs):
         self.clean()
