@@ -48,7 +48,6 @@ class ProcessModelTestCase(base.ProcessTestCase):
             process = self.model(name=name, resource_token=uuid.uuid4(), operation=operation)
             try:
                 process.clean()
-                response['clean_list_validation results'].append(string)
             except ValidationError as e:
                 pass
 
@@ -64,43 +63,8 @@ class ProcessModelTestCase(base.ProcessTestCase):
                 pass
 
         if response:
-            self.assertDictEqual(response, dict(), response)
-
-    def test_update_process_object(self):
-        """validate updation of process object @ model level, no naughty strings are allowed and process token must not be changed.
-
-        """
-
-        response = {}
-        print(" validation start for bad_strings_clean_list")
-        response['clean_list_validation results'] = []
-        response['reject_list_validation results'] = []
-
-        for string in self.bad_strings_clean_list:
-            name, operation = string, string
-
-            self.process_obj.name=name
-            self.process_obj.operation=operation
-            try:
-                self.process_obj.save()
-                response['clean_list_validation results'].append(string)
-            except ValidationError:
-                pass
-
-        print(" validation start for bad_strings_reject_list")
-
-        for string in self.bad_strings_reject_list:
-            name, operation = string, string
-
-            self.process_obj.name=name
-            self.process_obj.operation=operation
-            try:
-                self.process_obj.save()
-                response['reject_list_validation results'].append(string)
-            except ValidationError:
-                pass
-        if response:
-            self.assertDictEqual(response, dict(), response)
+            d = {'reject_list_validation results': [], 'clean_list_validation results': []}
+            self.assertDictEqual(response, d, response)
 
     def test_delete_process_object(self):
         """validate deletion of process object @ model level, no naughty strings are allowed.
