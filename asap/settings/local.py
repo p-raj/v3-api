@@ -4,7 +4,7 @@ from .base import *
 
 # ######### DEBUG CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#debug
-DEBUG = True
+DEBUG = False
 ########## END DEBUG CONFIGURATION
 
 ########## SITE CONFIGURATION
@@ -81,3 +81,43 @@ CELERY_ALWAYS_EAGER = True
 
 ##### Micro Services UpStream Urls  ######
 PROCESS_MICRO_SERVICE = get_env_setting('PROCESS_MICRO_SERVICE')
+RESOURCE_MICRO_SERVICE = get_env_setting('RESOURCE_MICRO_SERVICE')
+WIDGETS_MICRO_SERVICE = get_env_setting('WIDGETS_MICRO_SERVICE')
+VRT_MICRO_SERVICE = get_env_setting('VRT_MICRO_SERVICE')
+
+
+#
+#
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         # Include the default Django email handler for errors
+#         # This is what you'd get without configuring logging at all.
+#         'mail_admins': {
+#             'class': 'django.utils.log.AdminEmailHandler',
+#             'level': 'ERROR',
+#              # But the emails are plain text by default - HTML is nicer
+#             'include_html': True,
+#         },
+#         # Log to a text file that can be rotated by logrotate
+#         'logfile': {
+#             'class': 'logging.handlers.WatchedFileHandler',
+#             'filename': '/home/teramatrix/Documents/tmp.log'
+#         },
+#     },
+#     'loggers': {
+#         # Again, default Django configuration to email unhandled exceptions
+#         'django.request': {
+#             'handlers': ['mail_admins'],
+#             'level': 'ERROR',
+#             'propagate': True,
+#         },
+#         # Might as well log any errors anywhere else in Django
+#         'django': {
+#             'handlers': ['logfile'],
+#             'level': 'ERROR',
+#             'propagate': False,
+#         }
+#     },
+# }
