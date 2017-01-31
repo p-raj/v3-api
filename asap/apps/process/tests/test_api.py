@@ -12,7 +12,6 @@ import uuid
 
 # Django
 from django.urls import reverse
-from django.conf import settings
 
 # DRF
 from rest_framework.test import RequestsClient
@@ -35,9 +34,48 @@ class ProcessAPITestCase(base.ProcessTestCase):
         """
         :return:
         """
-        upstream_url = getattr(settings, 'PROCESS_MICRO_SERVICE', 'http://localhost:8000')
         process = self.model.objects.get(name='lion')
-        router = reverse('micro_service_v1:process-resolve', args=[str(process.token), ] )
-        url = '{0}{1}'.format(upstream_url, router)
+
+        # test case for process-detail (single object)
+
+        router = reverse('process-detail', args=[str(process.token), ])
+        url = '{0}{1}'.format(self.upstream_url(), router)
         response = client.get(url)
-        assert response.status_code == 200
+        self.assertEqual(response.status_code, 200)
+
+        # test case for process-list (multiple objects)
+
+        router = reverse('process-list')
+        url = '{0}{1}'.format(self.upstream_url(), router)
+        response = client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_proces_locker_objcet_api(self):
+        """
+        :return:
+        """
+        locker = self.locker.objects.create(name='lion', token=uuid.uuid4(), rules=dict())
+
+        # test case for processlocker-detail (single object)
+
+        router = reverse('processlocker-detail', args=[str(locker.token), ])
+        url = '{0}{1}'.format(self.upstream_url(), router)
+        response = client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+        # test case for processlocker-list (multiple objects)
+
+        router = reverse('processlocker-list')
+        url = '{0}{1}'.format(self.upstream_url(), router)
+        response = client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    # def test_proces_resolve_api(self):
+    #     """
+    #     """
+    #     TODO : Need to write functional test cases for this.
+    #     process = self.model.objects.get(name='lion')
+    #     router = reverse('micro_service_v1:process-resolve', args=[str(process.token), ])
+    #     url = '{0}{1}'.format(self.upstream_url(), router)
+    #     response = client.post(url)
+    #     self.assertEqual(response.status_code, 200)

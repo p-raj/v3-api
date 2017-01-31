@@ -11,18 +11,20 @@ from __future__ import unicode_literals
 import ujson as json
 
 # Django
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
+from django.conf import settings
 
 # own app
 from asap.apps.process import models
 
 
-class ProcessTestCase(TestCase):
+class ProcessTestCase(TransactionTestCase):
     """Base class of Process Test Case, it includes all possible test cases on process.
        Inherit this file and override respective test case method.
 
     """
     model = models.Process
+    locker = models.ProcessLocker
     bad_strings_clean_list = None
     bad_strings_reject_list = None
     process_obj = None
@@ -41,6 +43,12 @@ class ProcessTestCase(TestCase):
         """
         json_data = open('static/bad_strings.json').read()
         return json.loads(json_data)
+
+    def upstream_url(self):
+        """
+        """
+        return getattr(settings, 'PROCESS_MICRO_SERVICE', 'http://localhost:8000')
+
 
     #
     # def test_add_process_object(self):
