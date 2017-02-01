@@ -5,6 +5,7 @@ from rest_framework import serializers
 
 
 class SessionSerializer(TimestampableModelSerializer, serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(lookup_field='uuid', view_name='runtimesession-detail')
     is_expired = serializers.BooleanField(read_only=True)
 
     class Meta:
