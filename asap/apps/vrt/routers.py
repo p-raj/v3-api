@@ -16,9 +16,9 @@ from django.conf.urls import include, url
 from rest_framework_nested import routers
 
 router = Router()
-router.register('runtime-lockers', RuntimeLockerViewSet)
-router.register('runtimes', RuntimeViewSet)
-router.register('sessions', SessionViewSet)
+router.register('runtime-lockers', RuntimeLockerViewSet, base_name='runtimelocker')
+router.register('runtimes', RuntimeViewSet, base_name='runtime')
+router.register('sessions', SessionViewSet, base_name='runtimesession')
 
 routes_runtime_locker = routers.NestedSimpleRouter(Router.shared_router, 'runtime-lockers', lookup='runtime_locker')
 routes_runtime_locker.register('runtimes', RuntimeViewSet, base_name='runtime-locker-runtime')
