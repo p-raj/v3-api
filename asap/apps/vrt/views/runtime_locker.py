@@ -3,7 +3,7 @@ from asap.apps.vrt.serializers.runtime_locker import RuntimeLockerSerializer
 from asap.core.views import AuthorableModelViewSet
 from asap.router import Router
 
-from rest_framework import viewsets, response, status
+from rest_framework import viewsets, response, status, permissions
 from rest_framework.decorators import detail_route
 
 
@@ -13,6 +13,8 @@ class RuntimeLockerViewSet(AuthorableModelViewSet, viewsets.ModelViewSet):
     """
     queryset = RuntimeLocker.objects.all()
     serializer_class = RuntimeLockerSerializer
+    # TODO : remove AllowAny permission with proper permission class
+    permission_classes = (permissions.AllowAny,)
 
     lookup_field = 'uuid'
 

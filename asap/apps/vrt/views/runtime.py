@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 
 from asap.apps.vrt.models.runtime import Runtime
 from asap.apps.vrt.serializers.runtime import RuntimeSerializer
@@ -12,6 +12,8 @@ class RuntimeViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelV
     """
     queryset = Runtime.objects.all()
     serializer_class = RuntimeSerializer
+    # TODO : remove AllowAny permission with proper permission class
+    permission_classes = (permissions.AllowAny,)
 
     lookup_field = 'uuid'
     lookup_parent = [

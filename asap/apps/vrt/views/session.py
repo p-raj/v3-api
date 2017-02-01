@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from rest_framework.reverse import reverse_lazy
 
 from asap.apps.vrt.models.session import Session
@@ -12,6 +12,8 @@ class SessionViewSet(DRFNestedViewMixin, viewsets.ModelViewSet):
     """
     queryset = Session.objects.all()
     serializer_class = SessionSerializer
+    # TODO : remove AllowAny permission with proper permission class
+    permission_classes = (permissions.AllowAny,)
 
     lookup_field = 'uuid'
     lookup_parent = [
