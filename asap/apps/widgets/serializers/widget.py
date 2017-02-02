@@ -23,7 +23,7 @@ from asap.core.serializers import TimestampableModelSerializer
 from asap.apps.widgets.models.widget import Widget
 
 
-class WidgetSerializer(TimestampableModelSerializer, serializers.ModelSerializer):
+class WidgetSerializer(TimestampableModelSerializer, serializers.HyperlinkedModelSerializer):
     """Widget Serializer
 
     """
