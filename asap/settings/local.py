@@ -79,6 +79,9 @@ CELERY_ALWAYS_EAGER = True
 ########## PROJECT SPECIFIC CONFIGURATION
 
 
+##### Server URL ########
+SERVER_URL = get_env_setting('SERVER_URL')
+
 ##### Micro Services UpStream Urls  ######
 PROCESS_MICRO_SERVICE = get_env_setting('PROCESS_MICRO_SERVICE')
 RESOURCE_MICRO_SERVICE = get_env_setting('RESOURCE_MICRO_SERVICE')

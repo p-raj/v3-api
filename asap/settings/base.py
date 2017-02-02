@@ -258,6 +258,7 @@ LOCAL_APPS = (
     'asap.apps.store',
     'asap.apps.logs',
     'asap.apps.utils',
+    'asap.tests',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
