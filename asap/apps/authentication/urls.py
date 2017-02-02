@@ -12,6 +12,6 @@ router = Router()
 router.register('users', UserViewSet)
 
 urlpatterns = [
-    url(r'^login/$', LoginView.as_view()),
-    url(r'^token/$', RefreshTokenView.as_view()),
+    url(r'^login/$', LoginView.as_view(), name='login'),
+    url(r'^token/$', RefreshTokenView.as_view(), name='refresh-token'),
 ]

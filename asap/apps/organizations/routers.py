@@ -14,7 +14,7 @@ from rest_framework_nested import routers
 
 router = Router()
 router.register('organizations', OrganizationViewSet)
-router.register('members', MemberViewSet)
+router.register('members', MemberViewSet, base_name='member')
 
 routes_organization = routers.NestedSimpleRouter(Router.shared_router, 'organizations', lookup='organization')
 routes_organization.register('members', MemberViewSet, base_name='organizations')
