@@ -42,7 +42,7 @@ class ResourceProxyViewSet(viewsets.GenericViewSet):
 
     """
     # Process model didn't used because we will perform process related operation in process.py
-    model = models.ProcessLocker
+    model = models.Process
     # TODO : remove AllowAny permission with proper permission class
     permission_classes = (permissions.AllowAny,)
     serializer_class = NoneSerializer  # FIXME : Temporary solution of required serializer_class error.
