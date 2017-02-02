@@ -67,6 +67,12 @@ class ResourceViewSet(viewsets.GenericViewSet):
         :return:
         """
 
+        # FIXME:
+        # find the root cause of this hack
+        # data coming in 2 formats ? not so cool
+        # we shouldn't handle this
+        data = request.data if type(request.data) == dict else request.data.dict()
+
         # Start logging of Process
         self._create_log_instance(request, token)
         self.logging_cls.initialize()  # initialize process logging
@@ -77,7 +83,7 @@ class ResourceViewSet(viewsets.GenericViewSet):
         operation_response = resource_cls.execute_operation(resourse_db_obj.upstream_url,
                                                             resourse_db_obj.schema,
                                                             operation_id,
-                                                            data=request.data,
+                                                            data=data,
                                                             )
         return Response(operation_response, status=status.HTTP_200_OK)
 
