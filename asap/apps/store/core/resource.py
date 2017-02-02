@@ -55,7 +55,10 @@ class Resource(object):
         :param data : payload to be sent with operation
         :return: depends on operation response
         """
-        _request_options = {'headers': {'Authorization': 'Bearer F4ZCjqiUHVNoSBH8mhwnKzuP25Vqzc'}}
+        _request_options = {
+                            'headers': {'Authorization': 'Bearer F4ZCjqiUHVNoSBH8mhwnKzuP25Vqzc'},
+                            'content-type': 'application/json'
+        }
         data.update({'_request_options': _request_options})
 
         client = self.get_swagger_client(url, resource_schema)

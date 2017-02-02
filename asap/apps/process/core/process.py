@@ -55,6 +55,7 @@ class Process(object):
         self.logging_cls.handshake(resource_token, data)  # execution handover initiated
 
         rq = requests.post(url=url,
+                           headers={'content-type': 'application/json'},
                            data=data)
 
         if rq.status_code == requests.codes.ok:
