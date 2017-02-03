@@ -12,13 +12,17 @@
 # future
 from __future__ import unicode_literals
 
+# 3rd party
+import uuid, bleach
+
 # django
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.postgres.fields import JSONField
+from django.core.exceptions import ValidationError
 
-# 3rd party
-import uuid
+# local
+from asap.apps.utils import validator
 
 
 class Resource(models.Model):
@@ -73,3 +77,24 @@ class Resource(models.Model):
     # Functions
     def __str__(self):
         return "Resource {0}".format(self.name)
+
+    def clean(self):
+        """Validate models field data or clean fields data so that no bad strings can cause any problem.
+        """
+
+        # reject any malicious input string
+        bad_strings_json = validator._get_bad_strings_json().get('rejected_list')
+
+        if self.name in bad_strings_json:
+            raise ValidationError(_('malicious input string sent in name. {0}'.format(self.name)))
+
+        # validate char fields data length
+        if len(self.name) > 30:
+            raise ValidationError({'name': _('Length of name cannot be greater then 30')})
+
+        # clean or bleach fields data
+        self.name = bleach.clean(self.name)
+
+    def save(self, **kwargs):
+        self.clean()
+        return super(Resource, self).save(**kwargs)
