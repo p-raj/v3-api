@@ -145,6 +145,8 @@ class WidgetProxyViewSet(LoggingProxyViewSet):
             `/widgets/<w_id>/` and update the session for the `Runtime`.
     """
 
+    permission_classes = (AllowAny,)
+
     def get_source_path(self):
         runtime = Runtime.objects.filter(uuid=self.kwargs.get('uuid')).first()
         if not runtime or not runtime.widget_locker_uuid:
