@@ -182,13 +182,16 @@ class BaseClass(object):
         print('\n')
 
         self.resolved_process = str(input('Enter Widget token from above table : '))
-        self.raw_data = input('Enter raw-data to be sent must be in dictionary format: ')
+        self.raw_data = input('Enter raw-data to be sent must be in json format: ')
 
         print('\n')
 
     def execute_process(self):
         """resolve a process
         """
+        # self.all_process is a list of lists so we will make it a single list
+        self.all_process = [item for sublist in self.all_process for item in sublist]
+
         url = self._get_service_url('micro_service_v1:runtime-widget-proxy-detail-action',
                                     uuid=self.runtime_uuid,
                                     widget_uuid=self.widget_token,
@@ -211,7 +214,7 @@ class BaseClass(object):
             print('/n')
 
             # get raw data from user again
-            self.raw_data = input('Enter raw-data to be sent must be in dictionary format:')
+            self.raw_data = input('Enter raw-data to be sent must be in json format:')
 
             self.execute_process()
 
@@ -231,7 +234,7 @@ class BaseClass(object):
 
             # if user chooses cancel option then return True and show him the resolved processes data.
             if self.resolved_process == 'cancel':
-                print ('resolved data : ')
+                print('Resolved data is as follows :')
                 print(self.resolved_data)
                 return True
             else:
@@ -242,6 +245,9 @@ class BaseClass(object):
             self.execute_process()
 
         print('All process are resolved.')
+        print('/n')
+
+        print('Resolved data is as follows :')
         print('/n')
 
         print(self.resolved_data)
