@@ -62,6 +62,11 @@ class Resource(object):
         data.update({'_request_options': _request_options})
 
         client = self.get_swagger_client(url, resource_schema)
-        operation = getattr(client.v1, operation_id)
+
+        operation = None
+        for tag in dir(client):
+            if hasattr(getattr(client, tag), operation_id):
+                operation = getattr(getattr(client, tag), operation_id)
+                break
 
         return self.get_bravado_cls().callable_operation(operation, self.logging_cls, data)
