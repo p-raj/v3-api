@@ -55,7 +55,10 @@ class Process(object):
         self.logging_cls.handshake(resource_token, data)  # execution handover initiated
 
         rq = requests.post(url=url,
-                           headers={'content-type': 'application/json'},
+                           # the header is automatically added when using json param
+                           # it breaks the process resource calling
+                           # so commenting it for now
+                           # headers={'content-type': 'application/json'},
                            data=data)
 
         if rq.status_code == requests.codes.ok:
