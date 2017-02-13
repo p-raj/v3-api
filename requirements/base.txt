@@ -71,6 +71,7 @@ six==1.10.0
 sqlparse==0.2.2
 strict-rfc3339==0.7
 swagger-spec-validator==2.0.2
+tabulate==0.7.7
 traitlets==4.3.1
 Twisted==16.6.0
 ujson==1.35
