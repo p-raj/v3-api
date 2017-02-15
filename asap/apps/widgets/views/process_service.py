@@ -1,11 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import copy
 import uuid
 
 from rest_framework.permissions import AllowAny
 from rest_framework_proxy.views import ProxyView
 
+from asap.apps.widgets.models.widget import Widget
 from asap.apps.logs.logging import ServiceLogging
 
 
@@ -59,6 +61,16 @@ class LoggingProxyViewSet(ProxyView):
     def proxy(self, request, *args, **kwargs):
         self.widget_uuid = kwargs.get('uuid')
         self.process_uuid = kwargs.get('process_uuid')
+
+        widget = Widget.objects.filter(token=self.widget_uuid).first()
+        if widget and widget.data:
+            # update request data ?
+            # doesn't seem like a good solution
+            # but we are just a proxy ?
+            # does proxies add data ? maybe.
+            # TODO
+            # seems fishy
+            request.data.update(**widget.data)
 
         if self.logger is None:
             self._init_logger_(request, self.widget_uuid)
