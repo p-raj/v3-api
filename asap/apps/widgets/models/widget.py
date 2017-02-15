@@ -38,23 +38,28 @@ class Widget(Authorable, Timestampable, models.Model):
 
     # Attributes
     name = models.CharField(
-            _('Widget Name'),
-            max_length=30,
-            help_text=_('Required. 30 characters or fewer.'),
+        _('Widget Name'),
+        max_length=30,
+        help_text=_('Required. 30 characters or fewer.'),
     )
     token = models.UUIDField(
-            _('Widget token'),
-            default=uuid.uuid4,
-            help_text=_('Widget token, widget is accessed via this token'),
+        _('Widget token'),
+        default=uuid.uuid4,
+        help_text=_('Widget token, widget is accessed via this token'),
     )
     process_locker_token = models.UUIDField(
-                        _('Process Locker Token'),
-                        help_text=_('Token of Process Locker to which will be loaded when a Widget is called.')
+        _('Process Locker Token'),
+        help_text=_('Token of Process Locker to which will be loaded when a Widget is called.')
     )
     schema = JSONField(
-             _('Widget Schema'),
-             null=True, blank=True,
-             help_text=_('Rules config, tells us which widget will be called based on what rules.'),
+        _('Widget Schema'),
+        null=True, blank=True,
+        help_text=_('Rules config, tells us which widget will be called based on what rules.'),
+    )
+    template = JSONField(
+        _('Widget Template'),
+        null=True, blank=True,
+        help_text=_('Widget Template, the list of components with their layout & styles'),
     )
 
     # Functions
@@ -76,7 +81,7 @@ class Widget(Authorable, Timestampable, models.Model):
             raise ValidationError({'name': _('Length of name cannot be greater then 30')})
 
         # clean or bleach fields data
-        self.name= bleach.clean(self.name)
+        self.name = bleach.clean(self.name)
 
     def save(self, **kwargs):
         self.clean()
@@ -86,5 +91,5 @@ class Widget(Authorable, Timestampable, models.Model):
 @admin.register(Widget)
 class WidgetAdmin(admin.ModelAdmin):
     raw_id_fields = ['author']
-    list_display = ('name', 'token', 'process_locker_token', )
-    list_display_links = ('name', )
+    list_display = ('name', 'token', 'process_locker_token',)
+    list_display_links = ('name',)
