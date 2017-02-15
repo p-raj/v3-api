@@ -56,6 +56,12 @@ class Widget(Authorable, Timestampable, models.Model):
         null=True, blank=True,
         help_text=_('Rules config, tells us which widget will be called based on what rules.'),
     )
+
+    data = JSONField(
+        _('Widget Data'),
+        null=True, blank=True,
+        help_text=_('Widget Data, the data to be filled by admin, using admin widget designed by developer'),
+    )
     template = JSONField(
         _('Widget Template'),
         null=True, blank=True,
