@@ -206,10 +206,14 @@ class WidgetDetailActionProxyViewSet(WidgetProxyViewSet):
 
     def create_response(self, response):
         response = super(WidgetDetailActionProxyViewSet, self).create_response(response)
-        self.update_session(self.widget_uuid, response.data)
+        # session info will be saved in a format determined by the client
+        # everything might not be recorded
+        # self.update_session(self.widget_uuid, response.data)
         return response
 
     def create_error_response(self, body, status):
         response = super(WidgetDetailActionProxyViewSet, self).create_error_response(body, status)
-        self.update_session(self.widget_uuid, response.data)
+        # session info will be saved in a format determined by the client
+        # everything might not be recorded
+        # self.update_session(self.widget_uuid, response.data)
         return response
