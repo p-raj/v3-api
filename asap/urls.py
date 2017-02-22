@@ -26,6 +26,7 @@ from django.contrib import admin
 
 from rest_framework_swagger.views import get_swagger_view
 
+from asap.core.views.proxy import ProxyViewSet
 from .router import Router
 
 urlpatterns = [
@@ -40,12 +41,17 @@ urlpatterns = [
     # micro services routers
     url(r'^api/v1/', include(app_routes, namespace='micro_service_v1')),
     url(r'^api/v1/', include(Router.shared_router.urls)),
+
+    # TODO:
+    # replace the proxy URL with Kong
+    url(r'^proxy/(?P<url>.*)', ProxyViewSet.as_view(), name='proxy'),
 ]
 
 if settings.DEBUG:
     import debug_toolbar
 
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += [
         url(r'^__debug__/', include(debug_toolbar.urls)),
     ]
