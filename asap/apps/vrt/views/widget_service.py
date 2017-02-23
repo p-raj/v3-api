@@ -100,8 +100,17 @@ class LoggingProxyViewSet(SessionMixin, ProxyView):
         )
 
     def create_response(self, response):
+        _response = response
         self.logger.handshake_succeed(self.widget_uuid, None, response)
         response = super(LoggingProxyViewSet, self).create_response(response)
+
+        if response.status_code >= 400:
+            try:
+                response.data = _response.json()
+            except Exception as e:
+                # let's log to check when it fails
+                # TODO: use logger
+                print(e)
 
         # payload gets overridden anyways in logger._log_db_entry
         # so why bother sending it ?
