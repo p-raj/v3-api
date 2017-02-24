@@ -59,7 +59,8 @@ class Process(object):
                            # it breaks the process resource calling
                            # so commenting it for now
                            # headers={'content-type': 'application/json'},
-                           data=data)
+                           # TODO: checkout the diff between json/data
+                           json=data)
 
         if rq.status_code == requests.codes.ok:
             self.logging_cls.handshake_succeed(resource_token, data, rq)  # execution handover status
