@@ -15,3 +15,4 @@ class ProcessLockerViewSet(AuthorableModelViewSet, viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
 
     lookup_field = 'token'
+

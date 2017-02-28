@@ -23,6 +23,7 @@ from django.core.exceptions import ValidationError
 
 # local
 from asap.apps.utils import validator
+from asap.core.models import Authorable
 
 
 class Process(models.Model):
@@ -108,7 +109,7 @@ class Process(models.Model):
         return super(Process, self).save(**kwargs)
 
 
-class ProcessLocker(models.Model):
+class ProcessLocker(Authorable, models.Model):
     """
         Process Locker is the collection of Processes which will be called based on some rules.
         Every Locker will have a token which will be shared with Widget.
@@ -122,6 +123,7 @@ class ProcessLocker(models.Model):
     )
     rules = JSONField(
         _('Process rules'),
+        null=True, blank=True,
         help_text=_('Rules config, tells us which process will be called based on what rules.'),
     )
     token = models.UUIDField(

@@ -7,10 +7,13 @@ from rest_framework import serializers
 class ProcessLockerSerializer(TimestampableModelSerializer, serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ProcessLocker
-        exclude = ('processes',)
+        exclude = ('author',)
 
         extra_kwargs = {
             'url': {
+                'lookup_field': 'token'
+            },
+            'processes': {
                 'lookup_field': 'token'
             }
         }
