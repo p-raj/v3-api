@@ -47,6 +47,7 @@ class WidgetLocker(Authorable, Timestampable, models.Model):
     )
     rules = JSONField(
         _('Widget rules'),
+        null=True, blank=True,
         help_text=_('Rules config, tells us which widget will be called based on what rules.'),
     )
     token = models.UUIDField(

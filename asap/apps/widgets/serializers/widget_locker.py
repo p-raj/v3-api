@@ -7,13 +7,16 @@ from asap.core.serializers import TimestampableModelSerializer
 from rest_framework import serializers
 
 
-class WidgetLockerSerializer(TimestampableModelSerializer):
+class WidgetLockerSerializer(TimestampableModelSerializer, serializers.HyperlinkedModelSerializer):
     class Meta:
         model = WidgetLocker
-        exclude = ('author', )
+        exclude = ('author',)
 
         extra_kwargs = {
             'url': {
+                'lookup_field': 'token'
+            },
+            'widgets': {
                 'lookup_field': 'token'
             }
         }
