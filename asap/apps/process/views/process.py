@@ -14,12 +14,10 @@ class ProcessViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelV
     """
     queryset = Process.objects.all()
     serializer_class = ProcessSerializer
-    # TODO : remove AllowAny permission with proper permission class
-    permission_classes = (permissions.AllowAny,)
 
-    lookup_field = 'token'
+    lookup_field = 'uuid'
     lookup_parent = [
-        ('process_locker_token', 'processlocker__token')
+        ('process_locker_uuid', 'processlocker__uuid')
     ]
 
     def make_queryset(self):

@@ -27,7 +27,7 @@ from asap.apps.logs import logging
 
 # own app
 from asap.apps.process import models
-from asap.apps.process.core import process
+from asap.apps.process.clients.base import Client as Process
 
 
 class NoneSerializer(serializers.Serializer):
@@ -77,7 +77,7 @@ class ResourceProxyViewSet(viewsets.GenericViewSet):
         :param token: process token
         :return: process class instance
         """
-        return process.Process(token, self.logging_cls)
+        return Process(token, self.logging_cls)
 
     def process_resolve(self, request, token):
         """Process POST request handles by this method

@@ -2,12 +2,9 @@
 # -*- coding: utf-8 -*-
 
 """
-- process.process
-~~~~~~~~~~~~~~
 
--   This file contains classes/functions related to Process
 
- """
+"""
 
 # future
 from __future__ import unicode_literals
@@ -25,7 +22,7 @@ from rest_framework.exceptions import ValidationError
 from asap.apps.process import models, RESOURCE_UPSTREAM_URL
 
 
-class Process(object):
+class Client(object):
     """A Process class for accessing various process operations and RESTful service.
 
     """

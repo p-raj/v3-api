@@ -1,0 +1,103 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+"""
+Process
+-------
+
+Process is the singular unit, a __task__ that can be executed.
+From our perspective it might be the smallest unit of task as well,
+but from the 3rd party developers perspective, it may be huge.
+
+For instance.
+
+A Process may be
+ - Send Email
+ - Send a Push
+ - Call a single API
+ - Execute a python script
+
+"""
+from django.contrib import admin
+from django.contrib.postgres.fields import JSONField
+from django.db import models
+from django.utils.functional import cached_property
+from django.utils.translation import ugettext_lazy as _
+
+from importlib import import_module
+
+from asap.core.models import Authorable, Timestampable, \
+    Humanizable, UniversallyIdentifiable
+
+from asap.utils import to_pascal_case
+
+# TODO
+# move to constants.py
+
+# the types of process that we'll be supporting
+# currently the plan is to focus on
+# processes that can be called over HTTP
+TYPE_HTTP = 'http'
+
+# as per discussion with @PR, we do understand
+# the need to remove any dependency of the API gateway
+# we should be able to do switch the API gateway whenever possible
+# although `how ?` is not clear, and we have a time crunch
+# so marking it as TODO
+TYPES = [
+    (TYPE_HTTP, _('HTTP Process'))
+]
+
+
+class Process(Authorable, Humanizable, Timestampable,
+              UniversallyIdentifiable, models.Model):
+    # the process will eventually support different protocols
+    # may be even direct scripts ?
+    # only time will tell, so let's just create
+    # some room for adding different types of processes
+    type = models.CharField(blank=False, null=False, max_length=32,
+                            choices=TYPES, default=TYPE_HTTP)
+
+    # the schema we'll define for the process
+    # the schema may vary according to the type of process
+    # for example, the upstream url or the origin url makes sense
+    # for HTTP process but not for a python script
+    schema = JSONField(_('schema'), blank=False, null=False)
+
+    @cached_property
+    def client(self):
+        """
+        All the clients are located in the package
+        `asap.apps.process.clients`.
+        :return:
+        """
+        client = import_module(
+            self.__build_client_module_name(),
+            'asap.apps.process.clients'
+        )
+        return client(**self.schema)
+
+    class Meta:
+        verbose_name_plural = _('Processes')
+
+    def __build_client_module_name(self):
+        """
+        All the clients are located in the package
+        `asap.apps.process.clients`.
+
+        Clients follow the convention of
+        {PascalCaseType}Client.
+
+        for example:
+        for type 'http' - the client can be accessed by the name HttpClient
+        :return:
+        """
+        return '{0}Client'.format(to_pascal_case(self.type))
+
+    def __str__(self):
+        return 'Process {0}'.format(self.name)
+
+
+@admin.register(Process)
+class Admin(admin.ModelAdmin):
+    pass

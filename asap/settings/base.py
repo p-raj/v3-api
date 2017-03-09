@@ -30,7 +30,6 @@ def get_env_setting(key):
         raise ImproperlyConfigured(error_msg)
 
 
-
 # ######### PATH CONFIGURATION
 # Absolute filesystem path to the Django project directory:
 DJANGO_ROOT = dirname(dirname(abspath(__file__)))
@@ -319,8 +318,8 @@ REST_FRAMEWORK = {
         'rest_framework_swagger.renderers.SwaggerUIRenderer',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-        'oauth2_provider.ext.rest_framework.TokenHasReadWriteScope'
+        'rest_framework.permissions.AllowAny',
+        # 'oauth2_provider.ext.rest_framework.TokenHasReadWriteScope'
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',

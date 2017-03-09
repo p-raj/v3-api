@@ -14,5 +14,5 @@ class ProcessLockerViewSet(AuthorableModelViewSet, viewsets.ModelViewSet):
     # TODO : remove AllowAny permission with proper permission class
     permission_classes = (permissions.AllowAny,)
 
-    lookup_field = 'token'
+    lookup_field = 'uuid'
 

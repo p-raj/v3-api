@@ -19,8 +19,8 @@ from asap.router import Router
 from rest_framework_nested import routers
 
 router = Router()
-router.register('process-lockers', ProcessLockerViewSet, base_name="processlocker")
-router.register('processes', ProcessViewSet, base_name="process")
+router.register('process-lockers', ProcessLockerViewSet, base_name='processlocker')
+router.register('processes', ProcessViewSet, base_name='process')
 
 routes_process = routers.NestedSimpleRouter(Router.shared_router, 'process-lockers', lookup='process_locker')
 routes_process.register('processes', ProcessViewSet, base_name='process-lockers')
@@ -33,6 +33,6 @@ process_resolve = ResourceProxyViewSet.as_view({
 
 urlpatterns = [
     url('', include(routes_process.urls)),
-    url(r'^processes/(?P<token>{uuid})/resolve/$'.format(uuid=UUID_REGEX),
+    url(r'^processes/(?P<uuid>{uuid})/resolve/$'.format(uuid=UUID_REGEX),
         process_resolve, name='process-resolve'),
 ]
