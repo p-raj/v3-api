@@ -32,6 +32,18 @@ class NotificationViewSet(viewsets.GenericViewSet):
     permission_classes = (permissions.AllowAny, )
     actor = 'resource'
 
+    def _validate(self, serializer, data):
+        """
+
+        :param serializer: serializer against which data to ve validated
+        :param data: data to ve validated
+        :return: validated data.
+        """
+
+        serializer_instance = serializer(data=data)
+        serializer_instance.is_valid(raise_exception=True)
+        return serializer_instance.data
+
     def send_email(self, request):
         """
 
@@ -48,12 +60,9 @@ class NotificationViewSet(viewsets.GenericViewSet):
             "html_message":"true"
         }
         """
-        serializer = serializers.EmailNotificationSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        data = self._validate(serializers.EmailNotificationSerializer, request.data)
 
-        notify_lib = notification.NotifyAllLib()
-        notify_lib.send_notification(**serializer.data)
-
+        self.notify(data)
         return Response(status=status.HTTP_200_OK)
 
     def send_sms(self, request):
@@ -61,8 +70,19 @@ class NotificationViewSet(viewsets.GenericViewSet):
 
         :param request:
         :return:
+
+        POST EXAMPLE :
+        {
+            "to": "+9198********",
+            "from_": "plivo",
+            "provider": "plivo",
+            "body": "micro service message"
+        }
         """
-        pass
+        data = self._validate(serializers.SMSNotificationSerializer, request.data)
+
+        self.notify(data)
+        return Response(status=status.HTTP_200_OK)
 
     def send_push(self, request):
         """
@@ -71,3 +91,12 @@ class NotificationViewSet(viewsets.GenericViewSet):
         :return:
         """
         pass
+
+    def notify(self, data):
+        """
+
+        :param data: Notification data
+        """
+        notify_lib = notification.NotifyAllLib()
+        notify_lib.send_notification(**data)
+

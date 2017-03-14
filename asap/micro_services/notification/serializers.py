@@ -40,3 +40,14 @@ class EmailNotificationSerializer(serializers.Serializer):
         if not from_email:
             return service_settings.DEFAULT_FROM_EMAIL
         return from_email
+
+
+class SMSNotificationSerializer(serializers.Serializer):
+    """SMS Notification Serializer
+
+    """
+    to = serializers.CharField(required=True)
+    from_ = serializers.CharField(required=False)
+    body = serializers.CharField(required=True)
+    provider = serializers.ChoiceField(required=True, choices=service_settings.SMS_NOTIFICATION_PROVIDER)
+    notification_type = serializers.CharField(default=service_settings.SMS)

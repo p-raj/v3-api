@@ -38,11 +38,11 @@ class NotifyAllLib(object):
         :return: notification message as per notification_type
         """
         if kwargs.get('notification_type') == service_settings.EMAIL:
-            return self._email_message(**kwargs)
+            return self._email_message(*args, **kwargs)
         elif kwargs.get('notification_type') == service_settings.SMS:
-            return self._sms_message()
+            return self._sms_message(*args, **kwargs)
         elif kwargs.get('notification_type') == service_settings.PUSH:
-            return self._push_message()
+            return self._push_message(*args, **kwargs)
         else:
             raise ValidationError({'detail': 'Unknown notification service.'})
 
@@ -60,20 +60,27 @@ class NotifyAllLib(object):
         return {
             'source': kwargs.get('from_email'),
             'destination': kwargs.get('to'),
-            'notification_type': 'email',
+            'notification_type': service_settings.EMAIL,
             'provider': kwargs.get('provider'),
             'context': context,
         }
 
-
-    def _sms_message(self):
+    def _sms_message(self, *args, **kwargs):
         """
 
         :return:
         """
-        pass
+        return {
+            'source': kwargs.get('from_'),
+            'destination': kwargs.get('to'),
+            'notification_type': service_settings.SMS,
+            'provider': kwargs.get('provider'),
+            'context': {
+                'body': kwargs.get('body')
+            },
+        }
 
-    def _push_message(self):
+    def _push_message(self, *args, **kwargs):
         """
 
         :return:
