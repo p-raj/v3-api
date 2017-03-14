@@ -101,4 +101,4 @@ class ProcessActionProxyViewSet(LoggingProxyViewSet):
             `/process/<p_id>/` and update the session for the `Widget`.
     """
     proxy_host = 'http://localhost:8000'
-    source = 'api/v1/processes/%(process_uuid)s/resolve/'
+    source = 'api/v1/processes/%(process_uuid)s/execute/'

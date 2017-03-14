@@ -48,4 +48,4 @@ class ProcessViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelV
     @detail_route(renderer_classes=[renderers.CoreJSONRenderer])
     def execute(self, request, **kwargs):
         client = self.get_object().client
-        return response.Response(client.execute(request))
+        return response.Response(client.execute(request), content_type='application/json')

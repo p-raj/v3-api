@@ -74,4 +74,4 @@ class ProcessLocker(Authorable, Timestampable,
 
 @admin.register(ProcessLocker)
 class ProcessLockerAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('pk', 'uuid')
