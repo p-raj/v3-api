@@ -89,6 +89,15 @@ WIDGETS_MICRO_SERVICE = get_env_setting('WIDGETS_MICRO_SERVICE')
 VRT_MICRO_SERVICE = get_env_setting('VRT_MICRO_SERVICE')
 
 
+# ----------------- Gmail --------------------
+EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'akki.inforian@gmail.com'  # my gmail username
+EMAIL_HOST_PASSWORD = 'odeskakki'  # my gmail password
+EMAIL_PORT = 587
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
 #
 #
 # LOGGING = {

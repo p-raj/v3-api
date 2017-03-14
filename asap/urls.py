@@ -17,14 +17,15 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from asap.apps import urls as app_routes
-
 from django.conf import settings
 from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
 
 from rest_framework_swagger.views import get_swagger_view
+
+from asap.apps import urls as app_routes
+from asap.micro_services import urls as micro_service_routes
 
 from .router import Router
 
@@ -40,6 +41,8 @@ urlpatterns = [
     # micro services routers
     url(r'^api/v1/', include(app_routes, namespace='micro_service_v1')),
     url(r'^api/v1/', include(Router.shared_router.urls)),
+    url(r'^micro-service/', include(micro_service_routes, namespace='micro-services')),
+
 ]
 
 if settings.DEBUG:
