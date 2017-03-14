@@ -15,4 +15,9 @@ class HttpClient(object):
             }))
         except coreapi.exceptions.ErrorMessage as e:
             return e.error
+        except coreapi.exceptions.ParameterError as e:
+            errors = {
+                'errors': [_ for _ in e.args]
+            }
+            return coreapi.Error('Bad Request', errors)
         return data
