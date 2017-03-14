@@ -365,3 +365,18 @@ OAUTH2_PROVIDER = {
 VERIS_CLIENT_ID = environ.get('VERIS_CLIENT_ID')
 VERIS_CLIENT_SECRET = environ.get('VERIS_CLIENT_SECRET')
 # ######### END ASAP AUTHENTICATION CONFIGURATION
+
+
+
+# ----------------- Gmail --------------------
+EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = ''  # my gmail username
+EMAIL_HOST_PASSWORD = ''  # my gmail password
+EMAIL_PORT = 587
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# ----------------------- Plivo -------------------
+PLIVO_AUTH_ID = ""
+PLIVO_AUTH_TOKEN = ""
