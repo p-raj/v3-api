@@ -226,3 +226,16 @@ class WidgetDetailActionProxyViewSet(WidgetProxyViewSet):
         # everything might not be recorded
         # self.update_session(self.widget_uuid, response.data)
         return response
+
+    def get_headers(self, request):
+        # django.core.handlers.wsgi.WSGIRequest
+        req = getattr(request, '_request')
+        auth_header = req.META.get('HTTP_AUTHORIZATION')
+
+        headers = super(WidgetDetailActionProxyViewSet, self).get_headers(request)
+        if auth_header:
+            # FIXME:
+            # obtain the authorization from the widget schema :)
+            headers['AUTHORIZATION'] = auth_header
+
+        return headers

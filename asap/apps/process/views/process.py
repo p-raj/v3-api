@@ -48,6 +48,7 @@ class ProcessViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelV
         return response.Response(instance.schema_server)
 
     @detail_route(
+        methods=['GET', 'POST'],
         renderer_classes=[renderers.CoreJSONRenderer],
         permission_classes=(IsAuthorOrAuthorized,)
     )
