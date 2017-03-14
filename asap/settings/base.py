@@ -251,6 +251,8 @@ THIRD_PARTY_APPS = (
 
 # Apps specific for this project go here.
 LOCAL_APPS = (
+
+    # apps
     'asap.apps.organizations',
     'asap.apps.vrt',
     'asap.apps.widgets',
@@ -259,6 +261,9 @@ LOCAL_APPS = (
     'asap.apps.logs',
     'asap.apps.utils',
     'asap.tests',
+
+    # micro-services
+    'asap.micro_services',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
