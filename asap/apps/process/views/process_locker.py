@@ -11,8 +11,5 @@ from rest_framework import viewsets, permissions
 class ProcessLockerViewSet(AuthorableModelViewSet, viewsets.ModelViewSet):
     queryset = ProcessLocker.objects.all()
     serializer_class = ProcessLockerSerializer
-    # TODO : remove AllowAny permission with proper permission class
-    permission_classes = (permissions.AllowAny,)
 
     lookup_field = 'uuid'
-

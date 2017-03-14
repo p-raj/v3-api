@@ -17,18 +17,42 @@ A Process may be
  - Call a single API
  - Execute a python script
 
+
+### Schema:
+
+First, we except schema X (let's call it PSSpec[Process Schema Spec]),
+it contains the set of keys we need to complete any process.
+** It may be dependent of the type of process for now.
+
+There are 2 conversions of the PSSpec. PSSpec creates 2 CoreAPI Documents.
+ - Doc1 (Client). We are using CoreAPI client to call the resource server and return response.
+ - Doc2 (Server). Now we need to create a CoreAPI document that will be served to other services/clients,
+    so that the client can call the process server.
+
+Eg.
+            -----  PSSpec  -----
+            |                   |
+        Client                Server
+
+Client (/api/v1/members/)
+Server (/api/v1/processes/<uuid>/execute/)
+
+(Incoming Req.)                                             (Outgoing req.)
+--------------> [/api/v1/processes/<uuid>/execute/] -------> [/api/v1/members/] ---
+                                                                                    |
+--------------> [/api/v1/processes/<uuid>/execute/] <-------------------------------
+(Outgoing Resp.)                                             (Incoming resp.)
+
+
 """
+
 from django.contrib import admin
 from django.contrib.postgres.fields import JSONField
 from django.db import models
-from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 
-from importlib import import_module
-
-from asap.core.models import Authorable, Timestampable, \
-    Humanizable, UniversallyIdentifiable
-
+from asap.apps.process.schema.spec import PSSpec
+from asap.core.models import Authorable, Humanizable, Timestampable, UniversallyIdentifiable
 from asap.utils import to_pascal_case
 
 # TODO
@@ -64,18 +88,32 @@ class Process(Authorable, Humanizable, Timestampable,
     # for HTTP process but not for a python script
     schema = JSONField(_('schema'), blank=False, null=False)
 
-    @cached_property
+    @property
+    def spec(self):
+        """
+        :rtype: asap.apps.process.schema.spec.PSSpec
+        """
+        return PSSpec(self.schema)
+
+    @property
     def client(self):
         """
         All the clients are located in the package
         `asap.apps.process.clients`.
         :return:
         """
-        client = import_module(
-            self.__build_client_module_name(),
-            'asap.apps.process.clients'
-        )
-        return client(**self.schema)
+        from asap.apps.process import clients
+        return getattr(clients, self.__build_client_module_name())(self.schema_client)
+
+    @property
+    def schema_client(self):
+        from asap.apps.process.schema import ClientSchema
+        return ClientSchema(self.spec).build()
+
+    @property
+    def schema_server(self):
+        from asap.apps.process.schema import ServerSchema
+        return ServerSchema(self).build()
 
     class Meta:
         verbose_name_plural = _('Processes')
@@ -100,4 +138,5 @@ class Process(Authorable, Humanizable, Timestampable,
 
 @admin.register(Process)
 class Admin(admin.ModelAdmin):
-    pass
+    list_display = ('pk', 'name', 'uuid')
+    list_display_links = ('pk', 'name')
