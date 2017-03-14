@@ -1,14 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from rest_framework import response, renderers, viewsets
+from rest_framework import renderers, response, viewsets
 from rest_framework.decorators import detail_route
-
 from rest_framework_swagger.renderers import OpenAPIRenderer
 
 from asap.apps.process.models import Process
 from asap.apps.process.serializers import ProcessSerializer
-from asap.core.filters.author_filter import AuthorFilter
+from asap.core.permissions.is_author_or_authorized import IsAuthorOrAuthorized
 from asap.core.permissions.is_author_or_read_only import IsAuthorOrReadOnly
 from asap.core.views import AuthorableModelViewSet, DRFNestedViewMixin
 
@@ -17,7 +16,6 @@ class ProcessViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelV
     queryset = Process.objects.all()
     serializer_class = ProcessSerializer
     permission_classes = (IsAuthorOrReadOnly,)
-    filter_backends = (AuthorFilter,)
 
     lookup_field = 'uuid'
     lookup_parent = [
@@ -30,7 +28,7 @@ class ProcessViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelV
             return queryset
 
         # TODO
-        # return all the runtimes
+        # return all the processes
         # available to the requesting user
         return queryset
 
@@ -49,7 +47,13 @@ class ProcessViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelV
         instance = self.get_object()
         return response.Response(instance.schema_server)
 
-    @detail_route(renderer_classes=[renderers.CoreJSONRenderer])
+    @detail_route(
+        renderer_classes=[renderers.CoreJSONRenderer],
+        permission_classes=(IsAuthorOrAuthorized,)
+    )
     def execute(self, request, **kwargs):
+        # TODO: move the execute detail route to a separate API View
+        # since it prevents us from applying the author filter,
+        # which makes sense for the other routes
         client = self.get_object().client
         return response.Response(client.execute(request), content_type='application/json')
