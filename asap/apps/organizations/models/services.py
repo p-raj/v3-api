@@ -49,6 +49,10 @@ class Service(Authorable, Timestampable, models.Model):
 
     # the service enabled must have some kind of auth ?
     # let's assume its simple enough for now :)
+    # ideally, we have 2 separate servers, 2 separate accounts
+    # Organization Service has a OAuth2 client registered with Runtimes/X-Service
+    # which authenticates with and provides us the OAuth credentials
+    # for each organization, there might be a separate account on Runtime/X-Service
     auth_token = models.CharField(max_length=64, null=True, blank=True)
 
     @property
