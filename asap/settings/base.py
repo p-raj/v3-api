@@ -264,6 +264,8 @@ LOCAL_APPS = (
 
     # micro-services
     'asap.micro_services',
+    'asap.micro_services.notification',
+    'asap.micro_services.state_machine',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
