@@ -7,7 +7,8 @@ from __future__ import unicode_literals
 from django.conf.urls import include, url
 
 # own app
-from asap.apps.organizations.views import MemberViewSet, OrganizationViewSet
+from asap.apps.organizations.views import MemberViewSet, \
+    OrganizationViewSet, ServiceViewSet
 from asap.router import Router
 
 from rest_framework_nested import routers
@@ -15,9 +16,11 @@ from rest_framework_nested import routers
 router = Router()
 router.register('organizations', OrganizationViewSet)
 router.register('members', MemberViewSet, base_name='member')
+router.register('services', ServiceViewSet, base_name='service')
 
 routes_organization = routers.NestedSimpleRouter(Router.shared_router, 'organizations', lookup='organization')
 routes_organization.register('members', MemberViewSet, base_name='organizations')
+routes_organization.register('services', ServiceViewSet, base_name='organizations')
 
 urlpatterns = [
     url('', include(routes_organization.urls))
