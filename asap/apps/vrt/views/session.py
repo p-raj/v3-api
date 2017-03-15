@@ -1,34 +1,24 @@
-from rest_framework import viewsets, permissions
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+from rest_framework import viewsets
 from rest_framework.reverse import reverse_lazy
 
 from asap.apps.vrt.models.session import Session
 from asap.apps.vrt.serializers.session import SessionSerializer
+from asap.core.permissions.is_author_or_read_only import IsAuthorOrReadOnly
 from asap.core.views import DRFNestedViewMixin
 
 
 class SessionViewSet(DRFNestedViewMixin, viewsets.ModelViewSet):
-    """
-
-    """
     queryset = Session.objects.all()
     serializer_class = SessionSerializer
-    # TODO : remove AllowAny permission with proper permission class
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (IsAuthorOrReadOnly,)
 
     lookup_field = 'uuid'
     lookup_parent = [
         ('runtime_uuid', 'runtime__uuid')
     ]
-
-    def make_queryset(self):
-        queryset = super(SessionViewSet, self).make_queryset()
-        if self.is_nested:
-            return queryset
-
-        # TODO
-        # return all the sessions
-        # available after a&a
-        return queryset
 
     def create(self, request, *args, **kwargs):
         self.filter_nested_queryset(**kwargs)

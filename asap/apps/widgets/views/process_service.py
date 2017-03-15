@@ -1,14 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import copy
 import uuid
 
 from rest_framework.permissions import AllowAny
 from rest_framework_proxy.views import ProxyView
 
-from asap.apps.widgets.models.widget import Widget
 from asap.apps.logs.logging import ServiceLogging
+from asap.apps.widgets.models.widget import Widget
 
 
 class LoggingProxyViewSet(ProxyView):

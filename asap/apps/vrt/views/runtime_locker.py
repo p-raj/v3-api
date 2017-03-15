@@ -1,20 +1,19 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+from rest_framework import response, status, viewsets
+from rest_framework.decorators import detail_route
+
 from asap.apps.vrt.models.runtime_locker import RuntimeLocker
 from asap.apps.vrt.serializers.runtime_locker import RuntimeLockerSerializer
+from asap.core.permissions.is_author_or_read_only import IsAuthorOrReadOnly
 from asap.core.views import AuthorableModelViewSet
-from asap.router import Router
-
-from rest_framework import viewsets, response, status, permissions
-from rest_framework.decorators import detail_route
 
 
 class RuntimeLockerViewSet(AuthorableModelViewSet, viewsets.ModelViewSet):
-    """
-
-    """
     queryset = RuntimeLocker.objects.all()
     serializer_class = RuntimeLockerSerializer
-    # TODO : remove AllowAny permission with proper permission class
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (IsAuthorOrReadOnly,)
 
     lookup_field = 'uuid'
 
@@ -30,7 +29,3 @@ class RuntimeLockerViewSet(AuthorableModelViewSet, viewsets.ModelViewSet):
         # lots of ambiguous doubts :/
         # can't even start
         return response.Response(status=status.HTTP_200_OK)
-
-
-router = Router()
-router.register('runtime-lockers', RuntimeLockerViewSet)
