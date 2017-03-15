@@ -23,7 +23,7 @@ from __future__ import unicode_literals
 # own app
 
 
-INIT = 'init',
+INIT = 'init'
 PROCESSING = 'processing'
 COMPLETE = 'complete'
 FAIL = 'fail'
