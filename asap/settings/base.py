@@ -347,6 +347,23 @@ OAUTH2_PROVIDER = {
 }
 # ######### END DJANGO OAUTH TOOLKIT CONFIGURATION
 
+
+# ######### JWT CONFIGURATION
+# we need to create tokens for each service
+# and adding table for each service seems like a lot of work
+# so opting for simple JWT based library
+
+# See: https://pyjwt.readthedocs.io/en/latest/algorithms.html#digital-signature-algorithms
+JWT_ALGORITHM = 'HS256'
+JWT_SECRET = SECRET_KEY
+
+# for backward support decoding
+# don't remove a algorithm unless we want to
+# completely throw away the tokens
+JWT_ALGORITHMS = ['HS256']
+# ######### END JWT CONFIGURATION
+
+
 # ######### ASAP AUTHENTICATION CONFIGURATION
 # the veris client is a special oauth client
 # with all the permissions/scopes

@@ -9,6 +9,8 @@ from rest_framework import serializers
 
 class ProcessLockerSerializer(AuthorableModelSerializer, TimestampableModelSerializer,
                               serializers.HyperlinkedModelSerializer):
+    token = serializers.CharField()
+
     class Meta:
         model = ProcessLocker
         exclude = ()

@@ -31,9 +31,13 @@ Process Locker is just an interface to ease
 the listing of Processes associated to a widget.
 
 """
+import jwt
+
+from django.conf import settings
 from django.contrib import admin
 from django.contrib.postgres.fields import JSONField
 from django.db import models
+from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 
 from asap.apps.process.models.process import Process
@@ -68,8 +72,35 @@ class ProcessLocker(Authorable, Timestampable,
         help_text=_('Rules config, tells us which process will be called based on what rules.'),
     )
 
+    @cached_property
+    def token(self):
+        """
+        returns a new token every time
+        unless the same instance
+        is accessing the property again
+        :return:
+        """
+        # thought of abstracting it out
+        # but not sure about it yet,
+        # since the generation data will vary
+        return jwt.encode(self.__payload__(), key=settings.JWT_SECRET)
+
+    def verify(self, token):
+        try:
+            return jwt.decode(
+                token,
+                key=settings.JWT_SECRET
+            ) == self.__payload__()
+        except jwt.DecodeError:
+            return False
+
     def __str__(self):
         return 'Process Locker {0}'.format(self.pk)
+
+    def __payload__(self):
+        return {
+            'locker': str(self.uuid)
+        }
 
 
 @admin.register(ProcessLocker)
