@@ -57,4 +57,7 @@ class ProcessViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelV
         # since it prevents us from applying the author filter,
         # which makes sense for the other routes
         client = self.get_object().client
-        return response.Response(client.execute(request), content_type='application/json')
+        return response.Response(
+            client.execute(params=request.data),
+            content_type='application/json'
+        )

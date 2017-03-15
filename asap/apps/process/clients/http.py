@@ -10,9 +10,7 @@ class HttpClient(object):
 
     def execute(self, *args, **kwargs):
         try:
-            data = self.client.action(self.document, ['api'], kwargs.get('params', {
-                'organization_pk': '1'
-            }))
+            data = self.client.action(self.document, ['api'], kwargs.get('params', {}))
         except coreapi.exceptions.ErrorMessage as e:
             return e.error
         except coreapi.exceptions.ParameterError as e:
