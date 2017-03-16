@@ -23,7 +23,7 @@ from notifyAll.services import notifier
 from rest_framework.exceptions import ValidationError
 
 # local
-from asap.micro_services import service_settings
+from asap.micro_services.notification import config as notification_settings
 
 
 class NotifyAllLib(object):
@@ -37,11 +37,11 @@ class NotifyAllLib(object):
 
         :return: notification message as per notification_type
         """
-        if kwargs.get('notification_type') == service_settings.EMAIL:
+        if kwargs.get('notification_type') == notification_settings.EMAIL:
             return self._email_message(*args, **kwargs)
-        elif kwargs.get('notification_type') == service_settings.SMS:
+        elif kwargs.get('notification_type') == notification_settings.SMS:
             return self._sms_message(*args, **kwargs)
-        elif kwargs.get('notification_type') == service_settings.PUSH:
+        elif kwargs.get('notification_type') == notification_settings.PUSH:
             return self._push_message(*args, **kwargs)
         else:
             raise ValidationError({'detail': 'Unknown notification service.'})
@@ -60,7 +60,7 @@ class NotifyAllLib(object):
         return {
             'source': kwargs.get('from_email'),
             'destination': kwargs.get('to'),
-            'notification_type': service_settings.EMAIL,
+            'notification_type': notification_settings.EMAIL,
             'provider': kwargs.get('provider'),
             'context': context,
         }
@@ -73,7 +73,7 @@ class NotifyAllLib(object):
         return {
             'source': kwargs.get('from_'),
             'destination': kwargs.get('to'),
-            'notification_type': service_settings.SMS,
+            'notification_type': notification_settings.SMS,
             'provider': kwargs.get('provider'),
             'context': {
                 'body': kwargs.get('body')
