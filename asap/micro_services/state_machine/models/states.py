@@ -42,6 +42,7 @@ class TransactionStateMachine(models.Model):
     task_identifier = models.CharField(
         _('any unique identifier of any task'),
         max_length=200,
+        unique=True,
         help_text=_('Required. 200 characters or fewer.'),
     )
     state = models.CharField(
