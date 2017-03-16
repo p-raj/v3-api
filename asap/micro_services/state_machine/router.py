@@ -47,7 +47,7 @@ urlpatterns = [
     url(r'^(?P<task_identifier>[0-9a-z-]+)/current/$',
         get_current_state,
         name='get-current-state'),
-    url(r'^(?P<task_identifier>[0-9a-z-]+)/life_cycle/$',
+    url(r'^(?P<task_identifier>[0-9a-z-]+)/life-cycle/$',
         get_complete_transaction_life_cycle,
         name='get-complete-transaction-life-cycle'),
     url(r'^(?P<task_identifier>[0-9a-z-]+)/change/$',
