@@ -37,37 +37,6 @@ class TransactionStateViewSet(viewsets.GenericViewSet):
               (However rt now we only support HTTP). So how we will identify which service have been requested.
             - To identify type of service we must have another key `type` in `service` dict() which will tell
               what service have been requested. We will validate that service and store in respective service model.
-
-    POST EXAMPLE :
-
-    - without service
-    {
-      "task_name": "My first Task",
-      "task_identifier": "1a",
-      "state":"init"
-    }
-
-    - with service (http)
-    {
-        "task_name": "My Second Task",
-        "task_identifier": "1b",
-        "state": "init",
-        "service": {
-            "type":"http",
-            "upstream_url": "http://localhost:8003",
-            "method": "post",
-            "headers": {
-                "token": "0123654789"
-            },
-            "dataIn": {
-                "name": "Daniel"
-            },
-            "dataOut": {
-                "user_id": "1"
-            }
-        }
-    }
-
     """
     model = models.TransactionStateMachine
     # TODO : remove AllowAny permission with proper permission class
@@ -136,7 +105,37 @@ class TransactionStateViewSet(viewsets.GenericViewSet):
     def create_initial_state(self, request):
         """
         :param request: Django request
-        :return:
+        :return: 200_ok
+
+        POST EXAMPLE :
+
+        - without service
+        {
+          "task_name": "My first Task",
+          "task_identifier": "1a",
+          "state":"init"
+        }
+
+        - with service (http)
+        {
+            "task_name": "My Second Task",
+            "task_identifier": "1b",
+            "state": "init",
+            "service": {
+                "type":"http",
+                "upstream_url": "http://localhost:8003",
+                "method": "post",
+                "headers": {
+                    "token": "0123654789"
+                },
+                "dataIn": {
+                    "name": "Daniel"
+                },
+                "dataOut": {
+                    "user_id": "1"
+                }
+            }
+        }
         """
         life_cycle_data = dict()
 
@@ -147,7 +146,6 @@ class TransactionStateViewSet(viewsets.GenericViewSet):
 
         # Validate for main Transaction state Model
         transaction_state = self._validate_data(serializers.TransactionStateMachineSerializer, request.data)
-        transaction_state.is_valid(raise_exception=True)
 
         # if service present oin request then save service data
         if self.service:
@@ -196,6 +194,59 @@ class TransactionStateViewSet(viewsets.GenericViewSet):
     def change_state(self, request, task_identifier):
         """
         :param request: Django request
-        :return:
+        :param task_identifier: task identifier of whom you want to get complete life cycle
+        :return: 200_ok
+
+        POST EXAMPLE :
+        {
+            "state": "fail",
+            "service": {
+                "type":"http",
+                "upstream_url": "http://localhost:8002",
+                "method": "post",
+                "headers": {
+                    "token": "qwer1236544"
+                },
+                "dataIn": {
+                    "name": "Daneil"
+                },
+                "dataOut": {
+                    "user_id": "1"
+                }
+            }
+        }
+
         """
-        pass
+        life_cycle_data = dict()
+        task_instance = self.get_object(task_identifier)
+
+        # ----- validate request and its data ---- #
+
+        # validate new state
+        serializer = self._validate_data(serializers.ChangeStateSerializer, request.data)
+
+        # validate for service key
+        self._validate_request(request)
+
+        # if service present oin request then save service data
+        if self.service:
+            service_object_id = self._validate_and_save_service_data(request)
+
+            # add content type and object_id in life_cycle_dict
+            life_cycle_data.update({
+                'content_type': self.service_content_type,
+                'object_id': service_object_id
+            })
+
+        life_cycle_data.update({
+            'task': task_instance,
+            'state': serializer.data.get('state')
+        })
+
+        # update state
+        task_instance.change_state(serializer.data.get('state'))
+
+        # save Transaction life cycle instance
+        models.TransactionLifeCycle.objects.create(**life_cycle_data)
+
+        return Response(status=status.HTTP_200_OK)

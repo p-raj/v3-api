@@ -94,56 +94,15 @@ class TransactionStateMachine(models.Model):
         """
         return self.transactionlifecycle_set.all()
 
-    def change_state(self, new_state, create_related_instance=False, data=None):
+    def change_state(self, new_state):
         """
 
         :param new_state: new state of Transaction
-        :param create_related_instance: wether you want to create new instance in TransactionLifeCycle & respective service.
-        :param data: TransactionLifeCycle & respective service Model Data
         :return: TransactionStateMachine instance
 
-        data argument example
-        data = {
-            'life_cycle_data': {
-                'http_service_id':1,
-                'task_id':1,
-                'state': 'init', # optional , default init
-            },
-            'service_data': {
-                'upstream_url': 'http://localhost:8003',
-                'method': 'post', # optional , default post
-                'headers': {}, # type:dict, optional
-                'dataIn': {},  # type:dict, optional
-                'dataOut': {}, # type:dict, optional
-            }
-        }
-
         """
-        # if related instances to be updated along with state is changed then need to validate required data is also
-        # sent along with same request, When ever state is changed two new entries in TransactionLifeCycle & HttpService
-        # is required, so either create them here or where you are updating the state.
-        if create_related_instance and data is None:
-            raise ValueError({'detail': 'data param is required when updating relative instance along with state'})
-        elif create_related_instance and (data.get('life_cycle_data') is None or data.get('service_data') is None):
-            raise ValueError({'detail': 'data dict must include at-least two keys `life_cycle_data` and `service_data`'})
-
         self.state = new_state
         self.modified_at = datetime.now()
-
-        if create_related_instance:
-            life_cycle_data = data.get('life_cycle_data')
-            service_data = data.get('service_data')
-
-            life_cycle_data.update({
-                'content_type': ContentType.objects.get_for_model(HttpService),
-                'object_id': life_cycle_data.pop('http_service_id')
-            })
-
-            # save related instances
-            TransactionLifeCycle.objects.create(**life_cycle_data)
-            HttpService.objects.create(**service_data)
-
-        # save state if everything goes well
         return self.save()
 
 

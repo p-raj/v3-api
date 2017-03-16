@@ -79,7 +79,14 @@ class TransactionLifeCycleSerializer(serializers.ModelSerializer):
         """
 
         :param obj: TransactionLifeCycle object
-        :return:
+        :return: object related service data
         """
-
         return HttpServiceSerializer(instance=obj.get_http_service_object).data
+
+
+class ChangeStateSerializer(serializers.Serializer):
+    """Change State serializer
+
+    """
+    state = serializers.ChoiceField(required=True,
+                                    choices=config.STATES)
