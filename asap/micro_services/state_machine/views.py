@@ -17,6 +17,7 @@ from rest_framework import viewsets, status, permissions
 from rest_framework.response import Response
 
 # Django
+from django.shortcuts import get_object_or_404
 from django.contrib.contenttypes.models import ContentType
 
 # local
@@ -124,6 +125,14 @@ class TransactionStateViewSet(viewsets.GenericViewSet):
         service = serializer.save()
         return service.id
 
+    def get_object(self, task_identifier):
+        """
+
+        :param task_identifier: task unique identifier
+        :return: Transaction/task instance
+        """
+        return get_object_or_404(self.model, task_identifier=task_identifier)
+
     def create_initial_state(self, request):
         """
         :param request: Django request
@@ -166,9 +175,11 @@ class TransactionStateViewSet(viewsets.GenericViewSet):
     def get_current_state(self, request, task_identifier):
         """
         :param request: Django request
-        :return:
+        :param task_identifier: task identifier of whom you want to get current state
+        :return: current state of any Transaction/Task
         """
-        pass
+        task_instance = self.get_object(task_identifier)
+        return Response({'current_state': task_instance.get_current_state}, status=status.HTTP_200_OK)
 
     def get_complete_transaction_life_cycle(self, request, task_identifier):
         """
