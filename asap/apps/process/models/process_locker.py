@@ -37,6 +37,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.contrib.postgres.fields import JSONField
 from django.db import models
+from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 
@@ -83,14 +84,12 @@ class ProcessLocker(Authorable, Timestampable,
         # thought of abstracting it out
         # but not sure about it yet,
         # since the generation data will vary
-        return jwt.encode(self.__payload__(), key=settings.JWT_SECRET)
+        return self.encode(self.__payload__())
 
     def verify(self, token):
         try:
-            return jwt.decode(
-                token,
-                key=settings.JWT_SECRET
-            ) == self.__payload__()
+            payload = self.decode(token)
+            return payload.get('locker') == self.__payload__().get('locker')
         except jwt.DecodeError:
             return False
 
@@ -99,8 +98,17 @@ class ProcessLocker(Authorable, Timestampable,
 
     def __payload__(self):
         return {
-            'locker': str(self.uuid)
+            'locker': str(self.uuid),
+            'created_at': str(timezone.now())
         }
+
+    @classmethod
+    def encode(cls, data):
+        return jwt.encode(data, key=settings.JWT_SECRET).decode()
+
+    @classmethod
+    def decode(cls, token):
+        return jwt.decode(token, key=settings.JWT_SECRET)
 
 
 @admin.register(ProcessLocker)

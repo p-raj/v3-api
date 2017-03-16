@@ -135,6 +135,18 @@ class Process(Authorable, Humanizable, Timestampable,
     def __str__(self):
         return 'Process {0}'.format(self.name)
 
+    def has_permission(self, token):
+        # TODO
+        # whole thing doesn't feel right,
+        # although it works :/
+        import jwt
+        from asap.apps.process.models.process_locker import ProcessLocker
+        try:
+            payload = ProcessLocker.decode(token)
+        except jwt.DecodeError:
+            return False
+        return bool(self.processlocker_set.filter(uuid=payload.get('locker')).count())
+
 
 @admin.register(Process)
 class Admin(admin.ModelAdmin):
