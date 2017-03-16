@@ -17,7 +17,7 @@ from rest_framework import serializers
 # local
 
 # own app
-from asap.micro_services import service_settings
+from asap.micro_services.notification import config
 
 
 class EmailNotificationSerializer(serializers.Serializer):
@@ -29,8 +29,8 @@ class EmailNotificationSerializer(serializers.Serializer):
     subject = serializers.CharField(required=True)
     body = serializers.CharField(required=True)
     html_message = serializers.BooleanField(default=False)
-    provider = serializers.ChoiceField(required=True, choices=service_settings.EMAIL_NOTIFICATION_PROVIDER)
-    notification_type = serializers.CharField(default=service_settings.EMAIL)
+    provider = serializers.ChoiceField(required=True, choices=config.EMAIL_NOTIFICATION_PROVIDER)
+    notification_type = serializers.CharField(default=config.EMAIL)
 
     def validate_from_email(self, from_email):
         """
@@ -38,7 +38,7 @@ class EmailNotificationSerializer(serializers.Serializer):
         :return:
         """
         if not from_email:
-            return service_settings.DEFAULT_FROM_EMAIL
+            return config.DEFAULT_FROM_EMAIL
         return from_email
 
 
@@ -49,5 +49,5 @@ class SMSNotificationSerializer(serializers.Serializer):
     to = serializers.CharField(required=True)
     from_ = serializers.CharField(required=False)
     body = serializers.CharField(required=True)
-    provider = serializers.ChoiceField(required=True, choices=service_settings.SMS_NOTIFICATION_PROVIDER)
-    notification_type = serializers.CharField(default=service_settings.SMS)
+    provider = serializers.ChoiceField(required=True, choices=config.SMS_NOTIFICATION_PROVIDER)
+    notification_type = serializers.CharField(default=config.SMS)

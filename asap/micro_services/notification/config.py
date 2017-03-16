@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 
 """
-- micro_services.service_settings
+- micro_services.notification.config
 ~~~~~~~~~~~~~~
 
-- This file holds the general settings of micro services.
+- This file holds the general settings of notification micro-services.
  """
 
 # django
