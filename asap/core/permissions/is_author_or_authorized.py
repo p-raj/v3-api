@@ -20,6 +20,9 @@ class IsAuthorOrAuthorized(permissions.IsAuthenticated):
         return has_permission or bool(request.META.get('HTTP_AUTHORIZATION', None))
 
     def has_object_permission(self, request, view, obj):
+        if request.user == obj.author:
+            return True
+
         has_method = getattr(obj, 'has_permission', None)
         has_permission = has_method and has_method(
             request.META.get('HTTP_AUTHORIZATION', None)
