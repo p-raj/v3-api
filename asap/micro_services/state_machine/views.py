@@ -184,9 +184,14 @@ class TransactionStateViewSet(viewsets.GenericViewSet):
     def get_complete_transaction_life_cycle(self, request, task_identifier):
         """
         :param request: Django request
+        :param task_identifier: task identifier of whom you want to get complete life cycle
         :return:
         """
-        pass
+        task_instance = self.get_object(task_identifier)
+        serializer = serializers.TransactionLifeCycleSerializer(instance=task_instance.fetch_complete_life_cycle,
+                                                                many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def change_state(self, request, task_identifier):
         """

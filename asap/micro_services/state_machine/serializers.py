@@ -54,16 +54,6 @@ class TransactionStateMachineSerializer(serializers.ModelSerializer):
         return super(TransactionStateMachineSerializer, self).create(validated_data)
 
 
-class TransactionLifeCycleSerializer(serializers.ModelSerializer):
-    """
-
-    """
-
-    class Meta:
-        model = TransactionLifeCycle
-        fields = '__all__'
-
-
 class HttpServiceSerializer(serializers.ModelSerializer):
     """
 
@@ -71,6 +61,25 @@ class HttpServiceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = HttpService
-        fields = '__all__'
+        exclude = ('id', )
 
 
+class TransactionLifeCycleSerializer(serializers.ModelSerializer):
+    """
+
+    """
+    task_identifier = serializers.ReadOnlyField(source='task.task_identifier')
+    service = serializers.SerializerMethodField()
+
+    class Meta:
+        model = TransactionLifeCycle
+        fields = ('id', 'task_identifier', 'service', 'state', 'created_at', )
+
+    def get_service(self, obj):
+        """
+
+        :param obj: TransactionLifeCycle object
+        :return:
+        """
+
+        return HttpServiceSerializer(instance=obj.get_http_service_object).data
