@@ -50,3 +50,7 @@ METHODS = (
     (PUT, 'put'),
     (DELETE, 'delete'),
 )
+
+HTTP = 'http'
+
+ENABLED_SERVICES = (HTTP, )

@@ -155,13 +155,20 @@ class TransactionLifeCycle(models.Model):
 
     """
     task = models.ForeignKey(TransactionStateMachine,
-                             verbose_name=_('transaction state machine'))
+                             verbose_name=_('transaction state machine'),
+    )
     content_type = models.ForeignKey(ContentType,
                                      db_index=True,
-                                     help_text=_('Content Type of Object you want tyo map.'))
+                                     blank=True,
+                                     null=True,
+                                     help_text=_('Content Type of Object you want tyo map.'),
+    )
     object_id = models.PositiveIntegerField(
         _('id of object you want to map'),
-        db_index=True)
+        db_index=True,
+        blank=True,
+        null=True,
+    )
     entity = GenericForeignKey('content_type', 'object_id')
     state = models.CharField(
         _('current state of any task'),

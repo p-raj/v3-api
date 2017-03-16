@@ -41,7 +41,7 @@ change_state = views.TransactionStateViewSet.as_view({
 })
 
 urlpatterns = [
-    url(r'^(?P<task_identifier>[0-9a-z-]+)/new/$',
+    url(r'^new/$',
         create_initial_state,
         name='create-initial-state'),
     url(r'^(?P<task_identifier>[0-9a-z-]+)/current/$',
