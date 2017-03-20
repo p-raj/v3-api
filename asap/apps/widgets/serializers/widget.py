@@ -1,40 +1,62 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+import copy
+import requests
+from django.urls import reverse_lazy
 
-"""
-- widgets.serializers.widget
-~~~~~~~~~~~~~~
-
-- This file contains the Widget Serializers that will help in rendering Widget Response and validating upcoming
-   http request.
- """
-
-# future
-from __future__ import unicode_literals
-
-
-# DRF
 from rest_framework import serializers
 
-# local
+from asap.apps.widgets.models.widget import Widget
 from asap.core.serializers import TimestampableModelSerializer
 
-# own app
-from asap.apps.widgets.models.widget import Widget
+swagger_dict = {
+    'swagger': '2.0',
+    'info': {
+        'title': '',
+        'version': '1.0.0'
+    },
+    'paths': {},
+    'definitions': {},
+    'securityDefinitions': {}
+}
 
 
 class WidgetSerializer(TimestampableModelSerializer, serializers.HyperlinkedModelSerializer):
-    """Widget Serializer
+    schema = serializers.SerializerMethodField()
 
-    """
-
-    # Meta
     class Meta:
         model = Widget
-        exclude = ('author',)
+        exclude = ('author', 'processes_json',)
+        read_only_fields = ('processes_json',)
 
         extra_kwargs = {
             'url': {
-                'lookup_field': 'token'
+                'lookup_field': 'uuid'
             }
         }
+
+    def get_schema(self, obj):
+        # move these lame tasks to some place else
+        # and make these smart
+        processes = obj.processes_json
+
+        if not processes or type(processes) == dict:
+            return processes
+
+        schema = copy.deepcopy(swagger_dict)
+
+        # update the open API spec title to match the widget uuid
+        schema.get('info').update(title=str(obj.uuid))
+
+        # copy the path that the process represents
+        # change the path
+        for p in processes:
+            resp = requests.get('{0}server/'.format(p.get('url')))
+            process_schema = resp.json()
+            widget_proxy = reverse_lazy('micro_service_v1:widget-process-proxy', kwargs={
+                'uuid': str(obj.uuid),
+                'process_uuid': p.get('uuid')
+            })
+            schema['paths'][str(widget_proxy)] = process_schema.get('paths') \
+                .get('/api/v1/processes/{0}/execute/'.format(p.get('uuid')))
+        return schema

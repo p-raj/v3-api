@@ -8,15 +8,17 @@ from rest_framework import serializers
 
 
 class WidgetLockerSerializer(TimestampableModelSerializer, serializers.HyperlinkedModelSerializer):
+    token = serializers.CharField(read_only=True)
+
     class Meta:
         model = WidgetLocker
         exclude = ('author',)
 
         extra_kwargs = {
             'url': {
-                'lookup_field': 'token'
+                'lookup_field': 'uuid'
             },
             'widgets': {
-                'lookup_field': 'token'
+                'lookup_field': 'uuid'
             }
         }

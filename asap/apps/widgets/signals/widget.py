@@ -20,7 +20,7 @@ from django.urls import reverse_lazy
 
 from asap.apps.widgets.models.widget import Widget
 
-ProcessLocker_URL = 'http://localhost:8000/api/v1/process-lockers/{pl_token}/processes/'
+ProcessLocker_URL = 'http://localhost:8000/api/v1/process-lockers/{pl_uuid}/processes/'
 
 swagger_dict = {
     'swagger': '2.0',
@@ -45,35 +45,14 @@ def create_widget_schema(sender, **kwargs):
     if not kwargs.get('created'):
         return
 
-    # TODO:
-    # store the original process
-    # and generate widget schema on the fly :thinking:
-    # bad stuff down here :'(
-
     # fetch the process using the process locker token
     # and build the widget schema according OpenAPI Spec
     instance = kwargs.get('instance')
-    response = requests.get(ProcessLocker_URL.format(pl_token=instance.process_locker_token))
+    response = requests.get(ProcessLocker_URL.format(pl_uuid=instance.process_locker_uuid))
 
     # move these lame tasks to some place else
     # and make these smart
     processes = response.json().get('results')
-    schema = copy.deepcopy(swagger_dict)
-
-    # update the open API spec title to match the widget uuid
-    schema.get('info').update(title=str(instance.token))
-
-    # copy the path that the process represents
-    # change the path
-    for p in processes:
-        resp = requests.get('{0}server/'.format(p.get('url')))
-        process_schema = resp.json()
-        widget_proxy = reverse_lazy('micro_service_v1:widget-process-proxy', kwargs={
-            'uuid': str(instance.token),
-            'process_uuid': p.get('uuid')
-        })
-        schema['paths'][str(widget_proxy)] = process_schema.get('paths') \
-            .get('/api/v1/processes/{0}/execute/'.format(p.get('uuid')))
 
     # copy all the definitions that the process carries
     # currently we'll limit the process locker service from
@@ -84,5 +63,5 @@ def create_widget_schema(sender, **kwargs):
 
     # this is the initial schema and will be presented
     # to the admin for adding static data and modification
-    instance.schema = schema
+    instance.processes_json = processes
     instance.save()

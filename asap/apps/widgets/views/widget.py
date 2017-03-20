@@ -14,7 +14,7 @@ class WidgetViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelVi
     serializer_class = WidgetSerializer
     permission_classes = (IsAuthorOrReadOnly,)
 
-    lookup_field = 'token'
+    lookup_field = 'uuid'
     lookup_parent = [
         ('widget_locker_token', 'widgetlocker__token')
     ]

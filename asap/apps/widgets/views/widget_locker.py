@@ -14,4 +14,4 @@ class WidgetLockerViewSet(AuthorableModelViewSet, viewsets.ModelViewSet):
     serializer_class = WidgetLockerSerializer
     permission_classes = (IsAuthorOrReadOnly,)
 
-    lookup_field = 'token'
+    lookup_field = 'uuid'

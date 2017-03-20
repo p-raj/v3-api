@@ -8,14 +8,11 @@ from rest_framework_proxy.views import ProxyView
 
 from asap.apps.logs.logging import ServiceLogging
 from asap.apps.widgets.models.widget import Widget
+from asap.core.permissions.is_author_or_authorized import IsAuthorOrAuthorized
 
 
 class LoggingProxyViewSet(ProxyView):
-    """
-
-    """
-    # TODO : remove AllowAny permission with proper permission class
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthorOrAuthorized,)
 
     logger = None
     session = uuid.uuid4()
