@@ -15,29 +15,18 @@ from __future__ import unicode_literals
 from django.conf.urls import url
 
 # own app
-from asap.micro_services.notification import views
+from asap.micro_services.authorization import views
 
 
-email_notification = views.NotificationViewSet.as_view({
-    'post': 'send_email',
+authorize = views.AuthorizationViewSet.as_view({
+    'get': 'has_perm',
+    'post': 'create_perm',
+    'put': 'update_perm',
 })
 
-sms_notification = views.NotificationViewSet.as_view({
-    'post': 'send_sms',
-})
-
-push_notification = views.NotificationViewSet.as_view({
-    'post': 'send_push',
-})
 
 urlpatterns = [
-        url(r'^email/$',
-            email_notification,
-            name='email-notification'),
-        url(r'^sms/$',
-            sms_notification,
-            name='sms-notification'),
-        url(r'^push/$',
-            push_notification,
-            name='push-notification'),
+        url(r'^$',
+            authorize,
+            name='authorization'),
 ]

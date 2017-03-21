@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 
 """
-- notification.views
+- micro_services.authorization.views
 ~~~~~~~~~~~~~~
 
-- This file contains notification service actions like sed sms, email, push notifications.
+- This file contains authorization service actions like creating new permissions , validating access.
 """
 
 # future
@@ -17,86 +17,75 @@ from __future__ import unicode_literals
 from rest_framework import viewsets, status, permissions
 from rest_framework.response import Response
 
+# Django
+from django.shortcuts import get_object_or_404
+
+
 # local
-from asap.micro_services.libs import notifyAll as notification
 
 # own app
-from asap.micro_services.notification import serializers
+from asap.micro_services.authorization import serializers, models
 
 
-class NotificationViewSet(viewsets.GenericViewSet):
-    """Resource Viewset, every resource http request handles by this class
+class AuthorizationViewSet(viewsets.GenericViewSet):
+    """Authorization Viewset, every authorization http request handles by this class
 
     """
+    model = models.Authorization
+    serializer_class = serializers.AuthorizationSerializer
     # TODO : remove AllowAny permission with proper permission class
     permission_classes = (permissions.AllowAny, )
-    actor = 'resource'
 
-    def _validate(self, serializer, data):
+    def get_object(self, source, target):
         """
 
-        :param serializer: serializer against which data to ve validated
-        :param data: data to ve validated
-        :return: validated data.
+        :return: Authorization object
+        """
+        return get_object_or_404(models.Authorization, source=source,
+                                                target=target)
+
+    def create_perm(self, request):
         """
 
-        serializer_instance = serializer(data=data)
-        serializer_instance.is_valid(raise_exception=True)
-        return serializer_instance.data
+        """
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
 
-    def send_email(self, request):
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def update_perm(self, request):
         """
 
-        :param request:
-        :return:
+        """
+        obj = self.get_object(request.data.get('source'), request.data.get('target'))
+        serializer = self.get_serializer(instance=obj, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
 
-        POST Example :
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def has_perm(self, request):
+        """check authorization w.r.t target
+
+        GET Data example :
+
         {
-            "to": "example@gmail.com",
-            "from_email":"admin@example.com",
-            "subject": "micro service integration",
-            "provider": "gmail",
-            "body": "<h1>email Body comes here</h1>",
-            "html_message":"true"
+            "access_type": "read",
+            "target": "P1",
+            "source": "W1"
         }
+
         """
-        data = self._validate(serializers.EmailNotificationSerializer, request.data)
+        serializer = serializers.CheckAccessSerializer(data=request.query_params)
+        serializer.is_valid(raise_exception=True)
 
-        self.notify(data)
-        return Response(status=status.HTTP_200_OK)
+        obj = self.get_object(serializer.data.get('source'), serializer.data.get('target'))
 
-    def send_sms(self, request):
-        """
+        response = serializer.check_perm(obj, serializer.data.get('access_type'))
 
-        :param request:
-        :return:
+        return Response(response, status=status.HTTP_200_OK)
 
-        POST EXAMPLE :
-        {
-            "to": "+9198********",
-            "from_": "plivo",
-            "provider": "plivo",
-            "body": "micro service message"
-        }
-        """
-        data = self._validate(serializers.SMSNotificationSerializer, request.data)
 
-        self.notify(data)
-        return Response(status=status.HTTP_200_OK)
 
-    def send_push(self, request):
-        """
-
-        :param request:
-        :return:
-        """
-        pass
-
-    def notify(self, data):
-        """
-
-        :param data: Notification data
-        """
-        notify_lib = notification.NotifyAllLib()
-        notify_lib.send_notification(**data)
 

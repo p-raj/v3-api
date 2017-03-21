@@ -1,53 +1,68 @@
-#!/usr/bin/python
+# !/usr/bin/python
 # -*- coding: utf-8 -*-
 
 """
-- notification.serializers
+- micro_services.authorization.serializers
 ~~~~~~~~~~~~~~
 
-- This file contains the Notification (email, sms, push) Serializers.
+- This file contains the Authorization Serializers.
  """
 
 # future
 from __future__ import unicode_literals
 
+# 3rd party
+from datetime import datetime
+
 # DRF
 from rest_framework import serializers
+
+# Django
+
 
 # local
 
 # own app
-from asap.micro_services.notification import config
+from asap.micro_services.authorization import models
 
 
-class EmailNotificationSerializer(serializers.Serializer):
-    """Email Notification Serializer
+class AuthorizationSerializer(serializers.ModelSerializer):
+    """
 
     """
-    to = serializers.EmailField(required=True)
-    from_email = serializers.EmailField(required=False)
-    subject = serializers.CharField(required=True)
-    body = serializers.CharField(required=True)
-    html_message = serializers.BooleanField(default=False)
-    provider = serializers.ChoiceField(required=True, choices=config.EMAIL_NOTIFICATION_PROVIDER)
-    notification_type = serializers.CharField(default=config.EMAIL)
 
-    def validate_from_email(self, from_email):
+    class Meta:
+        model = models.Authorization
+        exclude = ('id', 'token', 'created_at', 'modified_at',)
+
+    def create(self, validated_data):
         """
-        :param from_email: from_email value send by client
-        :return:
+
+        :param validated_data: Validated data sent by user
+        :return: authorization object
         """
-        if not from_email:
-            return config.DEFAULT_FROM_EMAIL
-        return from_email
+        validated_data.update({
+            'created_at': datetime.now(),
+            'modified_at': datetime.now(),
+        })
+        return models.Authorization.objects.create(**validated_data)
 
 
-class SMSNotificationSerializer(serializers.Serializer):
-    """SMS Notification Serializer
+class CheckAccessSerializer(serializers.Serializer):
+    """Serializer for checking Access of source over target
 
     """
-    to = serializers.CharField(required=True)
-    from_ = serializers.CharField(required=False)
-    body = serializers.CharField(required=True)
-    provider = serializers.ChoiceField(required=True, choices=config.SMS_NOTIFICATION_PROVIDER)
-    notification_type = serializers.CharField(default=config.SMS)
+    ACCESS_TYPES = ('create', 'update', 'read', 'delete', )
+
+    source = serializers.CharField(required=True)
+    target = serializers.CharField(required=True)
+    access_type = serializers.ChoiceField(choices=ACCESS_TYPES)
+
+    def check_perm(self, instance, access_type):
+        """
+
+        :param instance: Authorization instance
+        :param access_type: permission type
+        :return: True/False
+        """
+        return getattr(instance, access_type, False)
