@@ -25,12 +25,11 @@ from asap.micro_services.notification import serializers
 
 
 class NotificationViewSet(viewsets.GenericViewSet):
-    """Resource Viewset, every resource http request handles by this class
+    """Notification Viewset, every notification http request handles by this class
 
     """
     # TODO : remove AllowAny permission with proper permission class
     permission_classes = (permissions.AllowAny, )
-    actor = 'resource'
 
     def _validate(self, serializer, data):
         """
