@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-- micro_service.routers
+- micro_service.notification.router
 ~~~~~~~~~~~~~~~~~
 
 - This file contains Notification service routers.
