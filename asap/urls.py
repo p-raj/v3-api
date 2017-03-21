@@ -24,16 +24,20 @@ from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
 
+from rest_framework.documentation import include_docs_urls
 from rest_framework_swagger.views import get_swagger_view
 
 from asap.core.views.proxy import ProxyViewSet
 from .router import Router
 
+API_TITLE = 'Veris API'
+
 urlpatterns = [
-    url(r'^swagger/$', get_swagger_view(title='Veris API')),
+    url(r'^swagger/$', get_swagger_view(title=API_TITLE)),
 
     url(r'^admin/', admin.site.urls),
     url(r'^auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^docs/', include_docs_urls(title=API_TITLE, description='')),
 
     # we have our own oauth provider
     url(r'^oauth/', include('oauth2_provider.urls', namespace='oauth2_provider')),
