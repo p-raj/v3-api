@@ -8,7 +8,7 @@ from asap.apps.organizations.models.services import Service
 
 class ServiceSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.ReadOnlyField()
-    is_enabled = serializers.BooleanField()
+    is_enabled = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = Service

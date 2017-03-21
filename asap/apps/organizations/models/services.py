@@ -53,14 +53,15 @@ class Service(Authorable, Timestampable, models.Model):
     # Organization Service has a OAuth2 client registered with Runtimes/X-Service
     # which authenticates with and provides us the OAuth credentials
     # for each organization, there might be a separate account on Runtime/X-Service
-    auth_token = models.CharField(max_length=64, null=True, blank=True)
+    # currently it corresponds to the locker for each service :/
+    service_client_id = models.CharField(max_length=64, null=True, blank=True)
 
     @property
     def is_enabled(self):
         # FIXME:
         # token may be expired,
         # not sufficient :/
-        return bool(self.auth_token)
+        return bool(self.service_client_id)
 
     @property
     def date_enabled(self):
@@ -72,9 +73,13 @@ class Service(Authorable, Timestampable, models.Model):
             'organization': self.organization
         })
 
+    class Meta:
+        unique_together = ('organization', 'name',)
+
 
 class ServiceAdmin(admin.ModelAdmin):
     raw_id_fields = ['organization']
+    list_display = ('pk', 'name', 'organization',)
 
 
 admin.site.register(Service, ServiceAdmin)
