@@ -10,7 +10,7 @@ class SessionSerializer(TimestampableModelSerializer, serializers.HyperlinkedMod
 
     class Meta:
         model = Session
-        exclude = ('expires_at', 'uuid',)
+        exclude = ('expires_at', 'uuid', 'author')
 
         extra_kwargs = {
             'url': {

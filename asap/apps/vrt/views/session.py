@@ -7,10 +7,11 @@ from rest_framework.reverse import reverse_lazy
 from asap.apps.vrt.models.session import Session
 from asap.apps.vrt.serializers.session import SessionSerializer
 from asap.core.permissions.is_author_or_read_only import IsAuthorOrReadOnly
-from asap.core.views import DRFNestedViewMixin
+from asap.core.views import DRFNestedViewMixin, AuthorableModelViewSet
 
 
-class SessionViewSet(DRFNestedViewMixin, viewsets.ModelViewSet):
+class SessionViewSet(AuthorableModelViewSet, DRFNestedViewMixin,
+                     viewsets.ModelViewSet):
     queryset = Session.objects.all()
     serializer_class = SessionSerializer
     permission_classes = (IsAuthorOrReadOnly,)

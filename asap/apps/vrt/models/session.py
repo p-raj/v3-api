@@ -7,10 +7,12 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from asap.apps.vrt.models.runtime import Runtime
-from asap.core.models import Timestampable
+from asap.core.models import Authorable, Timestampable, \
+    UniversallyIdentifiable
 
 
-class Session(Timestampable, models.Model):
+class Session(Authorable, UniversallyIdentifiable,
+              Timestampable, models.Model):
     uuid = models.UUIDField(
         default=uuid.uuid4,
         editable=False,
