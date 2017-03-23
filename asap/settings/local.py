@@ -89,6 +89,37 @@ WIDGETS_MICRO_SERVICE = get_env_setting('WIDGETS_MICRO_SERVICE')
 VRT_MICRO_SERVICE = get_env_setting('VRT_MICRO_SERVICE')
 
 
+# ######### DJANGO REST FRAMEWORK CONFIGURATION
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+        'rest_framework.renderers.CoreJSONRenderer',
+
+        'rest_framework_swagger.renderers.OpenAPIRenderer',
+        'rest_framework_swagger.renderers.SwaggerUIRenderer',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+        # 'oauth2_provider.ext.rest_framework.TokenHasReadWriteScope'
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'oauth2_provider.ext.rest_framework.OAuth2Authentication'
+    ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.OrderingFilter',
+        'rest_framework.filters.SearchFilter'
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 50
+}
+
 #
 #
 # LOGGING = {
