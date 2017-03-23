@@ -1,3 +1,75 @@
-from django.db import models
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 
-# Create your models here.
+"""
+- apps.service_vault.models
+~~~~~~~~~~~~~~
+
+- This file contains the Service Vault models that will map into DB tables and Every micro-service will gets register here
+ """
+
+# future
+from __future__ import unicode_literals
+
+# 3rd party
+
+# Django
+from django.db import models
+from django.utils.translation import ugettext_lazy as _
+from django.contrib.postgres.fields import JSONField
+
+# local
+
+
+class ServiceVault(models.Model):
+    """Service Collection Model
+
+    """
+
+    # Attributes
+    name = models.CharField(
+            _('Service Name'),
+            max_length=30,
+            help_text=_('Required. 30 characters or fewer.'),
+    )
+    request_host = models.UUIDField(
+            _('Request Host'),
+            unique=True,
+            help_text=_('Resource Host, to be passed to kong')
+    )
+    upstream_url = models.URLField(
+            _('upstream url of service.'),
+            max_length=200,
+            help_text=_('Required. 200 characters or fewer.'),
+    )
+    swagger_schema = JSONField(
+            _('Swagger Client')
+    )
+    is_public = models.BooleanField(
+            _('Make Service Public'),
+            default=False,
+            help_text=_('If checked , this service will be publicly available for use.'),
+    )
+    created_at = models.DateTimeField(
+             _('created at'),
+             auto_now_add=False,
+             db_index=True,
+             editable=False,
+    )
+    modified_at = models.DateTimeField(
+             _('modified at'),
+             auto_now_add=False,
+             db_index=True,
+             editable=False,
+    )
+
+    # Meta
+    class Meta:
+        verbose_name = _("Service Vault")
+        verbose_name_plural = _("Services Vault")
+        ordering = ["-created_at"]
+
+    # Functions
+    def __str__(self):
+        return "Service {0}".format(self.name)
+
