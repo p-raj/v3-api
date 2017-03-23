@@ -32,7 +32,9 @@ vault_detail = views.ServiceVaultViewSet.as_view({
     'patch': 'partial_update',
     'delete': 'destroy'
 })
-
+vault_apis = views.ServiceVaultViewSet.as_view({
+    'get': 'apis',
+})
 
 urlpatterns = [
             url(r'^service/$',
@@ -41,5 +43,8 @@ urlpatterns = [
             url(r'^service/(?P<pk>[0-9]+)/$',
                 vault_detail,
                 name='service-vault-detail'),
+            url(r'^service/(?P<pk>[0-9]+)/apis/$',
+                vault_apis,
+                name='service-vault-apis'),
 ]
 

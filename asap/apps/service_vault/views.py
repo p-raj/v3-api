@@ -14,7 +14,8 @@ from __future__ import unicode_literals
 # 3rd party
 
 # rest-framework
-from rest_framework import viewsets, permissions
+from rest_framework.response import Response
+from rest_framework import viewsets, permissions, status
 
 # local
 
@@ -47,3 +48,13 @@ class ServiceVaultViewSet(viewsets.ModelViewSet):
             elif self.request.query_params.get('is_public') == 'false':
                 queryset = queryset.filter(is_public=False)
         return queryset
+
+    def apis(self, request, pk=None):
+        """
+
+        :param request: Django request param
+        :param pk: service vault primary key
+        :return: Service APIS or operations in swagger
+        """
+        response = self.get_object().get_operations()
+        return Response({'operations': response}, status=status.HTTP_200_OK)

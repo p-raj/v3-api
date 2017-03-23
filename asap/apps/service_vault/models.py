@@ -20,6 +20,9 @@ from django.contrib.postgres.fields import JSONField
 
 # local
 
+# own app
+from asap.apps.service_vault import bravdo
+
 
 class ServiceVault(models.Model):
     """Service Collection Model
@@ -74,3 +77,12 @@ class ServiceVault(models.Model):
     def __str__(self):
         return "Service {0}".format(self.name)
 
+    def get_operations(self):
+        """
+
+        :return: swagger client operations
+        """
+        bravdo_client = bravdo.BravadoLib()
+
+        swagger_spec = bravdo_client.get_client_from_spec(self.upstream_url, self.swagger_schema)
+        return bravdo_client.get_all_operations(swagger_spec)
