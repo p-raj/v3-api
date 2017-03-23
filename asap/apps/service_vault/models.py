@@ -32,9 +32,10 @@ class ServiceVault(models.Model):
             max_length=30,
             help_text=_('Required. 30 characters or fewer.'),
     )
-    request_host = models.UUIDField(
+    request_host = models.CharField(
             _('Request Host'),
             unique=True,
+            max_length=200,
             help_text=_('Resource Host, to be passed to kong')
     )
     upstream_url = models.URLField(
@@ -52,13 +53,13 @@ class ServiceVault(models.Model):
     )
     created_at = models.DateTimeField(
              _('created at'),
-             auto_now_add=False,
+             auto_now_add=True,
              db_index=True,
              editable=False,
     )
     modified_at = models.DateTimeField(
              _('modified at'),
-             auto_now_add=False,
+             auto_now_add=True,
              db_index=True,
              editable=False,
     )
