@@ -17,8 +17,6 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from asap.apps import urls as app_routes
-
 from django.conf import settings
 from django.conf.urls import url, include
 from django.conf.urls.static import static
@@ -28,6 +26,9 @@ from rest_framework.documentation import include_docs_urls
 from rest_framework_swagger.views import get_swagger_view
 
 from asap.core.views.proxy import ProxyViewSet
+from asap.apps import urls as app_routes
+from asap.micro_services import urls as micro_service_routes
+
 from .router import Router
 
 API_TITLE = 'Veris API'
@@ -49,6 +50,8 @@ urlpatterns = [
     # TODO:
     # replace the proxy URL with Kong
     url(r'^proxy/(?P<url>.*)', ProxyViewSet.as_view(), name='proxy'),
+    url(r'^micro-service/', include(micro_service_routes, namespace='micro-services')),
+
 ]
 
 if settings.DEBUG:

@@ -250,6 +250,8 @@ THIRD_PARTY_APPS = (
 
 # Apps specific for this project go here.
 LOCAL_APPS = (
+
+    # apps
     'asap.apps.organizations',
     'asap.apps.vrt',
     'asap.apps.widgets',
@@ -258,6 +260,12 @@ LOCAL_APPS = (
     'asap.apps.logs',
     'asap.apps.utils',
     'asap.tests',
+
+    # micro-services
+    'asap.micro_services',
+    'asap.micro_services.notification',
+    'asap.micro_services.state_machine',
+    'asap.micro_services.authorization',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -376,3 +384,18 @@ JWT_ALGORITHMS = ['HS256']
 VERIS_CLIENT_ID = environ.get('VERIS_CLIENT_ID')
 VERIS_CLIENT_SECRET = environ.get('VERIS_CLIENT_SECRET')
 # ######### END ASAP AUTHENTICATION CONFIGURATION
+
+
+
+# ----------------- Gmail --------------------
+EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = ''  # my gmail username
+EMAIL_HOST_PASSWORD = ''  # my gmail password
+EMAIL_PORT = 587
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# ----------------------- Plivo -------------------
+PLIVO_AUTH_ID = ""
+PLIVO_AUTH_TOKEN = ""
