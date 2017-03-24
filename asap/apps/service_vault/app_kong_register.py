@@ -3,7 +3,7 @@
 
 """
 - apps.service-vault.app_kong_register
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - This file contains the function to register service-vault app in Kong
 """
@@ -32,9 +32,8 @@ def add_service_vault_to_kong():
     """
 
     """
-    response = kong.add_api(
+    return kong.add_api(
         APP_NAME,
         APP_REQUEST_HOST,
         APP_UPSTREAM_URL
     )
-    return response
