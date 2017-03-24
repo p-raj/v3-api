@@ -11,6 +11,7 @@ from asap.apps.process import routers as r_process
 from asap.apps.store import routers as r_store
 from asap.apps.vrt import routers as r_runtime
 from asap.apps.widgets import routers as r_widgets
+from asap.apps.service_vault import routers as r_servicevault
 
 # Django
 from django.conf.urls import url, include
@@ -23,4 +24,5 @@ urlpatterns = [
     url(r'', include(r_runtime)),
     url(r'', include(r_store)),
     url(r'', include(r_widgets)),
+    url(r'^service-vault/', include(r_servicevault)),
 ]

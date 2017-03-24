@@ -259,6 +259,7 @@ LOCAL_APPS = (
     'asap.apps.store',
     'asap.apps.logs',
     'asap.apps.utils',
+    'asap.apps.service_vault',
     'asap.tests',
 
     # micro-services
@@ -266,6 +267,7 @@ LOCAL_APPS = (
     'asap.micro_services.notification',
     'asap.micro_services.state_machine',
     'asap.micro_services.authorization',
+
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -336,6 +338,7 @@ REST_FRAMEWORK = {
         'oauth2_provider.ext.rest_framework.OAuth2Authentication'
     ),
     'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
         'rest_framework.filters.OrderingFilter',
         'rest_framework.filters.SearchFilter'
     ),
