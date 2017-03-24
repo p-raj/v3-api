@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-- apps.service-vault.bravado
+- apps.libs.bravado
 ~~~~~~~~~~~~~~
 
 -   This file contains the Bravdo third party library classes/functions which we are going to use in store module.
