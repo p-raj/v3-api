@@ -21,7 +21,7 @@ from django.contrib.postgres.fields import JSONField
 # local
 
 # own app
-from asap.apps.service_vault import bravdo
+from asap.apps.libs import bravdo
 
 
 class ServiceVault(models.Model):
