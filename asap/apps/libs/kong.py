@@ -42,7 +42,7 @@ def add_api(name, request_host, upstream_url):
     data = {
         'name': name,
         'request_host': request_host,
-        'request_path': '',
+       # 'request_path': '/o',
         'upstream_url': upstream_url,
         'strip_request_path': True
     }
