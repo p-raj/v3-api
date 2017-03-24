@@ -89,6 +89,10 @@ WIDGETS_MICRO_SERVICE = get_env_setting('WIDGETS_MICRO_SERVICE')
 VRT_MICRO_SERVICE = get_env_setting('VRT_MICRO_SERVICE')
 
 
+# Kong Related settings
+KONG_API_HOST = get_env_setting('KONG_API_HOST')
+VAULT_UPSTREAM_URL = get_env_setting('VAULT_UPSTREAM_URL')
+
 # ######### DJANGO REST FRAMEWORK CONFIGURATION
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
