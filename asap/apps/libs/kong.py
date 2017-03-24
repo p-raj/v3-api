@@ -17,6 +17,7 @@ from __future__ import unicode_literals
 
 # 3rd party
 import requests
+from rest_framework.exceptions import ValidationError
 
 # Django
 from django.conf import settings
@@ -41,10 +42,13 @@ def add_api(name, request_host, upstream_url):
     data = {
         'name': name,
         'request_host': request_host,
-        'request_path': '/',
+        'request_path': '',
         'upstream_url': upstream_url,
         'strip_request_path': True
     }
-
     add_api_url = '{0}{1}'.format(KONG_API_HOST, 'apis/')
-    return requests.post(add_api_url, data=data)
+    response = requests.post(add_api_url, data=data)
+
+    if response.status_code is not 201:
+        raise ValidationError(response.json())
+    return response
