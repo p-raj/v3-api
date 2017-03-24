@@ -12,6 +12,7 @@
 from __future__ import unicode_literals
 
 # 3rd party
+from rest_framework.exceptions import ValidationError
 
 # Django
 from django.db import models
@@ -19,9 +20,9 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.postgres.fields import JSONField
 
 # local
+from asap.apps.libs import bravdo
 
 # own app
-from asap.apps.libs import bravdo
 
 
 class ServiceVault(models.Model):
@@ -33,11 +34,12 @@ class ServiceVault(models.Model):
     name = models.CharField(
             _('Service Name'),
             max_length=30,
+            unique=True,  # because kong need unique names
             help_text=_('Required. 30 characters or fewer.'),
     )
     request_host = models.CharField(
             _('Request Host'),
-            unique=True,
+            unique=True,  # because kong need unique request_path
             max_length=200,
             help_text=_('Resource Host, to be passed to kong')
     )
@@ -84,5 +86,8 @@ class ServiceVault(models.Model):
         """
         bravdo_client = bravdo.BravadoLib()
 
-        swagger_spec = bravdo_client.get_client_from_spec(self.upstream_url, self.swagger_schema)
-        return bravdo_client.get_all_operations(swagger_spec)
+        try:
+            swagger_spec = bravdo_client.get_client_from_spec(self.upstream_url, self.swagger_schema)
+            return bravdo_client.get_all_operations(swagger_spec)
+        except Exception as e:
+            raise ValidationError({'detail': 'issues in reading swagger client, make sure swagger client you have uploaded is valid.'})
