@@ -25,33 +25,24 @@ from django.contrib import admin
 from rest_framework.documentation import include_docs_urls
 from rest_framework_swagger.views import get_swagger_view
 
-from asap.core.views.proxy import ProxyViewSet
 from asap.apps import urls as app_routes
-from asap.micro_services import urls as micro_service_routes
 
 from .router import Router
 
 API_TITLE = 'Veris API'
 
 urlpatterns = [
-    url(r'^swagger/$', get_swagger_view(title=API_TITLE)),
+    url(r'^schema/$', get_swagger_view(title=API_TITLE)),
+    url(r'^docs/', include_docs_urls(title=API_TITLE, description='')),
 
     url(r'^admin/', admin.site.urls),
     url(r'^auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^docs/', include_docs_urls(title=API_TITLE, description='')),
 
     # we have our own oauth provider
     url(r'^oauth/', include('oauth2_provider.urls', namespace='oauth2_provider')),
 
-    # micro services routers
-    url(r'^api/v1/', include(app_routes, namespace='micro_service_v1')),
+    url(r'^api/v1/', include(app_routes)),
     url(r'^api/v1/', include(Router.shared_router.urls)),
-
-    # TODO:
-    # replace the proxy URL with Kong
-    url(r'^proxy/(?P<url>.*)', ProxyViewSet.as_view(), name='proxy'),
-    url(r'^micro-service/', include(micro_service_routes, namespace='micro-services')),
-
 ]
 
 if settings.DEBUG:

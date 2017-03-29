@@ -6,11 +6,11 @@ from rest_framework import serializers
 from asap.apps.process.models import ProcessLocker
 from asap.apps.process.models.process import Process
 from asap.apps.process.serializers.process import ProcessSerializer
-from asap.core.serializers import AuthorableModelSerializer, TimestampableModelSerializer
+from asap.core.serializers import TimestampableModelSerializer
 from asap.fields.hyperlinked_serialized_related_field import HyperlinkedSerializedRelatedField
 
 
-class ProcessLockerSerializer(AuthorableModelSerializer, TimestampableModelSerializer,
+class ProcessLockerSerializer(TimestampableModelSerializer,
                               serializers.HyperlinkedModelSerializer):
     token = serializers.CharField(read_only=True)
     processes = HyperlinkedSerializedRelatedField(
@@ -25,7 +25,7 @@ class ProcessLockerSerializer(AuthorableModelSerializer, TimestampableModelSeria
 
     class Meta:
         model = ProcessLocker
-        exclude = ()
+        exclude = ('author',)
 
         extra_kwargs = {
             'url': {

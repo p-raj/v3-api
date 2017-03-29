@@ -5,27 +5,26 @@ from .base import *
 # ######### DEBUG CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#debug
 DEBUG = True
-########## END DEBUG CONFIGURATION
+# ######### END DEBUG CONFIGURATION
 
-########## SITE CONFIGURATION
+# ######### SITE CONFIGURATION
 # Hosts/domain names that are valid for this site
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = [
     '*'
 ]
-########## END SITE CONFIGURATION
+# ######### END SITE CONFIGURATION
 
 
-########## EMAIL CONFIGURATION
+# ######### EMAIL CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 
 EMAIL_FILE_PATH = normpath(join(SITE_ROOT, 'emails'))
-########## END EMAIL CONFIGURATION
+# ######### END EMAIL CONFIGURATION
 
 
-
-########## DATABASE CONFIGURATION
+# ######### DATABASE CONFIGURATION
 DATABASES = {
     'default': {
         # https://docs.djangoproject.com/en/1.10/releases/1.9/#database-backends
@@ -39,20 +38,20 @@ DATABASES = {
         'PORT': get_env_setting('DATABASE_PORT')
     }
 }
-########## END DATABASE CONFIGURATION
+# ######### END DATABASE CONFIGURATION
 
 
-########## CACHE CONFIGURATION
+# ######### CACHE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#caches
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
     }
 }
-########## END CACHE CONFIGURATION
+# ######### END CACHE CONFIGURATION
 
 
-########## TOOLBAR CONFIGURATION
+# ######### TOOLBAR CONFIGURATION
 # See: https://github.com/django-debug-toolbar/django-debug-toolbar#installation
 INSTALLED_APPS += (
     'debug_toolbar',
@@ -71,105 +70,20 @@ MIDDLEWARE += [
 DEBUG_TOOLBAR_CONFIG = {
     'SHOW_TEMPLATE_CONTEXT': True
 }
-########## END TOOLBAR CONFIGURATION
+# ######### END TOOLBAR CONFIGURATION
 
 
-########## PROJECT SPECIFIC CONFIGURATION
+# ######### PROJECT SPECIFIC CONFIGURATION
 CELERY_ALWAYS_EAGER = True
-########## PROJECT SPECIFIC CONFIGURATION
+# ######### PROJECT SPECIFIC CONFIGURATION
 
 
-##### Server URL ########
+# ######### SERVER URL
 SERVER_URL = get_env_setting('SERVER_URL')
 
-##### Micro Services UpStream Urls  ######
+
+# ######### MICRO SERVICES UPSTREAM URLS
 PROCESS_MICRO_SERVICE = get_env_setting('PROCESS_MICRO_SERVICE')
 RESOURCE_MICRO_SERVICE = get_env_setting('RESOURCE_MICRO_SERVICE')
 WIDGETS_MICRO_SERVICE = get_env_setting('WIDGETS_MICRO_SERVICE')
 VRT_MICRO_SERVICE = get_env_setting('VRT_MICRO_SERVICE')
-
-
-
-#` ----------------- Gmail --------------------
-EMAIL_USE_TLS = True
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = get_env_setting('EMAIL_HOST_USER')  # my gmail username
-EMAIL_HOST_PASSWORD = get_env_setting('EMAIL_HOST_PASSWORD')  # my gmail password
-EMAIL_PORT = 587
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-
-# ----------------------- Plivo -------------------
-PLIVO_AUTH_ID = get_env_setting('PLIVO_AUTH_ID')
-PLIVO_AUTH_TOKEN = get_env_setting('PLIVO_AUTH_TOKEN')
-
-# Kong Related settings
-KONG_API_HOST = get_env_setting('KONG_API_HOST')
-VAULT_UPSTREAM_URL = get_env_setting('VAULT_UPSTREAM_URL')
-
-# ######### DJANGO REST FRAMEWORK CONFIGURATION
-REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
-    'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer',
-        'rest_framework.renderers.CoreJSONRenderer',
-
-        'rest_framework_swagger.renderers.OpenAPIRenderer',
-        'rest_framework_swagger.renderers.SwaggerUIRenderer',
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
-        # 'oauth2_provider.ext.rest_framework.TokenHasReadWriteScope'
-    ],
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'oauth2_provider.ext.rest_framework.OAuth2Authentication'
-    ),
-    'DEFAULT_FILTER_BACKENDS': (
-        'django_filters.rest_framework.DjangoFilterBackend',
-        'rest_framework.filters.OrderingFilter',
-        'rest_framework.filters.SearchFilter'
-    ),
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 50
-}
-
-#
-#
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'handlers': {
-#         # Include the default Django email handler for errors
-#         # This is what you'd get without configuring logging at all.
-#         'mail_admins': {
-#             'class': 'django.utils.log.AdminEmailHandler',
-#             'level': 'ERROR',
-#              # But the emails are plain text by default - HTML is nicer
-#             'include_html': True,
-#         },
-#         # Log to a text file that can be rotated by logrotate
-#         'logfile': {
-#             'class': 'logging.handlers.WatchedFileHandler',
-#             'filename': '/home/teramatrix/Documents/tmp.log'
-#         },
-#     },
-#     'loggers': {
-#         # Again, default Django configuration to email unhandled exceptions
-#         'django.request': {
-#             'handlers': ['mail_admins'],
-#             'level': 'ERROR',
-#             'propagate': True,
-#         },
-#         # Might as well log any errors anywhere else in Django
-#         'django': {
-#             'handlers': ['logfile'],
-#             'level': 'ERROR',
-#             'propagate': False,
-#         }
-#     },
-# }

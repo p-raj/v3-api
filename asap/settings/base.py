@@ -1,14 +1,12 @@
 """Common settings and globals."""
 from __future__ import absolute_import
 
+from os import environ
 from os.path import abspath
 from os.path import basename
 from os.path import dirname
 from os.path import join
 from os.path import normpath
-from os import environ
-from os import getenv
-
 from sys import path
 
 # Normally you should not import ANYTHING from Django directly
@@ -250,24 +248,9 @@ THIRD_PARTY_APPS = (
 
 # Apps specific for this project go here.
 LOCAL_APPS = (
-
-    # apps
-    'asap.apps.organizations',
     'asap.apps.vrt',
     'asap.apps.widgets',
     'asap.apps.process',
-    'asap.apps.store',
-    'asap.apps.logs',
-    'asap.apps.utils',
-    'asap.apps.service_vault',
-    'asap.tests',
-
-    # micro-services
-    'asap.micro_services',
-    'asap.micro_services.notification',
-    'asap.micro_services.state_machine',
-    'asap.micro_services.authorization',
-
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -338,7 +321,7 @@ REST_FRAMEWORK = {
         'oauth2_provider.ext.rest_framework.OAuth2Authentication'
     ),
     'DEFAULT_FILTER_BACKENDS': (
-        'django_filters.rest_framework.DjangoFilterBackend',
+        'asap.core.filters.django_filter.DjangoFilter',
         'rest_framework.filters.OrderingFilter',
         'rest_framework.filters.SearchFilter'
     ),
@@ -387,18 +370,3 @@ JWT_ALGORITHMS = ['HS256']
 VERIS_CLIENT_ID = environ.get('VERIS_CLIENT_ID')
 VERIS_CLIENT_SECRET = environ.get('VERIS_CLIENT_SECRET')
 # ######### END ASAP AUTHENTICATION CONFIGURATION
-
-
-
-# ----------------- Gmail --------------------
-EMAIL_USE_TLS = True
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = ''  # my gmail username
-EMAIL_HOST_PASSWORD = ''  # my gmail password
-EMAIL_PORT = 587
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-
-# ----------------------- Plivo -------------------
-PLIVO_AUTH_ID = ""
-PLIVO_AUTH_TOKEN = ""

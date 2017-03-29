@@ -53,7 +53,7 @@ class WidgetSerializer(TimestampableModelSerializer, serializers.HyperlinkedMode
         for p in processes:
             resp = requests.get('{0}server/'.format(p.get('url')))
             process_schema = resp.json()
-            widget_proxy = reverse_lazy('micro_service_v1:widget-process-proxy', kwargs={
+            widget_proxy = reverse_lazy('widget-process-proxy', kwargs={
                 'uuid': str(obj.uuid),
                 'process_uuid': p.get('uuid')
             })

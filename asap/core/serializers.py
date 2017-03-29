@@ -15,7 +15,7 @@ class AuthorableModelSerializer(serializers.HyperlinkedModelSerializer):
         :param obj:
         :return:
         """
-        from asap.apps.authentication.views.users import UserSerializer
+        from asap.auth.views.users import UserSerializer
 
         user_serializer = UserSerializer(obj.author, context=self.context)
         return user_serializer.data
