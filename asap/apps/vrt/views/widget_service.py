@@ -41,7 +41,7 @@ class SessionMixin(ProxyView):
 
         if self.get_allow_new():
             runtime = Runtime.objects.filter(uuid=self.runtime_uuid).first()
-            session = Session.objects.create(data={}, runtime=runtime)
+            session = Session.objects.create(author=self.request.user, data={}, runtime=runtime)
             setattr(self, '_session', session.uuid)
             return session
         return None
