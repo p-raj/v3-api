@@ -1,0 +1,27 @@
+---
+version: '2.0'
+save_selected_member:
+  description: >
+    Fetch members workflow.
+    1. User fetches a Member (independent process P1)
+    2. User selects a Member and pushes it to a widget session/data pool ?
+    (independent process P2)
+    3. Member is saved to Runtime Session with additional information
+    * Runtime can then trigger a change in layout of widgets,
+    since the data has changed.
+
+  type: reverse
+  input: # Input parameter declarations
+    - organization_id: 1
+    - w_session_id: '62c12e91-37d9-421b-a0cf-9c7d47c14711'
+    - r_session_id: '62c12e91-37d9-421b-a0cf-9c7d47c14711'
+  tasks:
+    listen_for_member:
+      workflow: wait_for_input
+      publish:
+        session: <% task(listen_for_member).result %>
+      retry: delay=5 count=10
+
+    echo_member:
+      action: std.echo output=<% $.session %>
+      requires: [listen_for_member]

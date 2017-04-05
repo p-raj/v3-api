@@ -1,0 +1,17 @@
+---
+version: '2.0'
+reverse_workflow:
+  description: >
+    Test Reverse Workflow
+  type: reverse
+  input: # Input parameter declarations
+    - data: "test reverse workflow"
+  tasks:
+    echo_first:
+      action: std.echo output="<% $.data %>"
+      publish:
+        new_data: <% task(echo_first).result %>
+
+    echo_after:
+      action: std.echo output=<% $.new_data %>
+      requires: [echo_first]

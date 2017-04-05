@@ -1,0 +1,25 @@
+---
+version: '2.0'
+create_vm_and_send_email:
+  type: direct
+  input:
+    - vm_name
+    - image_id
+    - flavor_id
+  output:
+    result: <% $.vm_id %>
+  tasks:
+    create_vm:
+      action: nova.servers_create name=<% $.vm_name %> image=<% $.image_id %> flavor=<% $.flavor_id %>
+      publish:
+        vm_id: <% $.id %>
+      on-error:
+        - send_error_email
+      on-success:
+        - send_success_email
+    send_error_email:
+      action: send_email to='admin@mysite.org' body='Failed to create a VM'
+      on-complete:
+        - fail
+    send_success_email:
+      action: send_email to='admin@mysite.org' body='Vm is successfully created and its id is <% $.vm_id %>'

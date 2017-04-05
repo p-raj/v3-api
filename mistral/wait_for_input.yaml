@@ -1,0 +1,27 @@
+---
+version: '2.0'
+wait_for_input:
+  description: >
+    Fetch members workflow.
+    1. User fetches a Member (independent process P1)
+    2. User selects a Member and pushes it to a widget session/data pool ?
+    (independent process P2)
+    3. Member is saved to Runtime Session with additional information
+    * Runtime can then trigger a change in layout of widgets,
+    since the data has changed.
+
+  type: direct
+  input: # Input parameter declarations
+    - key: 'member'
+    - url: 'http://172.19.0.1:8000/api/v1/sessions/62c12e91-37d9-421b-a0cf-9c7d47c14711/'
+  tasks:
+    listen_for_key:
+      action: std.http url=<% $.url %>
+      publish:
+        response: <% task(listen_for_key).result.content %>
+      on-success:
+        - echo_response
+        - fail: <% not $.response.data.containsKey($.key) %>
+
+    echo_response:
+      action: std.echo output=<% $.response %>

@@ -1,0 +1,25 @@
+---
+version: '2.0'
+create_vm_and_send_email:
+  type: reverse
+  input:
+    - vm_name
+    - image_id
+    - flavor_id
+  output:
+    result: <% $.vm_id %>
+  tasks:
+    create_vm:
+      action: nova.servers_create name=<% $.vm_name %> image=<% $.image_id %> flavor=<% $.flavor_id %>
+      publish:
+        vm_id: <% $.id %>
+    search_for_ip:
+      action: nova.floating_ips_findall instance_id=null
+      publish:
+        vm_ip: <% $[0].ip %>
+    associate_ip:
+      action: nova.servers_add_floating_ip server=<% $.vm_id %> address=<% $.vm_ip %>
+      requires: [search_for_ip]
+    send_email:
+      action: send_email to='admin@mysite.org' body='Vm is created and id <% $.vm_id %> and ip address <% $.vm_ip %>'
+      requires: [create_vm, associate_ip]
