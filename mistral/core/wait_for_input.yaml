@@ -1,0 +1,18 @@
+---
+version: '2.0'
+wait_for_input:
+  description: ''
+  type: direct
+  input:
+    - key
+    - url
+  tasks:
+    listen_for_key:
+      action: std.http url=<% $.url %>
+      publish:
+        response: <% task(listen_for_key).result.content %>
+      on-success:
+        - echo_response
+        - fail: <% not $.response.data.containsKey($.key) %>
+    echo_response:
+      action: std.echo output=<% $.response %>

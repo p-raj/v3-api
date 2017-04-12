@@ -1,0 +1,20 @@
+---
+version: '2.0'
+who_are_you:
+  description: ''
+  type: reverse
+  input:
+    - url
+  tasks:
+    listen_for_name:
+      workflow: wait_for_input
+      input:
+        url: <% $.url %>
+        key: name
+      publish:
+        session: <% task(listen_for_name).result %>
+      retry: delay=10 count=100
+
+    publish_data:
+      action: std.http url='<% $.url %>resolve/name' method='POST'
+      requires: [listen_for_name]

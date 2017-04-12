@@ -1,0 +1,20 @@
+---
+version: '2.0'
+action:
+  description: ''
+  type: reverse
+  input:
+    - url
+  tasks:
+    listen_for_action:
+      workflow: wait_for_input
+      input:
+        url: <% $.url %>
+        key: action
+      publish:
+        session: <% task(listen_for_action).result %>
+      retry: delay=10 count=100
+
+    publish_data:
+      action: std.http url='<% $.url %>resolve/action/' method='POST'
+      requires: [listen_for_action]

@@ -1,0 +1,24 @@
+---
+version: '2.0'
+logbook:
+  description: ''
+  type: reverse
+  input:
+    - runtime_url
+    - session_url
+  tasks:
+    wait_for_who_are_you:
+      workflow: who_are_you
+      input:
+        url: <% $.session_url %>
+      retry: delay=10 count=100
+
+    wait_for_action:
+      workflow: action
+      input:
+        url: <% $.session_url %>
+      retry: delay=10 count=100
+
+    publish_data:
+      action: std.http url='<% $.runtime_url %>done/' method='POST'
+      requires: [wait_for_who_are_you, wait_for_action]
