@@ -1,0 +1,50 @@
+---
+version: '2.0'
+process:
+  description: ''
+  type: direct
+  input:
+    - url
+    - method: GET
+    - params: {}
+    - body: {}
+    - headers: {}
+    - cookies: {}
+    - auth: {}
+    - timeout: 10
+    - allow_redirects: false
+    - proxies: {}
+  tasks:
+    execute:
+      action: std.http
+      input:
+        url: <% $.url %>
+        method: <% $.method %>
+        params: <% $.params %>
+        body: <% $.body %>
+        headers: <% $.headers %>
+        cookies: <% $.cookies %>
+        auth: <% $.auth %>
+        timeout: <% $.timeout %>
+        allow_redirects: <% $.allow_redirects %>
+        proxies: <% $.proxies %>
+      publish:
+        data: <% task(execute).result.content %>
+        cookies: <% task(execute).result.cookies %>
+        elapsed: <% task(execute).result.elapsed %>
+        encoding: <% task(execute).result.encoding %>
+        headers: <% task(execute).result.headers %>
+        history: <% task(execute).result.history %>
+        reason: <% task(execute).result.reason %>
+        status: <% task(execute).result.status %>
+        url: <% task(execute).result.url %>
+      publish-on-error:
+        error: <% task(execute).result.content %>
+        cookies: <% task(execute).result.cookies %>
+        elapsed: <% task(execute).result.elapsed %>
+        encoding: <% task(execute).result.encoding %>
+        headers: <% task(execute).result.headers %>
+        history: <% task(execute).result.history %>
+        reason: <% task(execute).result.reason %>
+        status: <% task(execute).result.status %>
+        url: <% task(execute).result.url %>
