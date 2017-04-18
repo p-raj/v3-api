@@ -11,7 +11,7 @@ from mistralclient.api.v2.executions import ExecutionManager
 
 # TODO
 MISTRAL_SERVER = 'http://localhost:8989/v2'
-MISTRAL_PROCESS_EXECUTION_ID = 'f9b9ae3a-6660-4f40-ad05-512d4a2d9854'
+MISTRAL_PROCESS_EXECUTION_NAME = 'process'
 
 # TODO
 PROCESS_SERVER = 'http://172.19.0.1:8001/'
@@ -47,7 +47,7 @@ class ProcessActionProxyViewSet(views.APIView):
     def post(self, request, *args, **kwargs):
         raw_request = getattr(request, '_request')
         em = ExecutionManager(HTTPClient(MISTRAL_SERVER))
-        execution = em.create(MISTRAL_PROCESS_EXECUTION_ID, workflow_input={
+        execution = em.create(MISTRAL_PROCESS_EXECUTION_NAME, workflow_input={
             'url': self.get_process_url(**kwargs),
             'method': 'post',
             'params': dict(request.query_params),
