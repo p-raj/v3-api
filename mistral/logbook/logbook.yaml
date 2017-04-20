@@ -4,21 +4,21 @@ logbook:
   description: ''
   type: reverse
   input:
-    - runtime_url
-    - session_url
+    - keystore: http://localhost:7379/SET/
+    - session
   tasks:
-    wait_for_who_are_you:
-      workflow: who_are_you
+    wait_for_f74f2c34-2ed3-4a6a-ad18-7e25e509b7ba:
+      workflow: f74f2c34-2ed3-4a6a-ad18-7e25e509b7ba
       input:
-        url: <% $.session_url %>
+        url: <% $.session %><% $.session %>
       retry: delay=10 count=100
 
     wait_for_action:
       workflow: action
       input:
-        url: <% $.session_url %>
+        url: <% $.session %>
       retry: delay=10 count=100
 
     publish_data:
-      action: std.http url='<% $.runtime_url %>done/' method='POST'
-      requires: [wait_for_who_are_you, wait_for_action]
+      action: std.echo output='<% $.store %>' method='POST'
+      requires: [wait_for_f74f2c34-2ed3-4a6a-ad18-7e25e509b7ba, wait_for_action]

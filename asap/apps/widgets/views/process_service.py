@@ -6,8 +6,12 @@ from time import sleep
 
 from rest_framework import response, views
 
+from asap.apps.vrt.models.session import Session
 from mistralclient.api.httpclient import HTTPClient
 from mistralclient.api.v2.executions import ExecutionManager
+
+# TODO
+KEYSTORE_SERVER = 'http://172.19.0.1:7379/'
 
 # TODO
 MISTRAL_SERVER = 'http://localhost:8989/v2'
@@ -28,11 +32,28 @@ class ProcessActionProxyViewSet(views.APIView):
         - `/widgets/<w_id>/process/<p_id>/` should internally call
             `/process/<p_id>/` and update the session for the `Widget`.
     """
-    proxy_host = 'http://localhost:8000'
-    source = 'api/v1/processes/%(process_uuid)s/execute/'
 
-    @staticmethod
-    def get_process_url(**kwargs):
+    def get_session(self):
+        return self.request.META.get('HTTP_X_VRT_SESSION', '')
+
+    def proxy_process_url(self, **kwargs):
+        return '{keystore}/{action}/{key}'.format(**{
+            'keystore': KEYSTORE_SERVER,
+            'action': 'SET',
+            'key': '{session}.{widget}.{process}'.format(**{
+                'session': self.get_session(),
+                'widget': kwargs.get('uuid'),
+                'process': kwargs.get('process_uuid')
+            })
+        })
+
+    def get_process_url(self, **kwargs):
+        if self.get_session():
+            # each process data is recorded to replay the history
+            # mistral is looking for this
+            return self.proxy_process_url(**kwargs)
+
+        # direct
         return '{process_server}{path}'.format(**{
             'process_server': PROCESS_SERVER,
             'path': 'api/v1/processes/%(process_uuid)s/execute/'

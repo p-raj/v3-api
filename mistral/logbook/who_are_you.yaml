@@ -4,26 +4,32 @@ who_are_you:
   description: ''
   type: direct
   input:
-    - url
+    - session
+    - process
   tasks:
-    listen_for_input:
-      workflow: wait_for_input
+    listen_for_input_p1-id:
+      workflow: process_reversed
       input:
-        url: <% $.url %>
+        url: <% $.session %>.'p1-id'
       publish:
-        data: <% task(listen_for_input).result %>
+        data: <% task(listen_for_input_p1-id).result %>
       retry: delay=10 count=100
       on-success:
-        - actual_process
+        # now process_from rule may depend on user input ?
+        # or may work on existing data :/
+        # for existing data only
+        - process_from_rule_if_any
 
-    actual_process:
+        # a rule to mark the widget as finished
+        - succeed
+
+    process_from_rule_if_any:
       workflow: process
+      input:
+        url: <% $.process %>
+        body: <% $.data %>
       on-success:
-        - after_process: <% $.data.len() != 0 %>
-
-    after_process:
-      workflow: process
+        - publish_data
 
     publish_data:
-      action: std.http url='<% $.url %>resolve/name' method='POST'
-      requires: [listen_for_input]
+      action: std.echo output=<% $.data %>

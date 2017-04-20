@@ -8,7 +8,7 @@ Widget
 It is one of the most critical layers,
 responsible for mapping the UI components to the processes.
 
- """
+"""
 
 from django.conf import settings
 from django.contrib import admin
@@ -64,6 +64,55 @@ class Widget(Authorable, Humanizable, Timestampable,
                     'using admin widget designed by developer'),
     )
 
+    # the rules defined by the admin needs
+    # to be translated to mistral workflows :)
+    # for each rule there might be a mini workflow
+    # eg.
+    # on saving a member ---> send him a notification
+    # P1: Search Member
+    # P2: Save Member
+    # P3: Send notification
+    #  trigger: P2
+    #  condition: member.email --> contains --> veris.in
+    #  action: P3
+    #
+    # P2' (mistral): Wait for input
+    #  1.a. change the process URL, kind of proxy?, preventing changes in schema
+    #  1.b. generate the schema with a different P2 url ?
+    #  2. forwards the data to P2
+    #  3. Checks the rule on complete and starts P3
+    rules = JSONField(
+        _('Widget Rules'),
+        null=True, blank=True
+    )
+
+    # first of all, find a fucking better name :)
+    # auto generated when a rule is created
+    # eg.
+    # for each rule:
+    # P1 ----> condition ----> P2
+    # P1 ----> P1'
+    # where P1' is the temporary URL created
+    # where the data will be stored per __session/execution__
+    # process mappings ?
+    # FIXME
+    # move this to session ?
+    # UPDATE: every process is a proxy
+    # process_proxies = JSONField(
+    #     _('Process Proxy'),
+    #     null=True, blank=True
+    # )
+
+    # generate the workflow YAML and insert into mistral :)
+    # workflow_json = JSONField(
+    #     _('Workflow'),
+    #     null=True, blank=True
+    # )
+
+    # the workflow to start when the widget is invoked
+    # each instance will have widget execution / workflow execution
+    workflow_uuid = models.CharField(max_length=512, null=True, blank=True)
+
     # the template consists of the layout of components
     # & their bindings to processes
     # we may have bindings that are
@@ -74,14 +123,56 @@ class Widget(Authorable, Humanizable, Timestampable,
         help_text=_('Widget Template, the list of components with their layout & styles'),
     )
 
-    @property
-    def schema(self):
-        # TODO
-        # generate schema from processes json
-        return
-
     def __str__(self):
         return '{0}'.format(self.name)
+
+    @staticmethod
+    def get_process_id(process):
+        return process.get('uuid')[:6]
+
+    @property
+    def workflow_name(self):
+        return 'wait_for_{widget}'.format(widget=self.uuid)
+
+    @staticmethod
+    def workflow_task(process_id):
+        from asap.apps.widgets.views.process_service import KEYSTORE_SERVER
+        return {
+            'workflow': 'process_reversed',
+            'input': {
+                'url': '{store}SET/<% $.session %>.{process}'.format(
+                    store=KEYSTORE_SERVER,
+                    process=process_id
+                )
+            },
+            'publish': {
+                'data': '<% task(listen_for_input_{process}).result %>'.format(
+                    process=process_id
+                )
+            },
+            'retry': 'delay=5 count=5',
+            'on-success': [
+                'succeed'
+            ]
+        }
+
+    @property
+    def workflow_json(self):
+        return {
+            'version': '2.0',
+            self.workflow_name: {
+                'description': self.description or '',
+                'type': 'direct',
+                'input': [
+                    'session',
+                    'process'
+                ],
+                'tasks': {
+                    'listen_for_input_{process}'.format(process=self.get_process_id(_)):
+                        self.workflow_task(self.get_process_id(_)) for _ in self.processes_json
+                }
+            }
+        }
 
     def has_permission(self, token):
         # TODO

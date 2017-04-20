@@ -1,0 +1,22 @@
+---
+version: '2.0'
+process_reversed:
+  description: ''
+  type: direct
+  input:
+    - url
+  tasks:
+    listen_for_input:
+        workflow: wait_for_input
+        input:
+          url: <% $.url %>
+        publish:
+          data: <% task(listen_for_input).result %>
+        retry: delay=10 count=10
+        on-success:
+          - original_process
+    original_process:
+      workflow: process
+      input:
+        url: <% $.process %>
+        body: <% $.data %>
