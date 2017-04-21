@@ -99,7 +99,7 @@ class WidgetLocker(Authorable, Timestampable,
             return False
 
     def __str__(self):
-        return 'Widget Locker {0}'.format(self.name)
+        return 'Widget Locker {0}'.format(self.uuid)
 
     def __payload__(self):
         return {

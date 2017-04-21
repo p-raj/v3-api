@@ -4,4 +4,4 @@
 
 """
 
-PROCESS_LOCKER_UPSTREAM_URL = 'http://localhost:8000/api/v1/process-locker/{process_locker_token}/'
+PROCESS_LOCKER_UPSTREAM_URL = 'http://localhost:8001/api/v1/process-locker/{process_locker_token}/'

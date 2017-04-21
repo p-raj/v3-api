@@ -19,7 +19,7 @@ class WidgetViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelVi
 
     lookup_field = 'uuid'
     lookup_parent = [
-        ('widget_locker_token', 'widgetlocker__token')
+        ('widget_locker_uuid', 'widgetlocker__uuid')
     ]
 
     def get_session_uuid(self):

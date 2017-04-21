@@ -132,7 +132,7 @@ class Widget(Authorable, Humanizable, Timestampable,
 
     @property
     def workflow_name(self):
-        return 'wait_for_{widget}'.format(widget=self.uuid)
+        return 'widget_{widget}'.format(widget=self.uuid)
 
     @staticmethod
     def workflow_task(process_id):
@@ -164,8 +164,7 @@ class Widget(Authorable, Humanizable, Timestampable,
                 'description': self.description or '',
                 'type': 'direct',
                 'input': [
-                    'session',
-                    'process'
+                    'session'
                 ],
                 'tasks': {
                     'listen_for_input_{process}'.format(process=self.get_process_id(_)):

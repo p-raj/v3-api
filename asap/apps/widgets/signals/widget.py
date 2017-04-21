@@ -23,7 +23,7 @@ from mistralclient.api.v2.workflows import WorkflowManager
 
 logger = logging.getLogger(__name__)
 
-ProcessLocker_URL = 'http://localhost:8000/api/v1/process-lockers/{pl_uuid}/processes/'
+ProcessLocker_URL = 'http://localhost:8001/api/v1/process-lockers/{pl_uuid}/processes/'
 
 swagger_dict = {
     'swagger': '2.0',
