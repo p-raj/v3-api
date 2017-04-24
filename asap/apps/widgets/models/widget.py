@@ -9,11 +9,13 @@ It is one of the most critical layers,
 responsible for mapping the UI components to the processes.
 
 """
+import functools
 
 from django.conf import settings
 from django.contrib import admin
 from django.contrib.postgres.fields import JSONField
 from django.db import models
+from django.urls.base import reverse
 from django.utils.translation import ugettext_lazy as _
 
 from asap.core.models import Authorable, Humanizable, Timestampable, UniversallyIdentifiable
@@ -126,35 +128,59 @@ class Widget(Authorable, Humanizable, Timestampable,
     def __str__(self):
         return '{0}'.format(self.name)
 
+    def get_process_rules(self, process_id):
+        assert not self.rules or type(self.rules) == list, \
+            'rules need to an array, each rule should have ' \
+            '- trigger, ' \
+            '- action, ' \
+            '- list of conditions'
+        return [
+            '{process_name} : {rule}'.format(**{
+                'process_name': 'process_{0}'.format(_.get('action')),
+                'rule': '<% {0} %>'.format(
+                    functools.reduce(
+                        lambda c1, c2: '{0} and {1}'.format(c1, c2),
+                        _.get('conditions')
+                    )
+                )
+            }) for _ in self.rules if _.get('trigger') == process_id
+        ]
+
     @staticmethod
     def get_process_id(process):
-        return process.get('uuid')[:6]
+        return process.get('uuid')
 
     @property
     def workflow_name(self):
         return 'widget_{widget}'.format(widget=self.uuid)
 
-    @staticmethod
-    def workflow_task(process_id):
+    def workflow_task(self, process_id):
         from asap.apps.widgets.views.process_service import KEYSTORE_SERVER
-        return {
+        task = {
             'workflow': 'process_reversed',
             'input': {
                 'url': '{store}SET/<% $.session %>.{process}'.format(
                     store=KEYSTORE_SERVER,
                     process=process_id
-                )
+                ),
+                'process': reverse('widget-process-proxy', kwargs={
+                    'uuid': self.uuid,
+                    'process_uuid': process_id
+                })
             },
             'publish': {
-                'data': '<% task(listen_for_input_{process}).result %>'.format(
-                    process=process_id
+                'data': '<% task(process_{process}).result %>'.format(
+                    process=process_id[:6]
                 )
             },
             'retry': 'delay=5 count=5',
-            'on-success': [
-                'succeed'
-            ]
         }
+
+        rules = self.get_process_rules(process_id)
+        if rules:
+            task['on-success'] = rules
+        print(task)
+        return task
 
     @property
     def workflow_json(self):
@@ -167,7 +193,7 @@ class Widget(Authorable, Humanizable, Timestampable,
                     'session'
                 ],
                 'tasks': {
-                    'listen_for_input_{process}'.format(process=self.get_process_id(_)):
+                    'process_{process}'.format(process=_.get('uuid')):
                         self.workflow_task(self.get_process_id(_)) for _ in self.processes_json
                 }
             }

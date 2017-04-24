@@ -5,6 +5,7 @@ process_reversed:
   type: direct
   input:
     - url
+    - process
   tasks:
     listen_for_input:
         workflow: wait_for_input

@@ -12,6 +12,6 @@ wait_for_input:
         response: <% task(listen_for_input).result.content %>
       on-success:
         - echo_response
-        - fail: <% $.response.data.len() = 0 %>
+        - fail: <% $.response.len() = 0 %>
     echo_response:
       action: std.echo output=<% $.response %>

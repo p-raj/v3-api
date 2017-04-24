@@ -5,7 +5,7 @@ process:
   type: direct
   input:
     - url
-    - method: GET
+    - method: POST
     - params: {}
     - body: {}
     - headers: {}
