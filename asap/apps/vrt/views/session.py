@@ -4,14 +4,15 @@ import json
 
 import kinto_http
 from kinto_http.exceptions import KintoException
-
 from rest_framework import response, status, viewsets
+from rest_framework.decorators import detail_route
+from rest_framework.permissions import AllowAny
 from rest_framework.reverse import reverse_lazy
 
 from asap.apps.vrt.models.session import Session
 from asap.apps.vrt.serializers.session import SessionSerializer
 from asap.core.permissions.is_author_or_read_only import IsAuthorOrReadOnly
-from asap.core.views import DRFNestedViewMixin, AuthorableModelViewSet
+from asap.core.views import AuthorableModelViewSet, DRFNestedViewMixin
 
 # FIXME
 KINTO_BUCKET = 'runtimes'
@@ -22,7 +23,7 @@ class SessionViewSet(AuthorableModelViewSet, DRFNestedViewMixin,
                      viewsets.ModelViewSet):
     queryset = Session.objects.all()
     serializer_class = SessionSerializer
-    permission_classes = (IsAuthorOrReadOnly,)
+    permission_classes = (AllowAny,)
 
     lookup_field = 'uuid'
     lookup_parent = [
@@ -66,8 +67,9 @@ class SessionViewSet(AuthorableModelViewSet, DRFNestedViewMixin,
 
     def update(self, request, *args, **kwargs):
         data = request.data.get('data', {})
+        data = data if type(data) == dict else json.loads(data)
         self.kinto.update_record(
-            data if type(data) == dict else json.loads(data),
+            data,
             id=self.get_object().uuid,
             bucket=KINTO_BUCKET,
             collection=KINTO_COLLECTION
@@ -87,3 +89,23 @@ class SessionViewSet(AuthorableModelViewSet, DRFNestedViewMixin,
             # FIXME
             pass
         return instance
+
+    @detail_route(permission_classes=[AllowAny], methods=['post'])
+    def set(self, request, **kwargs):
+        data = request.data
+        data = data if type(data) == dict else json.loads(data)
+        data = {
+            request.META.get('HTTP_PROCESS', 'invalid'): data
+        }
+        r = self.kinto.update_record(
+            data,
+            id=self.get_object().uuid,
+            bucket=KINTO_BUCKET,
+            collection=KINTO_COLLECTION
+        )
+        return response.Response(r)
+
+    @detail_route(permission_classes=[AllowAny], methods=['get', 'post'])
+    def get(self, request, **kwargs):
+        instance = self.get_object()
+        return response.Response(instance.data.get(request.META.get('HTTP_PROCESS', 'invalid'), {}))

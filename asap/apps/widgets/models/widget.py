@@ -129,7 +129,10 @@ class Widget(Authorable, Humanizable, Timestampable,
         return '{0}'.format(self.name)
 
     def get_process_rules(self, process_id):
-        assert not self.rules or type(self.rules) == list, \
+        if not self.rules:
+            return []
+
+        assert type(self.rules) == list, \
             'rules need to an array, each rule should have ' \
             '- trigger, ' \
             '- action, ' \
@@ -159,27 +162,29 @@ class Widget(Authorable, Humanizable, Timestampable,
         task = {
             'workflow': 'process_reversed',
             'input': {
-                'url': '{store}SET/<% $.session %>.{process}'.format(
-                    store=KEYSTORE_SERVER,
-                    process=process_id
+                'url': '{store}/<% $.session %>/get/'.format(
+                    store=KEYSTORE_SERVER
                 ),
                 'process': reverse('widget-process-proxy', kwargs={
                     'uuid': self.uuid,
                     'process_uuid': process_id
-                })
+                }),
+                'headers': {
+                    'Process': process_id,
+                    'Content-Type': 'application/json'
+                }
             },
             'publish': {
-                'data': '<% task(process_{process}).result %>'.format(
+                'data': '<% task(process_{process}).result.content %>'.format(
+                    # FIXME
                     process=process_id[:6]
                 )
-            },
-            'retry': 'delay=5 count=5',
+            }
         }
 
         rules = self.get_process_rules(process_id)
         if rules:
             task['on-success'] = rules
-        print(task)
         return task
 
     @property
@@ -193,7 +198,8 @@ class Widget(Authorable, Humanizable, Timestampable,
                     'session'
                 ],
                 'tasks': {
-                    'process_{process}'.format(process=_.get('uuid')):
+                    # FIXME
+                    'process_{process}'.format(process=_.get('uuid')[:6]):
                         self.workflow_task(self.get_process_id(_)) for _ in self.processes_json
                 }
             }

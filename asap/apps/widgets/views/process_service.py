@@ -11,7 +11,7 @@ from mistralclient.api.httpclient import HTTPClient
 from mistralclient.api.v2.executions import ExecutionManager
 
 # TODO
-KEYSTORE_SERVER = 'http://172.19.0.1:7379/'
+KEYSTORE_SERVER = 'http://172.19.0.1:8001/api/v1/sessions'
 
 # TODO
 MISTRAL_SERVER = 'http://localhost:8989/v2'
@@ -37,14 +37,10 @@ class ProcessActionProxyViewSet(views.APIView):
         return self.request.META.get('HTTP_X_VRT_SESSION', '')
 
     def proxy_process_url(self, **kwargs):
-        return '{keystore}/{action}/{key}'.format(**{
+        return '{keystore}/{session}/set/'.format(**{
             'keystore': KEYSTORE_SERVER,
-            'action': 'SET',
-            'key': '{session}.{widget}.{process}'.format(**{
-                'session': self.get_session(),
-                'widget': kwargs.get('uuid'),
-                'process': kwargs.get('process_uuid')
-            })
+            'session': self.get_session(),
+            'process': kwargs.get('process_uuid')
         })
 
     def get_process_url(self, **kwargs):
@@ -76,7 +72,8 @@ class ProcessActionProxyViewSet(views.APIView):
             'cookies': raw_request.COOKIES,
             'headers': {
                 'Content-Type': request.content_type,
-                'Authorization': self.get_authenticate_header(kwargs)
+                'Authorization': self.get_authorization_header(**kwargs),
+                'Process': kwargs.get('process_uuid')
             }
         })
 

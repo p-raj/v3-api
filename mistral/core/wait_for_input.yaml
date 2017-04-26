@@ -5,13 +5,13 @@ wait_for_input:
   type: direct
   input:
     - url
+    - headers: {}
   tasks:
     listen_for_input:
-      action: std.http url=<% $.url %>
+      action: std.http url=<% $.url %> headers=<% $.headers %>
       publish:
-        response: <% task(listen_for_input).result.content %>
+        result: <% task(listen_for_input).result %>
+      publish-on-error:
+        result: <% task(listen_for_input).result %>
       on-success:
-        - echo_response
-        - fail: <% $.response.len() = 0 %>
-    echo_response:
-      action: std.echo output=<% $.response %>
+        - fail: <% $.result.len() = 0 %>
