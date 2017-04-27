@@ -1,10 +1,10 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-
+import uuid
 import logging
 
 from django.core.exceptions import PermissionDenied
+
 from rest_framework.permissions import AllowAny
+
 from rest_framework_proxy.views import ProxyView
 
 from asap.apps.vrt.models.runtime import Runtime
@@ -60,7 +60,77 @@ class SessionMixin(ProxyView):
         session.save()
 
 
-class WidgetProxyViewSet(SessionMixin, ProxyView):
+class LoggingProxyViewSet(SessionMixin, ProxyView):
+    """
+
+    """
+    # TODO : remove AllowAny permission with proper permission class
+    permission_classes = (AllowAny,)
+
+    logger = None
+    actor = 'vrt'
+
+    def __init__(self, **kwargs):
+        super(LoggingProxyViewSet, self).__init__(**kwargs)
+        self.runtime_uuid = None
+        self.widget_uuid = None
+
+    def _init_logger_(self, request, token):
+        """
+        :param request : Django request object.
+        :param token : widget token, helps in identifying the widget
+        :return: logging class instance
+        """
+        # FIXME
+        # hack to prevent 500 :'(
+        # session can't be null, invalid requests prevent entry in DB
+        # instead an entry should be created without session id
+        # make session nullable
+
+        # fake API call to generate a session
+        # if it doesn't exists :/
+        self.get_session()
+
+        session_uuid = self.get_session_uuid() or uuid.uuid4()
+
+    def create_response(self, response):
+        _response = response
+        response = super(LoggingProxyViewSet, self).create_response(response)
+
+        if response.status_code >= 400:
+            try:
+                response.data = _response.json()
+            except Exception as e:
+                # let's log to check when it fails
+                # TODO: use logger
+                print(e)
+
+        # payload gets overridden anyways in logger._log_db_entry
+        # so why bother sending it ?
+        # remove the parameter from the method signature
+        response['X-VRT-SESSION'] = self.get_session_uuid()
+        return response
+
+    def create_error_response(self, body, status):
+        response = super(LoggingProxyViewSet, self).create_error_response(body, status)
+
+        # payload gets overridden anyways in logger._log_db_entry
+        # so why bother sending it ?
+        # remove the parameter from the method signature
+        response['X-VRT-SESSION'] = self.get_session_uuid()
+        return response
+
+    def proxy(self, request, *args, **kwargs):
+        self.runtime_uuid = kwargs.get('uuid')
+        self.widget_uuid = kwargs.get('widget_uuid')
+
+        if self.logger is None:
+            self._init_logger_(request, self.runtime_uuid)
+
+        return super(LoggingProxyViewSet, self).proxy(request, *args, **kwargs)
+
+
+class WidgetProxyViewSet(LoggingProxyViewSet):
     """
     A Proxy ViewSet to fetch data from the Widgets Service
     while maintaining a session.
