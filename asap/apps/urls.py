@@ -4,8 +4,8 @@
 from django.conf.urls import include, url
 
 from asap.apps.process import routers as r_process
-from asap.apps.vrt import routers as r_runtime
-from asap.apps.widgets import routers as r_widgets
+from asap.apps.runtime import routers as r_runtime
+from asap.apps.widget import routers as r_widgets
 
 urlpatterns = [
     url(r'', include(r_process)),

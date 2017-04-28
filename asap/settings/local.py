@@ -31,11 +31,11 @@ DATABASES = {
         # The PostgreSQL backend (django.db.backends.postgresql_psycopg2)
         # is also available as django.db.backends.postgresql. :)
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': get_env_setting('DATABASE_NAME'),
-        'USER': get_env_setting('DATABASE_USER'),
-        'PASSWORD': get_env_setting('DATABASE_PASSWORD'),
-        'HOST': get_env_setting('DATABASE_HOST'),
-        'PORT': get_env_setting('DATABASE_PORT')
+        'NAME': 'v3',
+        'HOST': 'localhost',
+        'USER': 'veris',
+        'PASSWORD': 'veris',
+        'PORT': '5432'
     }
 }
 # ######### END DATABASE CONFIGURATION
@@ -76,14 +76,3 @@ DEBUG_TOOLBAR_CONFIG = {
 # ######### PROJECT SPECIFIC CONFIGURATION
 CELERY_ALWAYS_EAGER = True
 # ######### PROJECT SPECIFIC CONFIGURATION
-
-
-# ######### SERVER URL
-SERVER_URL = get_env_setting('SERVER_URL')
-
-
-# ######### MICRO SERVICES UPSTREAM URLS
-PROCESS_MICRO_SERVICE = get_env_setting('PROCESS_MICRO_SERVICE')
-RESOURCE_MICRO_SERVICE = get_env_setting('RESOURCE_MICRO_SERVICE')
-WIDGETS_MICRO_SERVICE = get_env_setting('WIDGETS_MICRO_SERVICE')
-VRT_MICRO_SERVICE = get_env_setting('VRT_MICRO_SERVICE')

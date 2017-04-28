@@ -15,10 +15,7 @@ class AuthorableModelSerializer(serializers.HyperlinkedModelSerializer):
         :param obj:
         :return:
         """
-        from asap.auth.views.users import UserSerializer
-
-        user_serializer = UserSerializer(obj.author, context=self.context)
-        return user_serializer.data
+        return obj.username
 
 
 class TimestampableModelSerializer(serializers.ModelSerializer):

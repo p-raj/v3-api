@@ -1,6 +1,27 @@
 """Production settings and globals."""
 
+from os import environ
+from os import getenv
+
 from .base import *
+
+# Normally you should not import ANYTHING from Django directly
+# into your settings, but ImproperlyConfigured is an exception.
+from django.core.exceptions import ImproperlyConfigured
+
+
+def get_env_setting(key):
+    """
+    Get the environment setting or return exception,
+    if default is not set
+
+    :param key:
+    """
+    try:
+        return environ[key]
+    except KeyError:
+        error_msg = 'Set the {0} env variable'.format(key)
+        raise ImproperlyConfigured(error_msg)
 
 
 ########## HOST CONFIGURATION
@@ -116,4 +137,3 @@ REST_FRAMEWORK_EXTENSIONS = {
     'DEFAULT_CACHE_RESPONSE_TIMEOUT': 30
 }
 ########## END DJANGO REST FRAMEWORK CONFIGURATION
-

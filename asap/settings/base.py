@@ -1,32 +1,12 @@
 """Common settings and globals."""
 from __future__ import absolute_import
 
-from os import environ
 from os.path import abspath
 from os.path import basename
 from os.path import dirname
 from os.path import join
 from os.path import normpath
 from sys import path
-
-# Normally you should not import ANYTHING from Django directly
-# into your settings, but ImproperlyConfigured is an exception.
-from django.core.exceptions import ImproperlyConfigured
-
-
-def get_env_setting(key):
-    """
-    Get the environment setting or return exception,
-    if default is not set
-
-    :param key:
-    """
-    try:
-        return environ[key]
-    except KeyError:
-        error_msg = 'Set the {0} env variable'.format(key)
-        raise ImproperlyConfigured(error_msg)
-
 
 # ######### PATH CONFIGURATION
 # Absolute filesystem path to the Django project directory:
@@ -240,7 +220,7 @@ DJANGO_APPS = (
 
 THIRD_PARTY_APPS = (
     # 'reversion',
-    'oauth2_provider',
+    # 'oauth2_provider',
 
     'rest_framework',
     'rest_framework_swagger'
@@ -248,9 +228,10 @@ THIRD_PARTY_APPS = (
 
 # Apps specific for this project go here.
 LOCAL_APPS = (
-    'asap.apps.vrt',
-    'asap.apps.widgets',
-    'asap.apps.process',
+    'bouncer.apps.AuthenticationConfig',
+    'asap.apps.runtime',
+    'asap.apps.widget',
+    'asap.apps.process'
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -262,6 +243,20 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#wsgi-application
 WSGI_APPLICATION = '{0}.wsgi.application'.format(SITE_MODULE)
 # ######### END WSGI CONFIGURATION
+
+
+# ######### AUTH USER MODEL CONFIGURATION
+# See: https://docs.djangoproject.com/en/1.11/ref/settings/#std:setting-AUTH_USER_MODEL
+AUTH_USER_MODEL = 'bouncer.User'
+# ######### END AUTH USER MODEL CONFIGURATION
+
+
+# ######### AUTHENTICATION BACKENDS CONFIGURATION
+# See: https://docs.djangoproject.com/en/1.11/ref/settings/#std:setting-AUTHENTICATION_BACKENDS
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend'
+]
+# ######### END AUTHENTICATION BACKENDS CONFIGURATION
 
 
 # ######### PASSWORD VALIDATION CONFIGURATION
@@ -311,14 +306,12 @@ REST_FRAMEWORK = {
         'rest_framework_swagger.renderers.SwaggerUIRenderer',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
-        # 'oauth2_provider.ext.rest_framework.TokenHasReadWriteScope'
+        'rest_framework.permissions.IsAuthenticated'
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
+        'bouncer.rest_framework.VerisAuthentication',
         'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'oauth2_provider.ext.rest_framework.OAuth2Authentication'
+        'rest_framework.authentication.SessionAuthentication'
     ),
     'DEFAULT_FILTER_BACKENDS': (
         'asap.core.filters.django_filter.DjangoFilter',
@@ -329,17 +322,6 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 50
 }
 # ######### END DJANGO REST FRAMEWORK CONFIGURATION
-
-
-# ######### DJANGO OAUTH TOOLKIT CONFIGURATION
-OAUTH2_PROVIDER = {
-    # this is the list of available scopes
-    'SCOPES': {
-        'read': 'Read scope',
-        'write': 'Write scope'
-    }
-}
-# ######### END DJANGO OAUTH TOOLKIT CONFIGURATION
 
 
 # ######### JWT CONFIGURATION
@@ -356,17 +338,3 @@ JWT_SECRET = SECRET_KEY
 # completely throw away the tokens
 JWT_ALGORITHMS = ['HS256']
 # ######### END JWT CONFIGURATION
-
-
-# ######### ASAP AUTHENTICATION CONFIGURATION
-# the veris client is a special oauth client
-# with all the permissions/scopes
-# create one using /oauth/applications url
-# and put the credentials in env
-# the login mechanism uses the same access token
-
-# not using get_env_key, since this conf will be generated
-# by our server only (only for now)
-VERIS_CLIENT_ID = environ.get('VERIS_CLIENT_ID')
-VERIS_CLIENT_SECRET = environ.get('VERIS_CLIENT_SECRET')
-# ######### END ASAP AUTHENTICATION CONFIGURATION

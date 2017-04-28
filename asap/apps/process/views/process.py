@@ -22,6 +22,12 @@ class ProcessViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelV
         ('process_locker_uuid', 'processlocker__uuid')
     ]
 
+    def get_queryset(self):
+        queryset = super(ProcessViewSet, self).get_queryset()
+        if self.request.user.is_authenticated:
+            return queryset.filter(author=self.request.user)
+        return queryset
+
     @detail_route(renderer_classes=[renderers.JSONRenderer])
     def schema(self, request, **kwargs):
         instance = self.get_object()
