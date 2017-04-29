@@ -9,3 +9,5 @@ WORKDIR /usr/src/app
 
 COPY . /usr/src/app
 RUN pip install -r requirements/local.txt
+
+EXPOSE 8000
