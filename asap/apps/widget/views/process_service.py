@@ -5,6 +5,8 @@ import json
 from time import sleep
 
 from rest_framework import response, views
+from rest_framework.decorators import permission_classes
+from rest_framework.permissions import AllowAny
 
 from asap.apps.runtime.models.session import Session
 from mistralclient.api.httpclient import HTTPClient
@@ -32,6 +34,8 @@ class ProcessActionProxyViewSet(views.APIView):
         - `/widgets/<w_id>/process/<p_id>/` should internally call
             `/process/<p_id>/` and update the session for the `Widget`.
     """
+
+    permission_classes = (AllowAny,)
 
     def get_session(self):
         return self.request.META.get('HTTP_X_VRT_SESSION', '')

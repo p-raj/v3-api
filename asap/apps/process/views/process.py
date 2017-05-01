@@ -3,6 +3,7 @@
 
 from rest_framework import renderers, response, viewsets
 from rest_framework.decorators import detail_route
+from rest_framework.permissions import AllowAny
 from rest_framework_swagger.renderers import OpenAPIRenderer
 
 from asap.apps.process.models import Process
@@ -14,6 +15,7 @@ from asap.core.views import AuthorableModelViewSet, DRFNestedViewMixin
 class ProcessViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelViewSet):
     queryset = Process.objects.all()
     serializer_class = ProcessSerializer
+    permission_classes = (AllowAny,)
 
     lookup_field = 'uuid'
     lookup_parent = [

@@ -90,7 +90,7 @@ class Runtime(Authorable, Humanizable, Timestampable,
     @staticmethod
     def widget_workflow_task_name(widget):
         return 'wait_for_{widget_workflow}'.format(
-            widget_workflow=Runtime.widget_workflow_name(widget)
+            widget_workflow=Runtime.widget_workflow_name(widget)[:13]
         )
 
     def __str__(self):

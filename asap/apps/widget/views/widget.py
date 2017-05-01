@@ -3,6 +3,7 @@
 
 from rest_framework import response, viewsets
 from rest_framework.decorators import detail_route
+from rest_framework.permissions import AllowAny
 
 from asap.apps.widget.models.widget import Widget
 from asap.apps.widget.serializers.widget import WidgetSerializer
@@ -15,6 +16,7 @@ from mistralclient.api.v2.executions import ExecutionManager
 class WidgetViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelViewSet):
     queryset = Widget.objects.all()
     serializer_class = WidgetSerializer
+    permission_classes = (AllowAny,)
 
     lookup_field = 'uuid'
     lookup_parent = [

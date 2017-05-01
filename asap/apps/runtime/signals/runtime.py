@@ -16,7 +16,7 @@ from mistralclient.api.v2.workflows import WorkflowManager
 logger = logging.getLogger(__name__)
 
 
-# @receiver(post_save, sender=Runtime)
+@receiver(post_save, sender=Runtime)
 def create_runtime_workflow(sender, **kwargs):
     instance = kwargs.get('instance')
     workflow_manager = WorkflowManager(http_client=httpclient.HTTPClient(MISTRAL_SERVER))

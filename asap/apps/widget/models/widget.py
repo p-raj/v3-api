@@ -165,7 +165,7 @@ class Widget(Authorable, Humanizable, Timestampable,
                 'url': '{store}/<% $.session %>/get/'.format(
                     store=KEYSTORE_SERVER
                 ),
-                'process': reverse('widget-process-proxy', kwargs={
+                'process': 'http://172.20.0.1:8001' + reverse('widget-process-proxy', kwargs={
                     'uuid': self.uuid,
                     'process_uuid': process_id
                 }),
@@ -175,8 +175,7 @@ class Widget(Authorable, Humanizable, Timestampable,
                 }
             },
             'publish': {
-                'data': '<% task(process_{process}).result.content %>'.format(
-                    # FIXME
+                'data': '<% task(process_{process}).result %>'.format(
                     process=process_id[:6]
                 )
             }

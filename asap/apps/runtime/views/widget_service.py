@@ -156,7 +156,7 @@ class WidgetProxyViewSet(LoggingProxyViewSet):
 
     def get_headers(self, request):
         headers = super(WidgetProxyViewSet, self).get_headers(request)
-        headers['Veris-Resource'] = request.META.get('HTTP_VERIS_RESOURCE')
+        # headers['Veris-Resource'] = request.META.get('HTTP_VERIS_RESOURCE')
         return headers
 
 

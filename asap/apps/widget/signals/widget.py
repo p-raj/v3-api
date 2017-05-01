@@ -37,7 +37,7 @@ swagger_dict = {
 }
 
 
-# @receiver(post_save, sender=Widget)
+@receiver(post_save, sender=Widget)
 def create_widget_schema(sender, **kwargs):
     """this signal is used to generate schema for sender-widget of this signal.
 
