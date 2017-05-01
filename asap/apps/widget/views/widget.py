@@ -15,7 +15,6 @@ from mistralclient.api.v2.executions import ExecutionManager
 class WidgetViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelViewSet):
     queryset = Widget.objects.all()
     serializer_class = WidgetSerializer
-    permission_classes = (IsAuthorOrReadOnly,)
 
     lookup_field = 'uuid'
     lookup_parent = [

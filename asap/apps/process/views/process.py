@@ -8,14 +8,12 @@ from rest_framework_swagger.renderers import OpenAPIRenderer
 from asap.apps.process.models import Process
 from asap.apps.process.serializers import ProcessSerializer
 from asap.core.permissions.is_author_or_authorized import IsAuthorOrAuthorized
-from asap.core.permissions.is_author_or_read_only import IsAuthorOrReadOnly
 from asap.core.views import AuthorableModelViewSet, DRFNestedViewMixin
 
 
 class ProcessViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelViewSet):
     queryset = Process.objects.all()
     serializer_class = ProcessSerializer
-    permission_classes = (IsAuthorOrReadOnly,)
 
     lookup_field = 'uuid'
     lookup_parent = [

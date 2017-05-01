@@ -7,14 +7,12 @@ from rest_framework.decorators import detail_route
 from asap.apps.widget.models.widget_locker import WidgetLocker
 from asap.apps.widget.serializers.widget import WidgetSerializer
 from asap.apps.widget.serializers.widget_locker import WidgetLockerSerializer
-from asap.core.permissions.is_author_or_read_only import IsAuthorOrReadOnly
 from asap.core.views import AuthorableModelViewSet
 
 
 class WidgetLockerViewSet(AuthorableModelViewSet, viewsets.ModelViewSet):
     queryset = WidgetLocker.objects.all()
     serializer_class = WidgetLockerSerializer
-    permission_classes = (IsAuthorOrReadOnly,)
 
     lookup_field = 'uuid'
 

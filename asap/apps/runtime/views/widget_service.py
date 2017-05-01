@@ -154,6 +154,11 @@ class WidgetProxyViewSet(LoggingProxyViewSet):
         self.kwargs.update(widget_locker_uuid=runtime.widget_locker_uuid)
         return super(WidgetProxyViewSet, self).get_source_path()
 
+    def get_headers(self, request):
+        headers = super(WidgetProxyViewSet, self).get_headers(request)
+        headers['Veris-Resource'] = request.META.get('HTTP_VERIS_RESOURCE')
+        return headers
+
 
 class WidgetListProxyViewSet(WidgetProxyViewSet):
     """

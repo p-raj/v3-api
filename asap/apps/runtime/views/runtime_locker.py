@@ -7,14 +7,12 @@ from rest_framework.decorators import detail_route
 from asap.apps.runtime.models.runtime_locker import RuntimeLocker
 from asap.apps.runtime.serializers.runtime import RuntimeSerializer
 from asap.apps.runtime.serializers.runtime_locker import RuntimeLockerSerializer
-from asap.core.permissions.is_author_or_read_only import IsAuthorOrReadOnly
 from asap.core.views import AuthorableModelViewSet
 
 
 class RuntimeLockerViewSet(AuthorableModelViewSet, viewsets.ModelViewSet):
     queryset = RuntimeLocker.objects.all()
     serializer_class = RuntimeLockerSerializer
-    permission_classes = (IsAuthorOrReadOnly,)
 
     lookup_field = 'uuid'
 
