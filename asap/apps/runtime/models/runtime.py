@@ -53,9 +53,15 @@ class Runtime(Authorable, Humanizable, Timestampable,
             self.widget_workflow_task_name(_):
                 self.workflow_task(_) for _ in self.widgets
         }
+        publish_tasks = {
+            self.publish_widget_workflow_task_name(_):
+                self.publish_workflow_task(_) for _ in self.widgets
+        }
+
+        tasks.update(**publish_tasks)
         tasks.update({
             'wait_for_widgets': {
-                'requires': [self.widget_workflow_task_name(_) for _ in self.widgets]
+                'requires': [self.publish_widget_workflow_task_name(_) for _ in self.widgets]
             }
         })
         return {
@@ -76,7 +82,33 @@ class Runtime(Authorable, Humanizable, Timestampable,
             "workflow": Runtime.widget_workflow_name(widget),
             "input": {
                 "session": "<% $.session %>"
+            },
+            "publish": {
+                "result": '<% task({widget_workflow}) %>'.format(
+                    widget_workflow=Runtime.widget_workflow_task_name(widget)
+                )
             }
+        }
+
+    @staticmethod
+    def publish_workflow_task(widget):
+        from asap.apps.widget.views.process_service import KEYSTORE_SERVER
+        return {
+            "action": "std.http",
+            "input": {
+                'method': 'post',
+                'url': '{store}/<% $.session %>/set/'.format(
+                    store=KEYSTORE_SERVER
+                ),
+                'body': '<% task({widget_workflow}) %>'.format(
+                    widget_workflow=Runtime.widget_workflow_task_name(widget)
+                ),
+                'headers': {
+                    'Process': widget.get('uuid'),
+                    'Content-Type': 'application/json'
+                }
+            },
+            'requires': [Runtime.widget_workflow_task_name(widget)]
         }
 
     @staticmethod
@@ -90,6 +122,12 @@ class Runtime(Authorable, Humanizable, Timestampable,
     @staticmethod
     def widget_workflow_task_name(widget):
         return 'wait_for_{widget_workflow}'.format(
+            widget_workflow=Runtime.widget_workflow_name(widget)[:13]
+        )
+
+    @staticmethod
+    def publish_widget_workflow_task_name(widget):
+        return 'publish_{widget_workflow}'.format(
             widget_workflow=Runtime.widget_workflow_name(widget)[:13]
         )
 
