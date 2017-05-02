@@ -1,5 +1,7 @@
 import coreapi
 
+from asap.core.signals.policy import AM_SERVER_URL
+
 
 class ClientSchema(object):
     def __init__(self, spec):
@@ -14,7 +16,7 @@ class ClientSchema(object):
     @property
     def document(self):
         return coreapi.Document(
-            url=self.spec.url,
+            url=self.spec.host,
             title=self.spec.name,
             description=self.spec.description,
             media_type='application/json',
@@ -30,7 +32,7 @@ class ClientSchema(object):
     @property
     def link(self):
         return coreapi.Link(
-            url=self.spec.url,
+            url=AM_SERVER_URL + self.spec.url_relative,
             action=self.spec.action,
             description=self.spec.description,
             fields=self.fields

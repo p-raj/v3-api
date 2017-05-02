@@ -18,10 +18,10 @@ class PSSpec(object):
         return self.schema.get('host')
 
     @property
-    def url(self):
+    def url_relative(self):
         # assumption -> the schema has been
         # validated before saving :)
-        return '{host}{url}'.format(**self.schema)
+        return self.schema.get('url')
 
     @property
     def name(self):
