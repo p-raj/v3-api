@@ -59,24 +59,24 @@ class ProcessActionProxyViewSet(views.APIView):
             'path': 'api/v1/processes/%(process_uuid)s/execute/'
         }) % kwargs
 
-    @staticmethod
-    def get_authorization_header(**kwargs):
-        from asap.apps.widget.models.widget import Widget
-        widget = Widget.objects.get(uuid=kwargs.get('uuid'))
-        return widget.process_locker_token
-
     def post(self, request, *args, **kwargs):
         raw_request = getattr(request, '_request')
+
+        from asap.apps.widget.models.widget import Widget
+        widget = Widget.objects.get(uuid=kwargs.get('uuid'))
+        body = widget.data or {}
+        body.update(**request.data)
+
         em = ExecutionManager(HTTPClient(MISTRAL_SERVER))
         execution = em.create(MISTRAL_PROCESS_EXECUTION_NAME, workflow_input={
             'url': self.get_process_url(**kwargs),
             'method': 'post',
             'params': dict(request.query_params),
-            'body': request.data,
+            'body': body,
             'cookies': raw_request.COOKIES,
             'headers': {
                 'Content-Type': request.content_type,
-                'Authorization': self.get_authorization_header(**kwargs),
+                'Authorization': widget.process_locker_token,
                 'Process': kwargs.get('process_uuid')
             }
         })
