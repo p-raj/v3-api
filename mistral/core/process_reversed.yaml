@@ -14,9 +14,25 @@ process_reversed:
         url: <% $.url %>
         headers: <% $.headers %>
       publish:
-        result: <% task(listen_for_input).result %>
+        data: <% task(listen_for_input).result.data %>
+        cookies: <% task(listen_for_input).result.cookies %>
+        elapsed: <% task(listen_for_input).result.elapsed %>
+        encoding: <% task(listen_for_input).result.encoding %>
+        headers: <% task(listen_for_input).result.headers %>
+        history: <% task(listen_for_input).result.history %>
+        reason: <% task(listen_for_input).result.reason %>
+        status: <% task(listen_for_input).result.status %>
+        url: <% task(listen_for_input).result.url %>
       publish-on-error:
-        result: <% task(listen_for_input).result %>
+        error: <% task(listen_for_input).result.error %>
+        cookies: <% task(listen_for_input).result.cookies %>
+        elapsed: <% task(listen_for_input).result.elapsed %>
+        encoding: <% task(listen_for_input).result.encoding %>
+        headers: <% task(listen_for_input).result.headers %>
+        history: <% task(listen_for_input).result.history %>
+        reason: <% task(listen_for_input).result.reason %>
+        status: <% task(listen_for_input).result.status %>
+        url: <% task(listen_for_input).result.url %>
       retry: delay=10 count=3
       on-success:
         - original_process
@@ -24,9 +40,25 @@ process_reversed:
       workflow: process
       input:
         url: <% $.process %>
-        body: <% task(original_process).result.content %>
+        body: <% task(listen_for_input).result.data %>
         headers: <% $.headers %>
       publish:
-        result: <% task(original_process).result %>
+        data: <% task(original_process).result.data %>
+        cookies: <% task(original_process).result.cookies %>
+        elapsed: <% task(original_process).result.elapsed %>
+        encoding: <% task(original_process).result.encoding %>
+        headers: <% task(original_process).result.headers %>
+        history: <% task(original_process).result.history %>
+        reason: <% task(original_process).result.reason %>
+        status: <% task(original_process).result.status %>
+        url: <% task(original_process).result.url %>
       publish-on-error:
-        result: <% task(original_process).result %>
+        error: <% task(original_process).result.error %>
+        cookies: <% task(original_process).result.cookies %>
+        elapsed: <% task(original_process).result.elapsed %>
+        encoding: <% task(original_process).result.encoding %>
+        headers: <% task(original_process).result.headers %>
+        history: <% task(original_process).result.history %>
+        reason: <% task(original_process).result.reason %>
+        status: <% task(original_process).result.status %>
+        url: <% task(original_process).result.url %>

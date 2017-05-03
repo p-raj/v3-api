@@ -29,7 +29,6 @@ process:
         allow_redirects: <% $.allow_redirects %>
         proxies: <% $.proxies %>
       publish:
-        result: <% task(execute).result %>
         data: <% task(execute).result.content %>
         cookies: <% task(execute).result.cookies %>
         elapsed: <% task(execute).result.elapsed %>
@@ -40,7 +39,6 @@ process:
         status: <% task(execute).result.status %>
         url: <% task(execute).result.url %>
       publish-on-error:
-        result: <% task(execute).result %>
         error: <% task(execute).result.content %>
         cookies: <% task(execute).result.cookies %>
         elapsed: <% task(execute).result.elapsed %>

@@ -84,7 +84,7 @@ class Runtime(Authorable, Humanizable, Timestampable,
                 "session": "<% $.session %>"
             },
             "publish": {
-                "result": '<% task({widget_workflow}) %>'.format(
+                "result": '<% task({widget_workflow}).result %>'.format(
                     widget_workflow=Runtime.widget_workflow_task_name(widget)
                 )
             }
@@ -100,7 +100,7 @@ class Runtime(Authorable, Humanizable, Timestampable,
                 'url': '{store}/<% $.session %>/set/'.format(
                     store=KEYSTORE_SERVER
                 ),
-                'body': '<% task({widget_workflow}) %>'.format(
+                'body': '<% task({widget_workflow}).result %>'.format(
                     widget_workflow=Runtime.widget_workflow_task_name(widget)
                 ),
                 'headers': {

@@ -175,7 +175,7 @@ class Widget(Authorable, Humanizable, Timestampable,
                 }
             },
             'publish': {
-                'data': '<% task(process_{process}).result %>'.format(
+                process_id: '<% task(process_{process}).result %>'.format(
                     process=process_id[:6]
                 )
             }
