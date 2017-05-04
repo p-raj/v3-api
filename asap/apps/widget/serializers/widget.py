@@ -26,7 +26,7 @@ class WidgetSerializer(TimestampableModelSerializer, serializers.HyperlinkedMode
 
     class Meta:
         model = Widget
-        exclude = ('author', 'processes_json',)
+        exclude = ('author', 'processes_json', 'is_published')
         read_only_fields = ('processes_json',)
 
         extra_kwargs = {

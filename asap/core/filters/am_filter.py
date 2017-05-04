@@ -1,7 +1,8 @@
 import requests
+from django.db.models import Q
 from rest_framework.filters import BaseFilterBackend
 
-from asap.core.signals.policy import AM_SERVER_URL, AM_SERVER_HEADER
+from asap.core.signals.policy import AM_SERVER_HEADER, AM_SERVER_URL
 
 
 class AMFilter(BaseFilterBackend):
@@ -20,9 +21,10 @@ class AMFilter(BaseFilterBackend):
 
         permissions = response.json().get('source_permission_set', [])
         return queryset.filter(
-            uuid__in=[
+            Q(is_published=True) |
+            Q(uuid__in=[
                 _.get('target').split(':')[-2]
                 for _ in permissions
                 if _.get('read')
-            ]
+            ])
         )

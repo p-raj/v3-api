@@ -8,12 +8,13 @@ from django.contrib import admin
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from asap.core.models import Authorable, Humanizable, Timestampable, UniversallyIdentifiable
+from asap.core.models import Authorable, Humanizable, Timestampable, \
+    UniversallyIdentifiable, Publishable
 
 User = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
 
-class Runtime(Authorable, Humanizable, Timestampable,
+class Runtime(Authorable, Humanizable, Publishable, Timestampable,
               UniversallyIdentifiable, models.Model):
     # the runtime service was built on Widget Service
     # it should provide widgets to the runtimes to which it has been associated
@@ -65,26 +66,26 @@ class Runtime(Authorable, Humanizable, Timestampable,
             }
         })
         return {
-            "version": "2.0",
+            'version': '2.0',
             self.workflow_name: {
-                "description": self.description,
-                "type": "reverse",
-                "input": [
-                    "session"
+                'description': self.description,
+                'type': 'reverse',
+                'input': [
+                    'session'
                 ],
-                "tasks": tasks
+                'tasks': tasks
             }
         }
 
     @staticmethod
     def workflow_task(widget):
         return {
-            "workflow": Runtime.widget_workflow_name(widget),
-            "input": {
-                "session": "<% $.session %>"
+            'workflow': Runtime.widget_workflow_name(widget),
+            'input': {
+                'session': '<% $.session %>'
             },
-            "publish": {
-                "result": '<% task({widget_workflow}).result %>'.format(
+            'publish': {
+                'result': '<% task({widget_workflow}).result %>'.format(
                     widget_workflow=Runtime.widget_workflow_task_name(widget)
                 )
             }
@@ -94,8 +95,8 @@ class Runtime(Authorable, Humanizable, Timestampable,
     def publish_workflow_task(widget):
         from asap.apps.widget.views.process_service import KEYSTORE_SERVER
         return {
-            "action": "std.http",
-            "input": {
+            'action': 'std.http',
+            'input': {
                 'method': 'post',
                 'url': '{store}/<% $.session %>/set/'.format(
                     store=KEYSTORE_SERVER

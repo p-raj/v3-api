@@ -18,12 +18,13 @@ from django.db import models
 from django.urls.base import reverse
 from django.utils.translation import ugettext_lazy as _
 
-from asap.core.models import Authorable, Humanizable, Timestampable, UniversallyIdentifiable
+from asap.core.models import Authorable, Humanizable, Timestampable, \
+    UniversallyIdentifiable, Publishable
 
 User = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
 
-class Widget(Authorable, Humanizable, Timestampable,
+class Widget(Authorable, Humanizable, Publishable, Timestampable,
              UniversallyIdentifiable, models.Model):
     """
     Widgets are the collection of different Process & Rules.

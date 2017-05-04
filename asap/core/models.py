@@ -34,6 +34,21 @@ class Authorable(models.Model):
         abstract = True
 
 
+class Publishable(models.Model):
+    """
+    Some entities might be either published. 
+        i.e The entity will be visible to all whether 
+        or not the user has access to them.
+    
+    eg. Apps marketplace (Default Apps)
+
+    """
+    is_published = models.BooleanField(default=False)
+
+    class Meta:
+        abstract = True
+
+
 class Humanizable(models.Model):
     """
     Any Entity that needs a human friendly name
