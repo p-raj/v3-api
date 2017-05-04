@@ -4,6 +4,7 @@ import logging
 from django.core.exceptions import PermissionDenied
 
 from rest_framework.permissions import AllowAny
+from rest_framework.reverse import reverse_lazy
 
 from rest_framework_proxy.views import ProxyView
 
@@ -175,6 +176,16 @@ class WidgetListProxyViewSet(WidgetProxyViewSet):
 
     proxy_host = 'http://localhost:8001'
     source = 'api/v1/widget-lockers/%(widget_locker_uuid)s/widgets/'
+
+    def create_response(self, response):
+        import requests
+        requests.get('http://localhost:8001' + str(reverse_lazy('runtime-execute', kwargs={
+            'uuid': self.runtime_uuid
+        })), headers={
+            'X-VRT-SESSION': str(self.get_session_uuid()),
+            'VERIS-RESOURCE': self.request.META.get('HTTP_VERIS_RESOURCE')
+        })
+        return super(WidgetListProxyViewSet, self).create_response(response)
 
 
 class WidgetDetailProxyViewSet(WidgetProxyViewSet):
