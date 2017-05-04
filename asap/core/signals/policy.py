@@ -7,7 +7,7 @@ from django.dispatch.dispatcher import receiver
 logger = logging.getLogger(__name__)
 
 # FIXME
-AM_SERVER_URL = 'http://localhost:8080'
+AM_SERVER_URL = 'http://172.20.0.1:8080'
 AM_SERVER_HEADER = {
     'Host': 'am.veris.in'
 }

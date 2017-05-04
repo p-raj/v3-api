@@ -41,7 +41,7 @@ class Runtime(Authorable, Humanizable, Publishable, Timestampable,
     def widgets(self):
         # FIXME
         # noinspection PyPep8Naming
-        WidgetLocker_URL = 'http://localhost:8001/api/v1/widget-lockers/{wl_uuid}/widgets/'
+        WidgetLocker_URL = 'http://172.20.0.1:8000/api/v1/widget-lockers/{wl_uuid}/widgets/'
         response = requests.get(WidgetLocker_URL.format(wl_uuid=self.widget_locker_uuid))
 
         # move these lame tasks to some place else
