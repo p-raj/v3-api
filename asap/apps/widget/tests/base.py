@@ -54,4 +54,4 @@ class WidgetTestCase(TransactionTestCase):
     def upstream_url(self):
         """
         """
-        return getattr(settings, 'WIDGETS_MICRO_SERVICE', 'http://localhost:8000')
+        return getattr(settings, 'WIDGETS_MICRO_SERVICE', 'http://172.20.0.1:8000')

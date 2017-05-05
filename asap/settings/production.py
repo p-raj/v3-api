@@ -24,14 +24,14 @@ def get_env_setting(key):
         raise ImproperlyConfigured(error_msg)
 
 
-########## HOST CONFIGURATION
+# ######### HOST CONFIGURATION
 # See: https://docs.djangoproject.com/en/1.5/releases/1.5/#allowed-hosts-required-in-production
 ALLOWED_HOSTS = [
 ]
-########## END HOST CONFIGURATION
+# ######### END HOST CONFIGURATION
 
 
-########## EMAIL CONFIGURATION
+# ######### EMAIL CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
@@ -57,10 +57,10 @@ EMAIL_USE_TLS = True
 SERVER_EMAIL = environ.get('SERVER_EMAIL', 'noreply@{}.com'.format(SITE_NAME))
 
 DEFAULT_FROM_EMAIL = SERVER_EMAIL
-########## END EMAIL CONFIGURATION
+# ######### END EMAIL CONFIGURATION
 
 
-########## DATABASE CONFIGURATION
+# ######### DATABASE CONFIGURATION
 DATABASES = {
     'default': {
         # https://docs.djangoproject.com/en/1.10/releases/1.9/#database-backends
@@ -74,32 +74,32 @@ DATABASES = {
         'PORT': get_env_setting('DATABASE_PORT')
     }
 }
-########## END DATABASE CONFIGURATION
+# ######### END DATABASE CONFIGURATION
 
 
-########## SECRET CONFIGURATION
+# ######### SECRET CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 SECRET_KEY = get_env_setting('SECRET_KEY')
-########## END SECRET CONFIGURATION
+# ######### END SECRET CONFIGURATION
 
 
-########## SESSION CONFIGURATION
+# ######### SESSION CONFIGURATION
 # See: https://docs.djangoproject.com/en/1.8/ref/settings/#session-expire-at-browser-close
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-########## END SESSION CONFIGURATION
+# ######### END SESSION CONFIGURATION
 
 
-########## APP CONFIGURATION
+# ######### APP CONFIGURATION
 PRODUCTION_APPS = (
     'gunicorn',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS += PRODUCTION_APPS
-########## END APP CONFIGURATION
+# ######### END APP CONFIGURATION
 
 
-########## CACHE CONFIGURATION
+# ######### CACHE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#caches
 DEFAULT_CACHE_BACKEND = environ.get('DEFAULT_CACHE_BACKEND', 'django.core.cache.backends.memcached.MemcachedCache')
 DEFAULT_CACHE_LOCATION = environ.get('DEFAULT_CACHE_LOCATION', '127.0.0.1:11211')
@@ -110,10 +110,10 @@ CACHES = {
         'LOCATION': DEFAULT_CACHE_LOCATION
     }
 }
-########## END CACHE CONFIGURATION
+# ######### END CACHE CONFIGURATION
 
 
-########## DJANGO REST FRAMEWORK CONFIGURATION
+# ######### DJANGO REST FRAMEWORK CONFIGURATION
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
@@ -136,4 +136,34 @@ REST_FRAMEWORK = {
 REST_FRAMEWORK_EXTENSIONS = {
     'DEFAULT_CACHE_RESPONSE_TIMEOUT': 30
 }
-########## END DJANGO REST FRAMEWORK CONFIGURATION
+# ######### END DJANGO REST FRAMEWORK CONFIGURATION
+
+
+# ######### PROJECT SPECIFIC CONFIGURATION
+CELERY_ALWAYS_EAGER = True
+
+# all the external calls must be through the gateway
+# even the calls to our own services
+# eg. mistral
+# NOTE: at the beginning of the project the assumption
+# was the process & widgets will separate micro-services
+# which currently seems technically an overhead,
+# and might be removed
+# so for example the processes are fetched using
+# HTTP request rather than direct access :(
+V3__API_GATEWAY = get_env_setting('V3__API_GATEWAY')
+
+# the api gateway looks for Host header
+# to perform the proxy
+# currently, we assume that everything will be proxied
+# based on the Host header,
+# we still don't know the shortcomings,
+# so let's just wait for the problems & keep moving :)
+# host self ? the header which will help the gateway
+# identify on how to reach us (this server)!
+# we are generating mistral workflow dynamically
+# and we will need callbacks
+V3__HOST_SELF = get_env_setting('V3__HOST_SELF')
+V3__HOST_MISTRAL = get_env_setting('V3__HOST_MISTRAL')
+
+# ######### PROJECT SPECIFIC CONFIGURATION

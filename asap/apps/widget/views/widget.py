@@ -3,16 +3,15 @@
 
 import logging
 
+from mistralclient.api.v2.executions import ExecutionManager
 from rest_framework import response, viewsets
 from rest_framework.decorators import detail_route
 from rest_framework.permissions import AllowAny
 
 from asap.apps.widget.models.widget import Widget
 from asap.apps.widget.serializers.widget import WidgetSerializer
-from asap.core.permissions.is_author_or_read_only import IsAuthorOrReadOnly
 from asap.core.views import AuthorableModelViewSet, DRFNestedViewMixin
-from mistralclient.api.httpclient import HTTPClient
-from mistralclient.api.v2.executions import ExecutionManager
+from asap.libs.mistral.http_client import MistralHTTPClient
 
 logger = logging.getLogger(__name__)
 
@@ -42,8 +41,7 @@ class WidgetViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelVi
         widget = self.get_object()
         session = self.get_session_uuid()
 
-        from asap.apps.widget.views.process_service import MISTRAL_SERVER
-        em = ExecutionManager(HTTPClient(MISTRAL_SERVER))
+        em = ExecutionManager(MistralHTTPClient())
         execution = em.create(widget.workflow_uuid, workflow_input={
             'session': session
         })

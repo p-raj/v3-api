@@ -46,7 +46,6 @@ class RuntimeTestCase(TransactionTestCase):
 
     def _get_bad_strings_json(self):
         """
-
         :return: bad string json object.
         """
         json_data = open('static/bad_strings.json').read()
@@ -55,4 +54,4 @@ class RuntimeTestCase(TransactionTestCase):
     def upstream_url(self):
         """
         """
-        return getattr(settings, 'VRT_MICRO_SERVICE', 'http://localhost:8000')
+        return getattr(settings, 'VRT_MICRO_SERVICE', 'http://172.20.0.1:8000')

@@ -75,4 +75,29 @@ DEBUG_TOOLBAR_CONFIG = {
 
 # ######### PROJECT SPECIFIC CONFIGURATION
 CELERY_ALWAYS_EAGER = True
+
+# all the external calls must be through the gateway
+# even the calls to our own services
+# eg. mistral
+# NOTE: at the beginning of the project the assumption
+# was the process & widgets will separate micro-services
+# which currently seems technically an overhead,
+# and might be removed
+# so for example the processes are fetched using
+# HTTP request rather than direct access :(
+V3__API_GATEWAY = 'http://172.20.0.1:8080'
+
+# the api gateway looks for Host header
+# to perform the proxy
+# currently, we assume that everything will be proxied
+# based on the Host header,
+# we still don't know the shortcomings,
+# so let's just wait for the problems & keep moving :)
+# host self ? the header which will help the gateway
+# identify on how to reach us (this server)!
+# we are generating mistral workflow dynamically
+# and we will need callbacks
+V3__HOST_SELF = 'apis.veris.in'
+V3__HOST_MISTRAL = 'mistral.veris.in'
+
 # ######### PROJECT SPECIFIC CONFIGURATION
