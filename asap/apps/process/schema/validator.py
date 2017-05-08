@@ -23,9 +23,6 @@ class SchemaValidator(object):
         if not spec.name:
             errors.append(_('`schema.name` field is required, eg. name of the process'))
 
-        if not spec.description:
-            errors.append(_('`schema.description` field is required, eg. description of the process'))
-
         if not spec.action:
             errors.append(_('`schema.action` field is required, eg. get, post..'))
 

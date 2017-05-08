@@ -29,10 +29,6 @@ class PSSpec(object):
         return self.schema.get('name')
 
     @property
-    def description(self):
-        return self.schema.get('description')
-
-    @property
     def action(self):
         return self.schema.get('action')
 

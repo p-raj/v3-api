@@ -18,7 +18,6 @@ class ClientSchema(object):
         return coreapi.Document(
             url=self.spec.host,
             title=self.spec.name,
-            description=self.spec.description,
             media_type='application/json',
             content=self.content
         )
@@ -34,7 +33,6 @@ class ClientSchema(object):
         return coreapi.Link(
             url=AM_SERVER_URL + self.spec.url_relative,
             action=self.spec.action,
-            description=self.spec.description,
             fields=self.fields
         )
 

@@ -26,7 +26,7 @@ class ServerSchema(object):
         return coreapi.Document(
             url=self.url,
             title=self.spec.name,
-            description=self.spec.description,
+            description=self.process.description,
             media_type='application/json',
             content=self.content
         )
@@ -40,7 +40,7 @@ class ServerSchema(object):
         return coreapi.Link(
             url=self.url,
             action='post',
-            description=self.spec.description,
+            description=self.process.description,
             fields=self.fields
         )
 
