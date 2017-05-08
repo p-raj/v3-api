@@ -59,7 +59,8 @@ class ProcessActionProxyViewSet(views.APIView):
 
         from asap.apps.widget.models.widget import Widget
         widget = Widget.objects.get(uuid=kwargs.get('uuid'))
-        body = widget.data or {}
+        data = widget.data or {}
+        body = data.get(self.kwargs.get('process_uuid'), {})
         body.update(**request.data)
 
         em = ExecutionManager(MistralHTTPClient())
