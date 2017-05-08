@@ -7,6 +7,7 @@ The difference is the PSSpec is a subset of a CoreAPI.
 i.e It only focuses on one URL/Link of the CoreAPI schema.
 
 """
+from django.core.exceptions import ValidationError
 
 
 class PSSpec(object):
@@ -39,3 +40,13 @@ class PSSpec(object):
     def fields(self):
         fields = self.schema.get('fields', [])
         return fields
+
+    @property
+    def is_valid(self):
+        from asap.apps.process.schema.validator import SchemaValidator
+        try:
+            SchemaValidator()(self.schema)
+            return True
+        except ValidationError as e:
+            print(e)
+            return False

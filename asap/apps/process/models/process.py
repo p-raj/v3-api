@@ -52,6 +52,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from asap.apps.process.schema.spec import PSSpec
+from asap.apps.process.schema.validator import SchemaValidator
 from asap.core.models import Authorable, Humanizable, Timestampable, UniversallyIdentifiable
 from asap.utils import to_pascal_case
 
@@ -86,7 +87,11 @@ class Process(Authorable, Humanizable, Timestampable,
     # the schema may vary according to the type of process
     # for example, the upstream url or the origin url makes sense
     # for HTTP process but not for a python script
-    schema = JSONField(_('schema'), blank=False, null=False)
+    schema = JSONField(
+        _('schema'), default={},
+        blank=True, null=False,
+        validators=[SchemaValidator()]
+    )
 
     @property
     def spec(self):
