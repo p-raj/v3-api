@@ -140,7 +140,7 @@ class Widget(Authorable, Humanizable, Publishable, Timestampable,
             '- list of conditions'
         return [
             '{process_name} : {rule}'.format(**{
-                'process_name': 'process_{0}'.format(_.get('action')),
+                'process_name': 'process_{0}'.format(_.get('action')[:6]),
                 'rule': '<% {0} %>'.format(
                     functools.reduce(
                         lambda c1, c2: '{0} and {1}'.format(c1, c2),
@@ -176,6 +176,11 @@ class Widget(Authorable, Humanizable, Publishable, Timestampable,
                 }
             },
             'publish': {
+                process_id: '<% task(process_{process}).result %>'.format(
+                    process=process_id[:6]
+                )
+            },
+            'publish-on-error': {
                 process_id: '<% task(process_{process}).result %>'.format(
                     process=process_id[:6]
                 )

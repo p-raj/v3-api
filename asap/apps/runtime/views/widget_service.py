@@ -242,4 +242,7 @@ class WidgetDetailActionProxyViewSet(WidgetProxyViewSet):
             # obtain the authorization from the widget schema :)
             headers['AUTHORIZATION'] = auth_header
 
+        if req.META.get('HTTP_X_VRT_SESSION'):
+            headers['X-VRT-SESSION'] = req.META.get('HTTP_X_VRT_SESSION')
+
         return headers

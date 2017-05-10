@@ -39,7 +39,7 @@ process:
         status: <% task(execute).result.status %>
         url: <% task(execute).result.url %>
       publish-on-error:
-        error: <% task(execute).result.content %>
+        data: <% task(execute).result.content %>
         cookies: <% task(execute).result.cookies %>
         elapsed: <% task(execute).result.elapsed %>
         encoding: <% task(execute).result.encoding %>

@@ -30,7 +30,10 @@ class HttpClient(object):
 
     def execute(self, *args, **kwargs):
         try:
+            # TODO
+            # documentation :/
             body = dot_to_json(kwargs.get('params', {}))
+            body = body if not body.get('data') else body.get('data')
             data = self.client.action(self.document, ['api'], body)
         except coreapi.exceptions.ErrorMessage as e:
             return e.error
