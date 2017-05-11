@@ -53,8 +53,10 @@ def expose_widget_data(data):
                 continue
             # we are quite sure we have hit a process
             pd = wp[p].get('data', {})
+            wdd = wd.get('data', {})
+            wdd.update(**pd)
             wd.update({
-                'data': pd
+                'data': wdd
             })
 
         if wd:
