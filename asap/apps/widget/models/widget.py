@@ -140,14 +140,21 @@ class Widget(Authorable, Humanizable, Publishable, Timestampable,
             '- list of conditions'
         return [
             '{process_name} : {rule}'.format(**{
-                'process_name': 'process_{0}'.format(_.get('action')[:6]),
+                'process_name': 'process_{0}'.format(_.get('action').get('uuid')[:6]),
                 'rule': '<% {0} %>'.format(
                     functools.reduce(
                         lambda c1, c2: '{0} and {1}'.format(c1, c2),
                         _.get('conditions')
                     )
                 )
-            }) for _ in self.rules if _.get('trigger') == process_id
+            })
+            if _.get('conditions') else
+            '{process_name}'.format(**{
+                'process_name': 'process_{0}'.format(_.get('action').get('uuid')[:6]),
+            })
+
+            for _ in self.rules
+            if _.get('trigger').get('uuid') == process_id
         ]
 
     @staticmethod
