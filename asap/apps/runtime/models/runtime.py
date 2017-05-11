@@ -88,6 +88,11 @@ class Runtime(Authorable, Humanizable, Publishable, Timestampable,
                 'result': '<% task({widget_workflow}).result %>'.format(
                     widget_workflow=Runtime.widget_workflow_task_name(widget)
                 )
+            },
+            'publish-on-error': {
+                'result': '<% task({widget_workflow}).result %>'.format(
+                    widget_workflow=Runtime.widget_workflow_task_name(widget)
+                )
             }
         }
 

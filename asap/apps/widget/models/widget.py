@@ -179,6 +179,7 @@ class Widget(Authorable, Humanizable, Publishable, Timestampable,
                 }),
                 'headers': {
                     'Process': process_id,
+                    'Widget': str(self.uuid),
                     'Content-Type': 'application/json'
                 }
             },

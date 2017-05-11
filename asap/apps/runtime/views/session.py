@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+import collections
 import json
 
 from rest_framework import response, viewsets
@@ -9,7 +10,55 @@ from rest_framework.reverse import reverse_lazy
 
 from asap.apps.runtime.models.session import Session
 from asap.apps.runtime.serializers.session import SessionSerializer
+from asap.apps.widget.models.widget import Widget
 from asap.core.views import AuthorableModelViewSet, DRFNestedViewMixin
+
+
+def flatten(d, parent_key='', sep='.'):
+    """
+    Credits: http://stackoverflow.com/a/6027615/1796173
+    """
+    items = []
+    for k, v in d.items():
+        new_key = parent_key + sep + k if parent_key else k
+        if isinstance(v, collections.MutableMapping):
+            items.extend(flatten(v, new_key, sep=sep).items())
+        else:
+            items.append((new_key, v))
+    return dict(items)
+
+
+# FIXME
+# this is super ugly hack :/
+# only AP know why, this one is definitely
+# just for getting things done
+# & it sucks big time
+def expose_widget_data(data):
+    for key in data.keys():
+        # check if the key has further data
+        if type(data[key]) != dict:
+            # if not its neither a widget
+            # nor a process :(
+            continue
+
+        # wp might be a widget or process
+        # for processes data will always be empty :)
+        wp = data[key]
+
+        wd = {}
+        for p in wp.keys():
+            if type(wp[p]) != dict:
+                # if not its neither a widget
+                # nor a process :(
+                continue
+            # we are quite sure we have hit a process
+            pd = wp[p].get('data', {})
+            wd.update({
+                'data': pd
+            })
+
+        if wd:
+            data[key]['data'] = flatten(wd)
 
 
 class SessionViewSet(AuthorableModelViewSet, DRFNestedViewMixin,
@@ -41,6 +90,10 @@ class SessionViewSet(AuthorableModelViewSet, DRFNestedViewMixin,
         data = instance.data or {}
         data.update(last_modified=instance.modified_at.timestamp())
 
+        # FIXME
+        # mutate session data
+        expose_widget_data(data)
+
         instance.data = data
         return instance
 
@@ -59,5 +112,30 @@ class SessionViewSet(AuthorableModelViewSet, DRFNestedViewMixin,
 
     @detail_route(permission_classes=[AllowAny], methods=['get', 'post'])
     def get(self, request, **kwargs):
+        widget = request.META.get('HTTP_WIDGET', 'invalid')
+        process = request.META.get('HTTP_PROCESS', 'invalid')
         instance = self.get_object()
-        return response.Response(instance.data.get(request.META.get('HTTP_PROCESS', 'invalid'), {}))
+
+        # FIXME
+        # if the requesting process is a part of
+        # rule, return trigger data
+        # very very very ugly again :'(
+        # not cool :'(
+        # missing widget info!!
+        widget = Widget.objects.filter(uuid=widget).first()
+        if not widget:
+            return response.Response({})
+
+        triggers = [r.get('trigger', {}).get('uuid')
+                    for r in widget.rules
+                    if r.get('action', {}).get('uuid') == process]
+        if not triggers:
+            return response.Response(instance.data.get(process, {}))
+
+        data = {}
+        # FIXME
+        # missing widget info!!
+        # combine all widget data for the triggers :'( :'(
+        for trigger in triggers:
+            data.update(**instance.data.get(trigger, {}))
+        return response.Response(data)

@@ -73,7 +73,8 @@ class ProcessActionProxyViewSet(views.APIView):
             'headers': {
                 'Content-Type': request.content_type,
                 'Authorization': widget.process_locker_token,
-                'Process': kwargs.get('process_uuid')
+                'Process': kwargs.get('process_uuid'),
+                'Widget': kwargs.get('uuid')
             }
         })
 
