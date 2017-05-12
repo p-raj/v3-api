@@ -129,7 +129,7 @@ class SessionViewSet(AuthorableModelViewSet, DRFNestedViewMixin,
             return response.Response({})
 
         triggers = [r.get('trigger', {}).get('uuid')
-                    for r in widget.rules
+                    for r in (widget.rules or [])
                     if r.get('action', {}).get('uuid') == process]
         if not triggers:
             return response.Response(instance.data.get(process, {}))
