@@ -61,6 +61,7 @@ def expose_widget_data(data):
 
         if wd:
             data[key]['data'] = flatten(wd)
+            data[key]['state'] = 'resolved'
 
 
 class SessionViewSet(AuthorableModelViewSet, DRFNestedViewMixin,
