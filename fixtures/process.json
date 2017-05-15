@@ -1,0 +1,537 @@
+[
+  {
+    "model": "process.process",
+    "fields": {
+      "author": [
+        "organization:01bf6d2b-9c79-4a86-a1b6-f7ad0f4a5324"
+      ],
+      "name": "login",
+      "description": "login",
+      "created_at": "2017-05-15T10:09:41.817Z",
+      "modified_at": "2017-05-15T10:09:41.817Z",
+      "uuid": "78b20108-fc1f-4008-9e05-78a14f837c68",
+      "type": "http",
+      "schema": {
+        "fields": [
+          {
+            "name": "email",
+            "location": "form",
+            "required": true
+          },
+          {
+            "name": "password",
+            "location": "form",
+            "required": true
+          }
+        ],
+        "description": "Auhtenticate the existing User",
+        "host": "users.veris.in",
+        "url": "/micro-service/user/login/",
+        "name": "user_login",
+        "action": "post"
+      },
+      "is_system": true
+    }
+  },
+  {
+    "model": "process.process",
+    "fields": {
+      "author": [
+        "organization:01bf6d2b-9c79-4a86-a1b6-f7ad0f4a5324"
+      ],
+      "name": "register",
+      "description": "register",
+      "created_at": "2017-05-15T10:10:00.865Z",
+      "modified_at": "2017-05-15T10:10:00.865Z",
+      "uuid": "123b299f-7766-426c-b892-41f8b3ade8d5",
+      "type": "http",
+      "schema": {
+        "fields": [
+          {
+            "name": "email",
+            "location": "form",
+            "required": true
+          },
+          {
+            "name": "password",
+            "location": "form",
+            "required": true
+          },
+          {
+            "name": "name",
+            "location": "form",
+            "required": false
+          },
+          {
+            "name": "avatar",
+            "location": "form",
+            "required": true
+          }
+        ],
+        "description": "Register a new User",
+        "host": "users.veris.in",
+        "url": "/micro-service/user/",
+        "name": "create",
+        "action": "post"
+      },
+      "is_system": true
+    }
+  },
+  {
+    "model": "process.process",
+    "fields": {
+      "author": [
+        "organization:01bf6d2b-9c79-4a86-a1b6-f7ad0f4a5324"
+      ],
+      "name": "create_organization",
+      "description": "create_organization",
+      "created_at": "2017-05-15T10:22:48.727Z",
+      "modified_at": "2017-05-15T10:22:48.727Z",
+      "uuid": "d6d4edf8-aab0-44b9-a3ee-a93d56008c4b",
+      "type": "http",
+      "schema": {
+        "fields": [
+          {
+            "name": "owner",
+            "location": "path",
+            "required": true
+          },
+          {
+            "name": "owner",
+            "location": "form",
+            "required": true
+          },
+          {
+            "name": "avatar",
+            "location": "form",
+            "required": true
+          },
+          {
+            "name": "name",
+            "location": "form",
+            "required": true
+          }
+        ],
+        "description": ":param request: Django request",
+        "host": "organizations.veris.in",
+        "url": "/micro-service/user/{owner}/organization/",
+        "name": "user_organization_create",
+        "action": "post"
+      },
+      "is_system": true
+    }
+  },
+  {
+    "model": "process.process",
+    "fields": {
+      "author": [
+        "organization:01bf6d2b-9c79-4a86-a1b6-f7ad0f4a5324"
+      ],
+      "name": "retrieve_organization",
+      "description": "retrieve_organization",
+      "created_at": "2017-05-15T10:23:43.881Z",
+      "modified_at": "2017-05-15T10:23:43.881Z",
+      "uuid": "f714d37a-b07a-4ab8-922d-2ac248419fbe",
+      "type": "http",
+      "schema": {
+        "fields": [
+          {
+            "name": "owner",
+            "location": "path",
+            "required": true
+          },
+          {
+            "name": "token",
+            "location": "path",
+            "required": true
+          }
+        ],
+        "description": "Organization Viewset",
+        "host": "organizations.veris.in",
+        "url": "/micro-service/user/{owner}/organization/{token}/",
+        "name": "user_organization_read",
+        "action": "get"
+      },
+      "is_system": true
+    }
+  },
+  {
+    "model": "process.process",
+    "fields": {
+      "author": [
+        "organization:01bf6d2b-9c79-4a86-a1b6-f7ad0f4a5324"
+      ],
+      "name": "update_organization",
+      "description": "update_organization",
+      "created_at": "2017-05-15T11:24:48.736Z",
+      "modified_at": "2017-05-15T11:24:48.736Z",
+      "uuid": "a2bad62c-83ab-4a8d-9407-7bf437bb7831",
+      "type": "http",
+      "schema": {
+        "fields": [
+          {
+            "name": "owner",
+            "location": "path",
+            "required": true
+          },
+          {
+            "name": "token",
+            "location": "path",
+            "required": true
+          },
+          {
+            "name": "owner",
+            "location": "form",
+            "required": false
+          },
+          {
+            "name": "avatar",
+            "location": "form",
+            "required": false
+          },
+          {
+            "name": "name",
+            "location": "form",
+            "required": false
+          }
+        ],
+        "description": "Organization Viewset",
+        "host": "organizations.veris.in",
+        "url": "/micro-service/user/{owner}/organization/{token}/",
+        "name": "user_organization_partial_update",
+        "action": "patch"
+      },
+      "is_system": true
+    }
+  },
+  {
+    "model": "process.process",
+    "fields": {
+      "author": [
+        "organization:01bf6d2b-9c79-4a86-a1b6-f7ad0f4a5324"
+      ],
+      "name": "delete_organization",
+      "description": "delete_organization",
+      "created_at": "2017-05-15T11:26:47.292Z",
+      "modified_at": "2017-05-15T11:26:47.292Z",
+      "uuid": "30b0dc0c-28a7-45d6-b544-3ee27d12e672",
+      "type": "http",
+      "schema": {
+        "fields": [
+          {
+            "name": "owner",
+            "location": "path",
+            "required": true
+          },
+          {
+            "name": "token",
+            "location": "path",
+            "required": true
+          }
+        ],
+        "description": "Organization Viewset",
+        "host": "organizations.veris.in",
+        "url": "/micro-service/user/{owner}/organization/{token}/",
+        "name": "user_organization_delete",
+        "action": "delete"
+      },
+      "is_system": true
+    }
+  },
+  {
+    "model": "process.process",
+    "fields": {
+      "author": [
+        "organization:01bf6d2b-9c79-4a86-a1b6-f7ad0f4a5324"
+      ],
+      "name": "list_user_organizations",
+      "description": "list_user_organizations",
+      "created_at": "2017-05-15T11:28:11.571Z",
+      "modified_at": "2017-05-15T11:38:41.328Z",
+      "uuid": "2a24d3d9-5dd5-4040-8ab5-473e66be25bd",
+      "type": "http",
+      "schema": {
+        "fields": [
+          {
+            "name": "owner",
+            "location": "path",
+            "required": true
+          },
+          {
+            "name": "limit",
+            "location": "query",
+            "required": false
+          },
+          {
+            "name": "offset",
+            "location": "query",
+            "required": false
+          },
+          {
+            "name": "ordering",
+            "location": "query",
+            "required": false
+          },
+          {
+            "name": "search",
+            "location": "query",
+            "required": false
+          }
+        ],
+        "description": "Organization Viewset",
+        "host": "organizations.veris.in",
+        "url": "/micro-service/user/{owner}/organization/",
+        "name": "user_organization_list",
+        "action": "get"
+      },
+      "is_system": true
+    }
+  },
+  {
+    "model": "process.process",
+    "fields": {
+      "author": [
+        "organization:01bf6d2b-9c79-4a86-a1b6-f7ad0f4a5324"
+      ],
+      "name": "list_organization_members",
+      "description": "list_organization_members",
+      "created_at": "2017-05-15T11:39:15.672Z",
+      "modified_at": "2017-05-15T11:39:15.672Z",
+      "uuid": "92697ab9-666a-4e1c-acca-1332033d9b22",
+      "type": "http",
+      "schema": {
+        "name": "user_organization_member_list",
+        "action": "get",
+        "host": "organizations.veris.in",
+        "fields": [
+          {
+            "name": "owner",
+            "location": "path",
+            "required": true
+          },
+          {
+            "name": "organization",
+            "location": "path",
+            "required": true
+          },
+          {
+            "name": "limit",
+            "location": "query",
+            "required": false
+          },
+          {
+            "name": "offset",
+            "location": "query",
+            "required": false
+          },
+          {
+            "name": "ordering",
+            "location": "query",
+            "required": false
+          },
+          {
+            "name": "search",
+            "location": "query",
+            "required": false
+          }
+        ],
+        "url": "/micro-service/user/{owner}/organization/{organization}/member/"
+      },
+      "is_system": true
+    }
+  },
+  {
+    "model": "process.process",
+    "fields": {
+      "author": [
+        "organization:01bf6d2b-9c79-4a86-a1b6-f7ad0f4a5324"
+      ],
+      "name": "create_organization_member",
+      "description": "create_organization_member",
+      "created_at": "2017-05-15T11:40:02.524Z",
+      "modified_at": "2017-05-15T11:40:02.524Z",
+      "uuid": "2b4735da-9c43-4916-aae5-2e38755a6c8a",
+      "type": "http",
+      "schema": {
+        "fields": [
+          {
+            "name": "owner",
+            "location": "path",
+            "required": true
+          },
+          {
+            "name": "organization",
+            "location": "path",
+            "required": true
+          },
+          {
+            "name": "type",
+            "location": "form",
+            "required": true
+          },
+          {
+            "name": "organization",
+            "location": "form",
+            "required": true
+          },
+          {
+            "name": "name",
+            "location": "form",
+            "required": true
+          },
+          {
+            "name": "user",
+            "location": "form",
+            "required": true
+          }
+        ],
+        "description": ":param request: Django request",
+        "host": "organizations.veris.in",
+        "url": "/micro-service/user/{owner}/organization/{organization}/member/",
+        "name": "user_organization_member_create",
+        "action": "post"
+      },
+      "is_system": true
+    }
+  },
+  {
+    "model": "process.process",
+    "fields": {
+      "author": [
+        "organization:01bf6d2b-9c79-4a86-a1b6-f7ad0f4a5324"
+      ],
+      "name": "retrieve_organization_member",
+      "description": "retrieve_organization_member",
+      "created_at": "2017-05-15T11:56:03.268Z",
+      "modified_at": "2017-05-15T11:56:03.268Z",
+      "uuid": "77bcfa37-5b57-48a8-9ab0-720698ea8452",
+      "type": "http",
+      "schema": {
+        "name": "user_organization_member_list",
+        "action": "get",
+        "host": "organizations.veris.in",
+        "fields": [
+          {
+            "name": "owner",
+            "location": "path",
+            "required": true
+          },
+          {
+            "name": "organization",
+            "location": "path",
+            "required": true
+          },
+          {
+            "name": "limit",
+            "location": "query",
+            "required": false
+          },
+          {
+            "name": "offset",
+            "location": "query",
+            "required": false
+          },
+          {
+            "name": "ordering",
+            "location": "query",
+            "required": false
+          },
+          {
+            "name": "search",
+            "location": "query",
+            "required": false
+          }
+        ],
+        "url": "/micro-service/user/{owner}/organization/{organization}/member/"
+      },
+      "is_system": true
+    }
+  },
+  {
+    "model": "process.process",
+    "fields": {
+      "author": [
+        "organization:01bf6d2b-9c79-4a86-a1b6-f7ad0f4a5324"
+      ],
+      "name": "delete_organization_member",
+      "description": "delete_organization_member",
+      "created_at": "2017-05-15T11:58:31.228Z",
+      "modified_at": "2017-05-15T11:58:31.228Z",
+      "uuid": "bcc9374c-d82f-4b12-b1c5-c47be9af07bd",
+      "type": "http",
+      "schema": {
+        "name": "user_organization_member_delete",
+        "action": "delete",
+        "host": "organizations.veris.in",
+        "fields": [
+          {
+            "name": "owner",
+            "location": "path",
+            "required": true
+          },
+          {
+            "name": "uuid",
+            "location": "path",
+            "required": true
+          },
+          {
+            "name": "organization",
+            "location": "path",
+            "required": true
+          }
+        ],
+        "url": "/micro-service/user/{owner}/organization/{organization}/member/{uuid}/"
+      },
+      "is_system": true
+    }
+  },
+  {
+    "model": "process.process",
+    "fields": {
+      "author": [
+        "organization:01bf6d2b-9c79-4a86-a1b6-f7ad0f4a5324"
+      ],
+      "name": "list_user_memberships",
+      "description": "list_user_memberships",
+      "created_at": "2017-05-15T12:04:23.986Z",
+      "modified_at": "2017-05-15T12:04:23.986Z",
+      "uuid": "40dd8e86-0f68-41aa-8864-5606cdc39e3c",
+      "type": "http",
+      "schema": {
+        "fields": [
+          {
+            "name": "member_user_uuid",
+            "location": "path",
+            "required": true
+          },
+          {
+            "name": "limit",
+            "location": "query",
+            "required": false
+          },
+          {
+            "name": "offset",
+            "location": "query",
+            "required": false
+          },
+          {
+            "name": "ordering",
+            "location": "query",
+            "required": false
+          },
+          {
+            "name": "search",
+            "location": "query",
+            "required": false
+          }
+        ],
+        "description": "This viewset will be used to list user memberships.",
+        "host": "organizations.veris.in",
+        "url": "/micro-service/member/{member_user_uuid}/organization/",
+        "name": "member_organization_list",
+        "action": "get"
+      },
+      "is_system": true
+    }
+  }
+]

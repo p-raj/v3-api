@@ -74,6 +74,11 @@ TYPES = [
 ]
 
 
+class ProcessManager(models.Manager):
+    def get_by_natural_key(self, uuid):
+        return self.get(uuid=uuid),
+
+
 class Process(Authorable, Humanizable, Timestampable,
               UniversallyIdentifiable, models.Model):
     # the process will eventually support different protocols
@@ -123,6 +128,9 @@ class Process(Authorable, Humanizable, Timestampable,
     def schema_server(self):
         from asap.apps.process.schema import ServerSchema
         return ServerSchema(self).build()
+
+    def natural_key(self):
+        return self.uuid
 
     class Meta:
         verbose_name_plural = _('Processes')
