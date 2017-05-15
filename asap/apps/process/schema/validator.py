@@ -1,9 +1,11 @@
 from django.core.exceptions import ValidationError
+from django.utils.deconstruct import deconstructible
 from django.utils.translation import ugettext_lazy as _
 
 from asap.apps.process.schema.spec import PSSpec
 
 
+@deconstructible()
 class SchemaValidator(object):
     def __call__(self, value):
         if type(value) != dict:

@@ -1,14 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-
+from django.core.exceptions import ValidationError
 from rest_framework import renderers, response, viewsets
-from rest_framework.decorators import detail_route
+from rest_framework.decorators import detail_route, list_route
 from rest_framework.permissions import AllowAny
+from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework_swagger.renderers import OpenAPIRenderer
 
 from asap.apps.process.models import Process
 from asap.apps.process.serializers import ProcessSerializer
-from asap.core.permissions.is_author_or_authorized import IsAuthorOrAuthorized
 from asap.core.views import AuthorableModelViewSet, DRFNestedViewMixin
 
 
@@ -28,6 +28,11 @@ class ProcessViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelV
             return queryset.filter(author=self.request.user)
         return queryset
 
+    @list_route(permission_classes=(AllowAny,))
+    def system(self, request, *args, **kwargs):
+        self.queryset = Process.objects.filter(is_system=True)
+        return self.list(request, *args, **kwargs)
+
     @detail_route(renderer_classes=[renderers.JSONRenderer])
     def schema(self, request, **kwargs):
         instance = self.get_object()
@@ -46,14 +51,16 @@ class ProcessViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelV
     @detail_route(
         methods=['GET', 'POST'],
         renderer_classes=[renderers.CoreJSONRenderer],
-        permission_classes=(IsAuthorOrAuthorized,)
+        permission_classes=(AllowAny,)
     )
     def execute(self, request, **kwargs):
         # TODO: move the execute detail route to a separate API View
         # since it prevents us from applying the author filter,
         # which makes sense for the other routes
-        client = self.get_object().client
-        return response.Response(
-            client.execute(params=request.data),
-            content_type='application/json'
-        )
+        try:
+            client = self.get_object().client
+            return response.Response(client.execute(params=request.data))
+        except ValidationError as e:
+            return response.Response(
+                e, status=HTTP_400_BAD_REQUEST
+            )

@@ -4,6 +4,7 @@ from functools import reduce
 
 import coreapi
 from coreapi.transports import HTTPTransport
+from django.core.exceptions import ValidationError
 
 
 def dot_to_json(a):
@@ -34,7 +35,13 @@ class HttpClient(object):
             # documentation :/
             body = dot_to_json(kwargs.get('params', {}))
             body = body if not body.get('data') else body.get('data')
-            data = self.client.action(self.document, ['api'], body)
+            data = self.client.action(
+                self.document, ['api'], body,
+                # FIXME
+                # this should be based on whether
+                # we are getting files or not
+                encoding='multipart/form-data'
+            )
         except coreapi.exceptions.ErrorMessage as e:
             return e.error
         except coreapi.exceptions.ParameterError as e:

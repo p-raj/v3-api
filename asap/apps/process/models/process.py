@@ -93,6 +93,10 @@ class Process(Authorable, Humanizable, Timestampable,
         validators=[SchemaValidator()]
     )
 
+    # system process created by the us to enable the use cases
+    # IAM / RBAC
+    is_system = models.BooleanField(default=False)
+
     @property
     def spec(self):
         """

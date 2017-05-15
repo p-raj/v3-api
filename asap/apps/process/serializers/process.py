@@ -16,7 +16,7 @@ class ProcessSerializer(TimestampableModelSerializer,
 
     class Meta:
         model = Process
-        exclude = ('author', )
+        exclude = ('author', 'is_system')
 
         extra_kwargs = {
             'url': {
