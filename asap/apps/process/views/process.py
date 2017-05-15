@@ -59,7 +59,12 @@ class ProcessViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelV
         # which makes sense for the other routes
         try:
             client = self.get_object().client
-            return response.Response(client.execute(params=request.data))
+
+            # default content-type is coreapi+json
+            return response.Response(
+                client.execute(params=request.data),
+                content_type='application/json'
+            )
         except ValidationError as e:
             return response.Response(
                 e, status=HTTP_400_BAD_REQUEST
