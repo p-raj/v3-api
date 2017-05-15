@@ -66,6 +66,9 @@ class ProcessViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelV
                 content_type='application/json'
             )
         except ValidationError as e:
-            return response.Response(
-                e, status=HTTP_400_BAD_REQUEST
+            return response.Response({
+                'errors': e.message.args
+            },
+                status=HTTP_400_BAD_REQUEST,
+                content_type='application/json'
             )
