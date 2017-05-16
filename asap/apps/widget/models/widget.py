@@ -192,16 +192,54 @@ class Widget(Authorable, Humanizable, Publishable, Timestampable,
                 process_id: '<% task(process_{process}).result %>'.format(
                     process=process_id[:6]
                 )
-            }
+            },
+            'on-success': [
+                'publish_process_{process}'.format(process=process_id[:6])
+            ],
+            'on-error': [
+                'publish_process_{process}'.format(process=process_id[:6])
+            ]
         }
 
         rules = self.get_process_rules(process_id)
         if rules:
-            task['on-success'] = rules
+            task['on-success'].append(*rules)
+        return task
+
+    def publish_workflow_task(self, process_id):
+        from asap.apps.widget.views.process_service import KEYSTORE_SERVER
+        task = {
+            'action': 'std.http',
+            'input': {
+                'url': '{store}/<% $.session %>/set/'.format(
+                    store=KEYSTORE_SERVER
+                ),
+                'headers': {
+                    'Process': process_id,
+                    'Widget': str(self.uuid),
+                    'Content-Type': 'application/json'
+                },
+                'body': '<% task(process_{process}).result %>'.format(
+                    process=process_id[:6]
+                )
+            }
+        }
         return task
 
     @property
     def workflow_json(self):
+        tasks = {
+            # FIXME
+            'process_{process}'.format(process=_.get('uuid')[:6]):
+                self.workflow_task(self.get_process_id(_)) for _ in self.processes_json
+        }
+        publish_process_tasks = {
+            # FIXME
+            'publish_process_{process}'.format(process=_.get('uuid')[:6]):
+                self.publish_workflow_task(self.get_process_id(_)) for _ in self.processes_json
+        }
+        tasks.update(**publish_process_tasks)
+
         return {
             'version': '2.0',
             self.workflow_name: {
@@ -210,11 +248,7 @@ class Widget(Authorable, Humanizable, Publishable, Timestampable,
                 'input': [
                     'session'
                 ],
-                'tasks': {
-                    # FIXME
-                    'process_{process}'.format(process=_.get('uuid')[:6]):
-                        self.workflow_task(self.get_process_id(_)) for _ in self.processes_json
-                }
+                'tasks': tasks
             }
         }
 
