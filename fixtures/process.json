@@ -97,11 +97,6 @@
             "required": true
           },
           {
-            "name": "owner",
-            "location": "form",
-            "required": true
-          },
-          {
             "name": "avatar",
             "location": "form",
             "required": true
