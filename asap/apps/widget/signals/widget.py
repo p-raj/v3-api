@@ -1,18 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-
-"""
-- widgets.signals.widget
-~~~~~~~~~~~~~~
-
-- This file contains the Widget signals.
-
- """
 import logging
 
 import requests
 import yaml
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch.dispatcher import receiver
 from mistralclient.api.base import APIException
 from mistralclient.api.v2.workflows import WorkflowManager
@@ -24,26 +16,9 @@ logger = logging.getLogger(__name__)
 
 ProcessLocker_URL = 'http://172.20.0.1:8000/api/v1/process-lockers/{pl_uuid}/processes/'
 
-swagger_dict = {
-    'swagger': '2.0',
-    'info': {
-        'title': '',
-        'version': '1.0.0'
-    },
-    'paths': {},
-    'definitions': {},
-    'securityDefinitions': {}
-}
-
 
 @receiver(post_save, sender=Widget)
 def create_widget_schema(sender, **kwargs):
-    """this signal is used to generate schema for sender-widget of this signal.
-
-    :param sender: sender or initiator og this signal
-    :param kwargs: keyword arguments
-    :return:
-    """
     instance = kwargs.get('instance')
 
     # fetch the process using the process locker token
@@ -78,6 +53,12 @@ def create_widget_schema(sender, **kwargs):
         workflow_uuid=workflow.id
     )
 
-    # instance.processes_json = processes
-    # instance.workflow_uuid = workflow.id
-    # instance.save()
+
+@receiver(post_delete, sender=Widget)
+def delete_workflow(sender, **kwargs):
+    instance = kwargs.get('instance')
+    workflow_manager = WorkflowManager(http_client=MistralHTTPClient())
+    try:
+        workflow_manager.delete(instance.workflow_uuid)
+    except APIException as e:
+        logger.warning(e)

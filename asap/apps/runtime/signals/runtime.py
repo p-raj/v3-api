@@ -4,7 +4,7 @@
 import logging
 
 import yaml
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch.dispatcher import receiver
 from mistralclient.api.base import APIException
 from mistralclient.api.v2.workflows import WorkflowManager
@@ -30,3 +30,13 @@ def create_runtime_workflow(sender, **kwargs):
     Runtime.objects.filter(pk=instance.pk).update(
         workflow_uuid=workflow.id
     )
+
+
+@receiver(post_delete, sender=Runtime)
+def delete_workflow(sender, **kwargs):
+    instance = kwargs.get('instance')
+    workflow_manager = WorkflowManager(http_client=MistralHTTPClient())
+    try:
+        workflow_manager.delete(instance.workflow_uuid)
+    except APIException as e:
+        logger.warning(e)
