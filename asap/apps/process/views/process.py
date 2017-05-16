@@ -61,10 +61,14 @@ class ProcessViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelV
             client = self.get_object().client
 
             # default content-type is coreapi+json
+            data = client.execute(params=request.data)
+
+            # FIXME
+            meta = getattr(data, 'title', '200 OK')
             return response.Response(
-                client.execute(params=request.data),
-                content_type='application/json'
-            )
+                data,
+                status=int(meta.split()[0]),
+                content_type='application/json')
         except ValidationError as e:
             return response.Response({
                 'errors': e.message.args
