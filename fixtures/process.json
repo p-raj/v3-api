@@ -365,17 +365,12 @@
             "required": true
           },
           {
-            "name": "organization",
-            "location": "form",
-            "required": true
-          },
-          {
             "name": "name",
             "location": "form",
             "required": true
           },
           {
-            "name": "user",
+            "name": "email",
             "location": "form",
             "required": true
           }
