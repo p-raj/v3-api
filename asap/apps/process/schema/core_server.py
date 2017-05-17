@@ -50,7 +50,6 @@ class ServerSchema(object):
         # :sunglasses: - chaud mode on :P
         fields = copy.deepcopy(self.spec.fields)
         for _ in fields:
-            if _.get('location') == 'path':
-                _.update(location='form')
+            _.update(location='form')
 
         return [coreapi.Field(**_) for _ in fields]

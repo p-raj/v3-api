@@ -140,5 +140,6 @@ class SessionViewSet(AuthorableModelViewSet, DRFNestedViewMixin,
         # missing widget info!!
         # combine all widget data for the triggers :'( :'(
         for trigger in triggers:
-            data.update(**instance.data.get(trigger, {}))
+            for k, v in instance.data.get(trigger, {}).items():
+                data['data.{0}'.format(k)] = v
         return response.Response(data)
