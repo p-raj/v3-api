@@ -116,6 +116,11 @@ class Widget(Authorable, Humanizable, Publishable, Timestampable,
     # each instance will have widget execution / workflow execution
     workflow_uuid = models.CharField(max_length=512, null=True, blank=True)
 
+    # the base workflow generated for each widget
+    # the workflow will be editable as JSON,
+    # till we get a builder (~yahoo pipes)
+    workflow = JSONField(null=True, blank=True)
+
     # the template consists of the layout of components
     # & their bindings to processes
     # we may have bindings that are

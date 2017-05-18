@@ -18,17 +18,23 @@ logger = logging.getLogger(__name__)
 @receiver(post_save, sender=Runtime)
 def create_runtime_workflow(sender, **kwargs):
     instance = kwargs.get('instance')
+
+    # we'll generate the initial workflow,
+    # and prevent overriding it again
+    instance.workflow = instance.workflow or instance.workflow_json
+
     workflow_manager = WorkflowManager(http_client=MistralHTTPClient())
     try:
         workflow = workflow_manager.get(instance.workflow_name)
-        workflow_manager.update(yaml.dump(instance.workflow_json))
+        workflow_manager.update(yaml.dump(instance.workflow))
     except APIException as e:
         logger.warning(e)
         workflow = workflow_manager.create(yaml.dump(instance.workflow_json))[0]
 
     # prevent from getting into loop :)
     Runtime.objects.filter(pk=instance.pk).update(
-        workflow_uuid=workflow.id
+        workflow_uuid=workflow.id,
+        workflow=instance.workflow
     )
 
 

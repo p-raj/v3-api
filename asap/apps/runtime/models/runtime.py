@@ -5,6 +5,7 @@ import requests
 
 from django.conf import settings
 from django.contrib import admin
+from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -32,6 +33,11 @@ class Runtime(Authorable, Humanizable, Publishable, Timestampable,
     # the workflow to start when the runtime is invoked
     # each instance will have runtime execution / workflow execution
     workflow_uuid = models.CharField(max_length=512, null=True, blank=True)
+
+    # the base workflow generated for each runtime
+    # the workflow will be editable as JSON,
+    # till we get a builder (~yahoo pipes)
+    workflow = JSONField(null=True, blank=True)
 
     @property
     def workflow_name(self):

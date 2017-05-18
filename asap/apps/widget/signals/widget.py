@@ -39,10 +39,14 @@ def create_widget_schema(sender, **kwargs):
     # this is the initial schema and will be presented
     # to the admin for adding static data and modification
 
+    # we'll generate the initial workflow,
+    # and prevent overriding it again
+    instance.workflow = instance.workflow or instance.workflow_json
+
     workflow_manager = WorkflowManager(http_client=MistralHTTPClient())
     try:
         workflow = workflow_manager.get(instance.workflow_name)
-        workflow_manager.update(yaml.dump(instance.workflow_json))
+        workflow_manager.update(yaml.dump(instance.workflow))
     except APIException as e:
         logger.warning(e)
         workflow = workflow_manager.create(yaml.dump(instance.workflow_json))[0]
@@ -50,7 +54,8 @@ def create_widget_schema(sender, **kwargs):
     # prevent from getting into loop :)
     Widget.objects.filter(pk=instance.pk).update(
         processes_json=instance.processes_json,
-        workflow_uuid=workflow.id
+        workflow_uuid=workflow.id,
+        workflow=instance.workflow
     )
 
 
