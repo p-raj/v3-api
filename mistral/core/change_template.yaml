@@ -1,0 +1,15 @@
+---
+version: '2.0'
+change_widget_template:
+  description: ''
+  type: direct
+  input:
+    - url
+    - template
+    - widget
+  tasks:
+    change_template:
+      action: std.http url=<% $.url %> method='POST'
+      input:
+        body: '{ "template": "<% $.template %>" }'
+        headers: { "Content-Type": "application/json", "Process": "<% $.widget %>" }
