@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+import json
 from functools import reduce
 
 import coreapi
@@ -35,6 +36,11 @@ class HttpClient(object):
             # documentation :/
             body = dot_to_json(kwargs.get('params', {}))
             body = body if not body.get('data') else body.get('data')
+
+            for k, v in body.items():
+                # hack for json items in multipart/form-data :(
+                body[k] = v if type(v) != dict else json.dumps(v)
+
             data = self.client.action(
                 self.document, ['api'], body,
                 # FIXME
