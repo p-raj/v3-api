@@ -73,7 +73,7 @@ class MistralWorkflow(Workflow):
         assert isinstance(builder, MistralWorkflowBuilder), \
             'builder must be instance of MistralWorkflowBuilder'
 
-    def get_json(self):
+    def dict(self):
         return {
             'version': self.builder.get_workflow_version(),
             self.builder.get_workflow_name(): {
@@ -87,9 +87,9 @@ class MistralWorkflow(Workflow):
     @property
     def json(self):
         import json
-        return json.dumps(self.get_json())
+        return json.dumps(self.dict())
 
     @property
     def yaml(self):
         import yaml
-        return yaml.dump(self.get_json())
+        return yaml.dump(self.dict())

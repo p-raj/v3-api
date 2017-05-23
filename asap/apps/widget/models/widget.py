@@ -17,6 +17,7 @@ from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.urls.base import reverse
 from django.utils.translation import ugettext_lazy as _
+from django.utils.functional import cached_property
 
 from asap.apps.widget.workflow import WidgetWorkflowBuilder
 from asap.core.models import Authorable, Humanizable, Publishable, \
@@ -136,9 +137,17 @@ class Widget(Authorable, Humanizable, Publishable, Timestampable,
     def __str__(self):
         return '{0}'.format(self.name)
 
+    @cached_property
+    def workflow_builder(self):
+        return MistralWorkflow(WidgetWorkflowBuilder(self))
+
+    @property
+    def workflow_name(self):
+        return self.workflow_builder.builder.get_workflow_name()
+
     @property
     def workflow_json(self):
-        return MistralWorkflow(WidgetWorkflowBuilder(self)).json
+        return self.workflow_builder.dict()
 
     def has_permission(self, token):
         # TODO

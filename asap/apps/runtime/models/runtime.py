@@ -6,6 +6,7 @@ from django.contrib import admin
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.utils.functional import cached_property
 
 from asap.apps.runtime.workflow import RuntimeWorkflowBuilder
 from asap.core.models import Authorable, Humanizable, Publishable, \
@@ -39,12 +40,20 @@ class Runtime(Authorable, Humanizable, Publishable, Timestampable,
     # till we get a builder (~yahoo pipes)
     workflow = JSONField(null=True, blank=True)
 
-    @property
-    def workflow_json(self):
-        return MistralWorkflow(RuntimeWorkflowBuilder(self)).json
-
     def __str__(self):
         return '{0}'.format(self.uuid)
+
+    @cached_property
+    def workflow_builder(self):
+        return MistralWorkflow(RuntimeWorkflowBuilder(self))
+
+    @property
+    def workflow_name(self):
+        return self.workflow_builder.builder.get_workflow_name()
+
+    @property
+    def workflow_json(self):
+        return self.workflow_builder.dict()
 
 
 @admin.register(Runtime)
