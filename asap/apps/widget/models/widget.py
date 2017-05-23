@@ -231,6 +231,20 @@ class Widget(Authorable, Humanizable, Publishable, Timestampable,
         }
         return task
 
+    def change_template_tasks(self, template_name):
+        from asap.apps.widget.views.process_service import KEYSTORE_SERVER
+        task = {
+            'workflow': 'change_widget_template',
+            'input': {
+                'url': '{store}/<% $.session %>/set/'.format(
+                    store=KEYSTORE_SERVER
+                ),
+                'template': template_name,
+                'widget': str(self.uuid)
+            }
+        }
+        return task
+
     @property
     def workflow_json(self):
         tasks = {
@@ -243,7 +257,13 @@ class Widget(Authorable, Humanizable, Publishable, Timestampable,
             'publish_process_{process}'.format(process=_.get('uuid')[:6]):
                 self.publish_workflow_task(self.get_process_id(_)) for _ in self.processes_json
         }
+        change_template_tasks = {
+            'change_template_{template}'.format(template=key):
+                self.change_template_tasks(key)
+            for key, value in self.template.items() or {}
+        }
         tasks.update(**publish_process_tasks)
+        tasks.update(**change_template_tasks)
 
         return {
             'version': '2.0',
