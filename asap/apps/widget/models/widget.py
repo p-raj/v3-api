@@ -18,8 +18,10 @@ from django.db import models
 from django.urls.base import reverse
 from django.utils.translation import ugettext_lazy as _
 
-from asap.core.models import Authorable, Humanizable, Timestampable, \
-    UniversallyIdentifiable, Publishable
+from asap.apps.widget.workflow import WidgetWorkflowBuilder
+from asap.core.models import Authorable, Humanizable, Publishable, \
+    Timestampable, UniversallyIdentifiable
+from asap.core.workflow import MistralWorkflow
 
 User = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
@@ -134,148 +136,9 @@ class Widget(Authorable, Humanizable, Publishable, Timestampable,
     def __str__(self):
         return '{0}'.format(self.name)
 
-    def get_process_rules(self, process_id):
-        if not self.rules:
-            return []
-
-        assert type(self.rules) == list, \
-            'rules need to an array, each rule should have ' \
-            '- trigger, ' \
-            '- action, ' \
-            '- list of conditions'
-        return [
-            '{process_name} : {rule}'.format(**{
-                'process_name': 'process_{0}'.format(_.get('action').get('uuid')[:6]),
-                'rule': '<% {0} %>'.format(
-                    functools.reduce(
-                        lambda c1, c2: '{0} and {1}'.format(c1, c2),
-                        _.get('conditions')
-                    )
-                )
-            })
-            if _.get('conditions') else
-            '{process_name}'.format(**{
-                'process_name': 'process_{0}'.format(_.get('action').get('uuid')[:6]),
-            })
-
-            for _ in self.rules
-            if _.get('trigger').get('uuid') == process_id
-        ]
-
-    @staticmethod
-    def get_process_id(process):
-        return process.get('uuid')
-
-    @property
-    def workflow_name(self):
-        return 'widget_{widget}'.format(widget=self.uuid)
-
-    def workflow_task(self, process_id):
-        from asap.apps.widget.views.process_service import KEYSTORE_SERVER
-        task = {
-            'workflow': 'process_reversed',
-            'input': {
-                'url': '{store}/<% $.session %>/get/'.format(
-                    store=KEYSTORE_SERVER
-                ),
-                'process': 'http://172.20.0.1:8000' + reverse('widget-process-proxy', kwargs={
-                    'uuid': self.uuid,
-                    'process_uuid': process_id
-                }),
-                'headers': {
-                    'Process': process_id,
-                    'Widget': str(self.uuid),
-                    'Content-Type': 'application/json'
-                }
-            },
-            'publish': {
-                process_id: '<% task(process_{process}).result %>'.format(
-                    process=process_id[:6]
-                )
-            },
-            'publish-on-error': {
-                process_id: '<% task(process_{process}).result %>'.format(
-                    process=process_id[:6]
-                )
-            },
-            'on-success': [
-                'publish_process_{process}'.format(process=process_id[:6])
-            ],
-            'on-error': [
-                'publish_process_{process}'.format(process=process_id[:6])
-            ]
-        }
-
-        rules = self.get_process_rules(process_id)
-        if rules:
-            task['on-success'].append(*rules)
-        return task
-
-    def publish_workflow_task(self, process_id):
-        from asap.apps.widget.views.process_service import KEYSTORE_SERVER
-        task = {
-            'action': 'std.http',
-            'input': {
-                'url': '{store}/<% $.session %>/set/'.format(
-                    store=KEYSTORE_SERVER
-                ),
-                'headers': {
-                    'Process': process_id,
-                    'Widget': str(self.uuid),
-                    'Content-Type': 'application/json'
-                },
-                'body': '<% task(process_{process}).result %>'.format(
-                    process=process_id[:6]
-                )
-            }
-        }
-        return task
-
-    def change_template_tasks(self, template_name):
-        from asap.apps.widget.views.process_service import KEYSTORE_SERVER
-        task = {
-            'workflow': 'change_widget_template',
-            'input': {
-                'url': '{store}/<% $.session %>/set/'.format(
-                    store=KEYSTORE_SERVER
-                ),
-                'template': template_name,
-                'widget': str(self.uuid)
-            }
-        }
-        return task
-
     @property
     def workflow_json(self):
-        tasks = {
-            # FIXME
-            'process_{process}'.format(process=_.get('uuid')[:6]):
-                self.workflow_task(self.get_process_id(_)) for _ in self.processes_json
-        }
-        publish_process_tasks = {
-            # FIXME
-            'publish_process_{process}'.format(process=_.get('uuid')[:6]):
-                self.publish_workflow_task(self.get_process_id(_)) for _ in self.processes_json
-        }
-        change_template_tasks = {
-            'change_template_{template}'.format(template=key):
-                self.change_template_tasks(key)
-            for key, value in self.template.items() or {}
-        }
-        tasks.update(**publish_process_tasks)
-        tasks.update(**change_template_tasks)
-
-        return {
-            'version': '2.0',
-            self.workflow_name: {
-                'description': self.description or '',
-                'type': 'direct',
-                'input': [
-                    'session'
-                ],
-                'tasks': tasks
-            }
-        }
+        return MistralWorkflow(WidgetWorkflowBuilder(self)).json
 
     def has_permission(self, token):
         # TODO
