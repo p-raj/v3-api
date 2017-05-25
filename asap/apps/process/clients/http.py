@@ -41,6 +41,7 @@ class HttpClient(object):
                 # hack for json items in multipart/form-data :(
                 body[k] = v if type(v) != dict else json.dumps(v)
 
+            print(body)
             data = self.client.action(
                 self.document, ['api'], body,
                 # FIXME
@@ -48,8 +49,11 @@ class HttpClient(object):
                 # we are getting files or not
                 encoding='multipart/form-data'
             )
+            print(data)
         except coreapi.exceptions.ErrorMessage as e:
+            print(e)
             return e.error
         except coreapi.exceptions.ParameterError as e:
+            print(e)
             raise ValidationError(e)
         return data

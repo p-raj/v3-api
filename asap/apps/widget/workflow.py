@@ -25,19 +25,19 @@ class WidgetWorkflowBuilder(MistralWorkflowBuilder):
                 self.__task_process(self.get_process_id(_))
             for _ in self.processes_json
         }
-        publish_process_tasks = {
-            'publish_process_{process}'.format(process=_.get('uuid')[:6]):
-                self.__task_publish_process_status(self.get_process_id(_))
-            for _ in self.processes_json
-        }
-        change_template_tasks = {
-            'change_template_{template}'.format(template=key):
-                self.__task_change_visible_template(key)
-            for key, value in self.template.items()
-        }
-        tasks.update(**publish_process_tasks)
-        tasks.update(**change_template_tasks)
+
+        tasks.update(**self.__task_start())
+        tasks.update(**self.__task_end())
+        tasks.update(**self.__task_session_publish())
+        tasks.update(**self.__task_session_fetch())
         return tasks
+
+    def get_task_defaults(self):
+        return {
+            'on-complete': [
+                'session.publish'
+            ]
+        }
 
     def get_workflow_inputs(self):
         return [
@@ -111,58 +111,91 @@ class WidgetWorkflowBuilder(MistralWorkflowBuilder):
                 }
             },
             'publish': {
-                process_id: '<% task(process_{process}).result %>'.format(
-                    process=process_id[:6]
-                )
+                'key': str(self.widget.uuid),
+                'value': {
+                    process_id[:6]: '<% task(process_{process}).result %>'.format(
+                        process=process_id[:6]
+                    )
+                }
             },
             'publish-on-error': {
-                process_id: '<% task(process_{process}).result %>'.format(
-                    process=process_id[:6]
-                )
-            },
-            'on-success': [
-                'publish_process_{process}'.format(process=process_id[:6])
-            ],
-            'on-error': [
-                'publish_process_{process}'.format(process=process_id[:6])
-            ]
+                'key': str(self.widget.uuid),
+                'value': {
+                    process_id[:6]: '<% task(process_{process}).result %>'.format(
+                        process=process_id[:6]
+                    )
+                }
+            }
         }
-
-        rules = self.__rules_success(process_id)
-        if rules:
-            task['on-success'].append(*rules)
         return task
 
-    def __task_publish_process_status(self, process_id):
-        from asap.apps.widget.views.process_service import KEYSTORE_SERVER
-        task = {
-            'action': 'std.http',
-            'input': {
-                'url': '{store}/<% $.session %>/set/'.format(
-                    store=KEYSTORE_SERVER
-                ),
-                'headers': {
-                    'Process': process_id,
-                    'Widget': str(self.uuid),
-                    'Content-Type': 'application/json'
+    def __task_start(self):
+        return {
+            'start': {
+                'action': 'std.noop',
+                'publish': {
+                    'key': str(self.widget.uuid),
+                    'value': {
+                        'execution': '<% execution().id %>',
+                        'template': 'init',
+                        'data': {
+                            'data.uuid': '<% $.session %>',
+                            'data.value': {
+                                'key': 'value'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    def __task_end(self):
+        return {
+            'end': {
+                'action': 'std.noop',
+                'publish': {
+                    'key': str(self.widget.uuid),
+                    'value': {
+                        'execution': '<% execution().id %>',
+                        'template': 'resolved'
+                    }
                 },
-                'body': '<% task(process_{process}).result %>'.format(
-                    process=process_id[:6]
-                )
+                'on-success': [
+                    'succeed'
+                ]
             }
         }
-        return task
 
-    def __task_change_visible_template(self, template_name):
-        from asap.apps.widget.views.process_service import KEYSTORE_SERVER
-        task = {
-            'workflow': 'change_widget_template',
-            'input': {
-                'url': '{store}/<% $.session %>/set/'.format(
-                    store=KEYSTORE_SERVER
-                ),
-                'template': template_name,
-                'widget': str(self.uuid)
+    @staticmethod
+    def __task_session_publish():
+        return {
+            'session.publish': {
+                'action': 'std.http',
+                'input': {
+                    'url': 'http://172.20.0.1:8000/api/v1/sessions/<% $.session %>/write/',
+                    'method': 'POST',
+                    'body': '<% $.value %>',
+                    'headers': {
+                        'Content-Type': 'application/json',
+                        'Key': '<% $.key %>'
+                    }
+                }
             }
         }
-        return task
+
+    @staticmethod
+    def __task_session_fetch():
+        return {
+            'session.fetch': {
+                'action': 'std.http',
+                'input': {
+                    'url': 'http://172.20.0.1:8000/api/v1/sessions/<% $.session %>/read/',
+                    'method': 'POST',
+                    'body': '<% $.value %>',
+                    'headers': {
+                        'Content-Type': 'application/json',
+                        'Key': '<% $.key %>'
+                    }
+                }
+            }
+        }

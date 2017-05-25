@@ -94,7 +94,7 @@ class SessionViewSet(AuthorableModelViewSet, DRFNestedViewMixin,
 
         # FIXME
         # mutate session data
-        expose_widget_data(data)
+        # expose_widget_data(data)
 
         instance.data = data
         return instance

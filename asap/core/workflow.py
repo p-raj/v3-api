@@ -51,6 +51,10 @@ class WorkflowBuilder(ABC):
     def get_tasks(self):
         pass
 
+    # noinspection PyMethodMayBeStatic
+    def get_task_defaults(self):
+        return {}
+
 
 class MistralWorkflowBuilder(WorkflowBuilder):
     def __init__(self, *args, **kwargs):
@@ -80,7 +84,8 @@ class MistralWorkflow(Workflow):
                 'description': self.builder.get_workflow_description(),
                 'type': self.builder.get_workflow_type(),
                 'input': self.builder.get_workflow_inputs(),
-                'tasks': self.builder.get_tasks()
+                'tasks': self.builder.get_tasks(),
+                'task-defaults': self.builder.get_task_defaults()
             }
         }
 
