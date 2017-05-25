@@ -49,7 +49,7 @@ def create_widget_schema(sender, **kwargs):
         workflow_manager.update(yaml.dump(instance.workflow))
     except APIException as e:
         logger.warning(e)
-        workflow = workflow_manager.create(yaml.dump(instance.workflow_json))[0]
+        workflow = workflow_manager.create(yaml.dump(instance.workflow))[0]
 
     # prevent from getting into loop :)
     Widget.objects.filter(pk=instance.pk).update(
