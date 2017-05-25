@@ -1,0 +1,128 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Mistral API",
+    "version": ""
+  },
+  "host": "0.0.0.0:8989",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/v2/executions/": {
+      "post": {
+        "parameters": [
+          {
+            "schema": {
+              "properties": {
+                "description": {
+                  "description": "description of workflow execution",
+                  "type": "string"
+                },
+                "id": {
+                  "description": "id is immutable and auto assigned",
+                  "type": "string"
+                },
+                "input": {
+                  "description": "input is a JSON structure containing workflow input values",
+                  "type": "object"
+                },
+                "output": {
+                  "description": "output is a workflow output",
+                  "type": "object"
+                },
+                "state": {
+                  "description": "state can be one of: IDLE, RUNNING, SUCCESS, ERROR, PAUSED",
+                  "type": "string"
+                },
+                "state_info": {
+                  "description": "an optional state information string",
+                  "type": "string"
+                },
+                "task_execution_id": {
+                  "description": "reference to the parent task execution",
+                  "type": "string"
+                },
+                "workflow_id": {
+                  "description": "reference to workflow ID",
+                  "type": "string"
+                },
+                "workflow_name": {
+                  "description": "reference to workflow definition",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "input"
+              ],
+              "type": "object"
+            },
+            "name": "data",
+            "in": "body"
+          }
+        ],
+        "operationId": "create",
+        "summary": "Execute a mistral workflow or action",
+        "description": "Execute a mistral workflow or action",
+        "tags": [
+          "executions"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "execution": {
+      "properties": {
+        "description": {
+          "description": "description of workflow execution",
+          "type": "string"
+        },
+        "id": {
+          "description": "id is immutable and auto assigned",
+          "type": "string"
+        },
+        "input": {
+          "description": "input is a JSON structure containing workflow input values",
+          "type": "object"
+        },
+        "output": {
+          "description": "output is a workflow output",
+          "type": "object"
+        },
+        "state": {
+          "description": "state can be one of: IDLE, RUNNING, SUCCESS, ERROR, PAUSED",
+          "type": "string"
+        },
+        "state_info": {
+          "description": "an optional state information string",
+          "type": "string"
+        },
+        "task_execution_id": {
+          "description": "reference to the parent task execution",
+          "type": "string"
+        },
+        "workflow_id": {
+          "description": "reference to workflow ID",
+          "type": "string"
+        },
+        "workflow_name": {
+          "description": "reference to workflow definition",
+          "type": "string"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "basic": {
+      "type": "basic"
+    }
+  }
+}

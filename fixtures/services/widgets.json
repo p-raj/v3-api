@@ -1,0 +1,341 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Veris API",
+        "version": ""
+    },
+    "paths": {
+        "/api/v1/widgets/": {
+            "get": {
+                "summary": "Widget Viewset , responsible for resolving and fetching a widget or fetch multiple widgets.",
+                "tags": [
+                    "widgets"
+                ],
+                "description": "Widget Viewset , responsible for resolving and fetching a widget or fetch multiple widgets.",
+                "operationId": "list",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "required": false,
+                        "name": "limit",
+                        "description": "",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "required": false,
+                        "name": "offset",
+                        "description": "",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "required": false,
+                        "name": "ordering",
+                        "description": "",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "required": false,
+                        "name": "search",
+                        "description": "",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "next": {
+                                    "type": "string"
+                                },
+                                "previous": {
+                                    "type": "string"
+                                },
+                                "results": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/widget"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Widget Viewset , responsible for resolving and fetching a widget or fetch multiple widgets.",
+                "consumes": [
+                    "application/json"
+                ],
+                "description": "Widget Viewset , responsible for resolving and fetching a widget or fetch multiple widgets.",
+                "operationId": "create",
+                "parameters": [
+                    {
+                        "schema": {
+                            "required": [
+                                "name",
+                                "process_locker_token"
+                            ],
+                            "properties": {
+                                "token": {
+                                    "type": "string",
+                                    "description": "Widget token, widget is accessed via this token"
+                                },
+                                "template": {
+                                    "type": "string",
+                                    "description": "Widget Template, the list of components with their layout & styles"
+                                },
+                                "schema": {
+                                    "type": "string",
+                                    "description": "Rules config, tells us which widget will be called based on what rules."
+                                },
+                                "data": {
+                                    "type": "string",
+                                    "description": "Widget Data, the data to be filled by admin, using admin widget designed by developer"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "description": "Required. 30 characters or fewer."
+                                },
+                                "process_locker_token": {
+                                    "type": "string",
+                                    "description": "Token of Process Locker to which will be loaded when a Widget is called."
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "name": "data",
+                        "in": "body"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/widget"
+                        }
+                    },
+                    "400": {
+                        "description": "",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "tags": [
+                    "widgets"
+                ]
+            }
+        },
+        "/api/v1/widgets/{token}/": {
+            "get": {
+                "summary": "Widget Viewset , responsible for resolving and fetching a widget or fetch multiple widgets.",
+                "tags": [
+                    "widgets"
+                ],
+                "description": "Widget Viewset , responsible for resolving and fetching a widget or fetch multiple widgets.",
+                "operationId": "read",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "required": true,
+                        "name": "token",
+                        "description": "",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/widget"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Widget Viewset , responsible for resolving and fetching a widget or fetch multiple widgets.",
+                "consumes": [
+                    "application/json"
+                ],
+                "description": "Widget Viewset , responsible for resolving and fetching a widget or fetch multiple widgets.",
+                "operationId": "update",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "required": true,
+                        "name": "token",
+                        "description": "",
+                        "in": "path"
+                    },
+                    {
+                        "schema": {
+                            "required": [
+                                "name",
+                                "process_locker_token"
+                            ],
+                            "properties": {
+                                "token": {
+                                    "type": "string",
+                                    "description": "Widget token, widget is accessed via this token"
+                                },
+                                "template": {
+                                    "type": "string",
+                                    "description": "Widget Template, the list of components with their layout & styles"
+                                },
+                                "schema": {
+                                    "type": "string",
+                                    "description": "Rules config, tells us which widget will be called based on what rules."
+                                },
+                                "data": {
+                                    "type": "string",
+                                    "description": "Widget Data, the data to be filled by admin, using admin widget designed by developer"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "description": "Required. 30 characters or fewer."
+                                },
+                                "process_locker_token": {
+                                    "type": "string",
+                                    "description": "Token of Process Locker to which will be loaded when a Widget is called."
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "name": "data",
+                        "in": "body"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/widget"
+                        }
+                    }
+                },
+                "tags": [
+                    "widgets"
+                ]
+            },
+            "patch": {
+                "summary": "Widget Viewset , responsible for resolving and fetching a widget or fetch multiple widgets.",
+                "consumes": [
+                    "application/json"
+                ],
+                "description": "Widget Viewset , responsible for resolving and fetching a widget or fetch multiple widgets.",
+                "operationId": "partial_update",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "required": true,
+                        "name": "token",
+                        "description": "",
+                        "in": "path"
+                    },
+                    {
+                        "schema": {
+                            "properties": {
+                                "token": {
+                                    "type": "string",
+                                    "description": "Widget token, widget is accessed via this token"
+                                },
+                                "template": {
+                                    "type": "string",
+                                    "description": "Widget Template, the list of components with their layout & styles"
+                                },
+                                "schema": {
+                                    "type": "string",
+                                    "description": "Rules config, tells us which widget will be called based on what rules."
+                                },
+                                "data": {
+                                    "type": "string",
+                                    "description": "Widget Data, the data to be filled by admin, using admin widget designed by developer"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "description": "Required. 30 characters or fewer."
+                                },
+                                "process_locker_token": {
+                                    "type": "string",
+                                    "description": "Token of Process Locker to which will be loaded when a Widget is called."
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "name": "data",
+                        "in": "body"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/widget"
+                        }
+                    }
+                },
+                "tags": [
+                    "widgets"
+                ]
+            },
+            "delete": {
+                "summary": "Widget Viewset , responsible for resolving and fetching a widget or fetch multiple widgets.",
+                "tags": [
+                    "widgets"
+                ],
+                "description": "Widget Viewset , responsible for resolving and fetching a widget or fetch multiple widgets.",
+                "operationId": "delete",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "required": true,
+                        "name": "token",
+                        "description": "",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "widget": {
+            "type": "object",
+            "properties": {
+                "url": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "modified_at": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
+                },
+                "schema": {
+                    "type": "object"
+                },
+                "data": {
+                    "type": "object"
+                },
+                "template": {
+                    "type": "object"
+                }
+            }
+        }
+    }
+}

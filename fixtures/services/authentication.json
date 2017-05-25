@@ -1,0 +1,108 @@
+{
+  "swagger": "2.0",
+  "paths": {
+    "/api/v1/token/": {
+      "post": {
+        "tags": [
+          "token"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "summary": "enable post request for this view",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "properties": {
+                "refresh_token": {
+                  "type": "string",
+                  "description": ""
+                }
+              },
+              "required": [
+                "refresh_token"
+              ],
+              "type": "object"
+            },
+            "name": "data",
+            "in": "body"
+          }
+        ],
+        "description": "enable post request for this view\n\n:param request:\n:return:",
+        "operationId": "token_create"
+      }
+    },
+    "/api/v1/login/": {
+      "post": {
+        "tags": [
+          "login"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "summary": "enable post request for this view",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "properties": {
+                "password": {
+                  "type": "string",
+                  "description": ""
+                },
+                "username": {
+                  "type": "string",
+                  "description": ""
+                }
+              },
+              "required": [
+                "username",
+                "password"
+              ],
+              "type": "object"
+            },
+            "name": "data",
+            "in": "body"
+          }
+        ],
+        "description": "enable post request for this view\n\n:param request:\n:return:",
+        "operationId": "login_create"
+      }
+    }
+  },
+  "definitions": {
+    "token": {
+      "properties": {
+        "refresh_token": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "token_type": {
+          "type": "string"
+        },
+        "expires_in": {
+          "type": "integer"
+        },
+        "access_token": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "info": {
+    "version": "",
+    "title": "Veris API"
+  }
+}

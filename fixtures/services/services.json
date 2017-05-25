@@ -1,0 +1,484 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Veris Services",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/v1/apis/": {
+      "get": {
+        "operationId": "apis_list",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "type": "string",
+            "in": "query",
+            "description": ""
+          },
+          {
+            "name": "ordering",
+            "required": false,
+            "type": "string",
+            "in": "query",
+            "description": ""
+          },
+          {
+            "name": "search",
+            "required": false,
+            "type": "string",
+            "in": "query",
+            "description": ""
+          }
+        ],
+        "tags": [
+          "apis"
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/api"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "apis_create",
+        "parameters": [
+          {
+            "name": "data",
+            "in": "body",
+            "schema": {
+              "required": [
+                "path",
+                "type",
+                "service"
+              ],
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "description": ""
+                },
+                "service": {
+                  "type": "string",
+                  "description": ""
+                },
+                "type": {
+                  "type": "string",
+                  "description": ""
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "tags": [
+          "apis"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/api"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/apis/{id}/": {
+      "get": {
+        "operationId": "apis_read",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "type": "string",
+            "in": "path",
+            "description": ""
+          }
+        ],
+        "tags": [
+          "apis"
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/api"
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "apis_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "type": "string",
+            "in": "path",
+            "description": ""
+          },
+          {
+            "name": "data",
+            "in": "body",
+            "schema": {
+              "required": [
+                "path",
+                "type",
+                "service"
+              ],
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "description": ""
+                },
+                "service": {
+                  "type": "string",
+                  "description": ""
+                },
+                "type": {
+                  "type": "string",
+                  "description": ""
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "tags": [
+          "apis"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/api"
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "apis_partial_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "type": "string",
+            "in": "path",
+            "description": ""
+          },
+          {
+            "name": "data",
+            "in": "body",
+            "schema": {
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "description": ""
+                },
+                "service": {
+                  "type": "string",
+                  "description": ""
+                },
+                "type": {
+                  "type": "string",
+                  "description": ""
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "tags": [
+          "apis"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/api"
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "apis_delete",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "type": "string",
+            "in": "path",
+            "description": ""
+          }
+        ],
+        "tags": [
+          "apis"
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/services/": {
+      "get": {
+        "operationId": "services_list",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "type": "string",
+            "in": "query",
+            "description": ""
+          },
+          {
+            "name": "ordering",
+            "required": false,
+            "type": "string",
+            "in": "query",
+            "description": ""
+          },
+          {
+            "name": "search",
+            "required": false,
+            "type": "string",
+            "in": "query",
+            "description": ""
+          }
+        ],
+        "tags": [
+          "services"
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/service"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "services_create",
+        "parameters": [
+          {
+            "name": "data",
+            "in": "body",
+            "schema": {
+              "required": [
+                "name"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": ""
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "tags": [
+          "services"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/service"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/services/{name}/": {
+      "get": {
+        "operationId": "services_read",
+        "parameters": [
+          {
+            "name": "name",
+            "required": true,
+            "type": "string",
+            "in": "path",
+            "description": ""
+          }
+        ],
+        "tags": [
+          "services"
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/service"
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "services_update",
+        "parameters": [
+          {
+            "name": "name",
+            "required": true,
+            "type": "string",
+            "in": "path",
+            "description": ""
+          },
+          {
+            "name": "data",
+            "in": "body",
+            "schema": {
+              "required": [
+                "name"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": ""
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "tags": [
+          "services"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/service"
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "services_partial_update",
+        "parameters": [
+          {
+            "name": "name",
+            "required": true,
+            "type": "string",
+            "in": "path",
+            "description": ""
+          },
+          {
+            "name": "data",
+            "in": "body",
+            "schema": {
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": ""
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "tags": [
+          "services"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/service"
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "services_delete",
+        "parameters": [
+          {
+            "name": "name",
+            "required": true,
+            "type": "string",
+            "in": "path",
+            "description": ""
+          }
+        ],
+        "tags": [
+          "services"
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "service": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": ""
+        },
+        "name": {
+          "type": "string",
+          "description": ""
+        }
+      }
+    },
+    "api": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": ""
+        },
+        "path": {
+          "type": "string",
+          "description": ""
+        },
+        "type": {
+          "type": "string",
+          "description": ""
+        },
+        "service": {
+          "type": "string",
+          "description": ""
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "basic": {
+      "type": "basic"
+    }
+  }
+}

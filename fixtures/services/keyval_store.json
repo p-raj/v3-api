@@ -1,0 +1,80 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "KeyValue Store",
+    "version": ""
+  },
+  "host": "localhost:8000",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/api/v1/sessions/{uuid}/read/": {
+      "post": {
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "uuid",
+            "description": "",
+            "in": "path",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "Key",
+            "in": "header",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "operationId": "sessions_read",
+        "tags": [
+          "sessions"
+        ]
+      }
+    },
+    "/api/v1/sessions/{uuid}/write/": {
+      "post": {
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "uuid",
+            "description": "",
+            "in": "path",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "Key",
+            "in": "header",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "operationId": "sessions_write",
+        "tags": [
+          "sessions"
+        ]
+      }
+    }
+  },
+  "securityDefinitions": {
+    "basic": {
+      "type": "basic"
+    }
+  }
+}

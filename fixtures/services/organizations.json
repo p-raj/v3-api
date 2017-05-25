@@ -1,0 +1,565 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Organization-Member Micro-service API",
+    "version": ""
+  },
+  "paths": {
+    "/micro-service/member/{member_user_uuid}/organization/": {
+      "get": {
+        "operationId": "member_organization_list",
+        "tags": [
+          "micro-service"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "type": "string",
+            "name": "member_user_uuid",
+            "in": "path",
+            "description": ""
+          },
+          {
+            "required": false,
+            "type": "integer",
+            "name": "limit",
+            "in": "query",
+            "description": "Number of results to return per page."
+          },
+          {
+            "required": false,
+            "type": "integer",
+            "name": "offset",
+            "in": "query",
+            "description": "The initial index from which to return the results."
+          },
+          {
+            "required": false,
+            "type": "string",
+            "name": "ordering",
+            "in": "query",
+            "description": "Which field to use when ordering the results."
+          },
+          {
+            "required": false,
+            "type": "string",
+            "name": "search",
+            "in": "query",
+            "description": "A search term."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "description": "This viewset will be used to list user memberships.",
+        "summary": "This viewset will be used to list user memberships."
+      }
+    },
+    "/micro-service/user/{owner}/organization/": {
+      "get": {
+        "operationId": "user_organization_list",
+        "tags": [
+          "micro-service"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "type": "string",
+            "name": "owner",
+            "in": "path",
+            "description": "User uuid, this token will identify who is the owner of respective Organization."
+          },
+          {
+            "required": false,
+            "type": "integer",
+            "name": "limit",
+            "in": "query",
+            "description": "Number of results to return per page."
+          },
+          {
+            "required": false,
+            "type": "integer",
+            "name": "offset",
+            "in": "query",
+            "description": "The initial index from which to return the results."
+          },
+          {
+            "required": false,
+            "type": "string",
+            "name": "ordering",
+            "in": "query",
+            "description": "Which field to use when ordering the results."
+          },
+          {
+            "required": false,
+            "type": "string",
+            "name": "search",
+            "in": "query",
+            "description": "A search term."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "description": "Organization Viewset",
+        "summary": "Organization Viewset"
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "user_organization_create",
+        "tags": [
+          "micro-service"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "type": "string",
+            "name": "owner",
+            "in": "path",
+            "description": "User uuid, this token will identify who is the owner of respective Organization."
+          },
+          {
+            "schema": {
+              "required": [
+                "name",
+                "avatar",
+                "owner"
+              ],
+              "type": "object",
+              "properties": {
+                "avatar": {
+                  "description": "",
+                  "type": "string"
+                },
+                "owner": {
+                  "description": "User uuid, this token will identify who is the owner of respective Organization.",
+                  "type": "string"
+                },
+                "name": {
+                  "description": "Required. 64 characters or fewer.",
+                  "type": "string"
+                }
+              }
+            },
+            "name": "data",
+            "in": "body"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "description": ":param request: Django request\n:param owner: owner/user uuid\n:return: Just created Organization",
+        "summary": ":param request: Django request"
+      }
+    },
+    "/micro-service/user/{owner}/organization/{organization}/member/": {
+      "get": {
+        "operationId": "user_organization_member_list",
+        "tags": [
+          "micro-service"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "type": "string",
+            "name": "owner",
+            "in": "path",
+            "description": ""
+          },
+          {
+            "required": true,
+            "type": "string",
+            "name": "organization",
+            "in": "path",
+            "description": "Member Organization."
+          },
+          {
+            "required": false,
+            "type": "integer",
+            "name": "limit",
+            "in": "query",
+            "description": "Number of results to return per page."
+          },
+          {
+            "required": false,
+            "type": "integer",
+            "name": "offset",
+            "in": "query",
+            "description": "The initial index from which to return the results."
+          },
+          {
+            "required": false,
+            "type": "string",
+            "name": "ordering",
+            "in": "query",
+            "description": "Which field to use when ordering the results."
+          },
+          {
+            "required": false,
+            "type": "string",
+            "name": "search",
+            "in": "query",
+            "description": "A search term."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "user_organization_member_create",
+        "tags": [
+          "micro-service"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "type": "string",
+            "name": "owner",
+            "in": "path",
+            "description": ""
+          },
+          {
+            "required": true,
+            "type": "string",
+            "name": "organization",
+            "in": "path",
+            "description": "Member Organization."
+          },
+          {
+            "schema": {
+              "required": [
+                "name",
+                "user",
+                "type",
+                "organization"
+              ],
+              "type": "object",
+              "properties": {
+                "type": {
+                  "description": "Member type, for internal user only",
+                  "type": "string"
+                },
+                "user": {
+                  "description": "User uuid, this uid will identify associated User with respective Member.",
+                  "type": "string"
+                },
+                "name": {
+                  "description": "Required. 64 characters or fewer.",
+                  "type": "string"
+                },
+                "organization": {
+                  "description": "Member Organization.",
+                  "type": "string"
+                }
+              }
+            },
+            "name": "data",
+            "in": "body"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "description": ":param request: Django request\n:param owner: owner/user uuid\n:param organization: organization token.\n:return: Just created Organization",
+        "summary": ":param request: Django request"
+      }
+    },
+    "/micro-service/user/{owner}/organization/{organization}/member/{uuid}/": {
+      "get": {
+        "operationId": "user_organization_member_read",
+        "tags": [
+          "micro-service"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "type": "string",
+            "name": "owner",
+            "in": "path",
+            "description": ""
+          },
+          {
+            "required": true,
+            "type": "string",
+            "name": "uuid",
+            "in": "path",
+            "description": "Member uuid, this token will uniquely identify Member."
+          },
+          {
+            "required": true,
+            "type": "string",
+            "name": "organization",
+            "in": "path",
+            "description": "Member Organization."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "patch": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "user_organization_member_partial_update",
+        "tags": [
+          "micro-service"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "type": "string",
+            "name": "owner",
+            "in": "path",
+            "description": ""
+          },
+          {
+            "required": true,
+            "type": "string",
+            "name": "uuid",
+            "in": "path",
+            "description": "Member uuid, this token will uniquely identify Member."
+          },
+          {
+            "required": true,
+            "type": "string",
+            "name": "organization",
+            "in": "path",
+            "description": "Member Organization."
+          },
+          {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "description": "Member type, for internal user only",
+                  "type": "string"
+                },
+                "user": {
+                  "description": "User uuid, this uid will identify associated User with respective Member.",
+                  "type": "string"
+                },
+                "name": {
+                  "description": "Required. 64 characters or fewer.",
+                  "type": "string"
+                },
+                "organization": {
+                  "description": "Member Organization.",
+                  "type": "string"
+                }
+              }
+            },
+            "name": "data",
+            "in": "body"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "delete": {
+        "operationId": "user_organization_member_delete",
+        "tags": [
+          "micro-service"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "type": "string",
+            "name": "owner",
+            "in": "path",
+            "description": ""
+          },
+          {
+            "required": true,
+            "type": "string",
+            "name": "uuid",
+            "in": "path",
+            "description": "Member uuid, this token will uniquely identify Member."
+          },
+          {
+            "required": true,
+            "type": "string",
+            "name": "organization",
+            "in": "path",
+            "description": "Member Organization."
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/micro-service/user/{owner}/organization/{token}/": {
+      "get": {
+        "operationId": "user_organization_read",
+        "tags": [
+          "micro-service"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "type": "string",
+            "name": "owner",
+            "in": "path",
+            "description": "User uuid, this token will identify who is the owner of respective Organization."
+          },
+          {
+            "required": true,
+            "type": "string",
+            "name": "token",
+            "in": "path",
+            "description": "Organization uuid, this token will uniquely identify Organization."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "description": "Organization Viewset",
+        "summary": "Organization Viewset"
+      },
+      "patch": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "user_organization_partial_update",
+        "tags": [
+          "micro-service"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "type": "string",
+            "name": "owner",
+            "in": "path",
+            "description": "User uuid, this token will identify who is the owner of respective Organization."
+          },
+          {
+            "required": true,
+            "type": "string",
+            "name": "token",
+            "in": "path",
+            "description": "Organization uuid, this token will uniquely identify Organization."
+          },
+          {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "avatar": {
+                  "description": "",
+                  "type": "string"
+                },
+                "owner": {
+                  "description": "User uuid, this token will identify who is the owner of respective Organization.",
+                  "type": "string"
+                },
+                "name": {
+                  "description": "Required. 64 characters or fewer.",
+                  "type": "string"
+                }
+              }
+            },
+            "name": "data",
+            "in": "body"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "description": "Organization Viewset",
+        "summary": "Organization Viewset"
+      },
+      "delete": {
+        "operationId": "user_organization_delete",
+        "tags": [
+          "micro-service"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "type": "string",
+            "name": "owner",
+            "in": "path",
+            "description": "User uuid, this token will identify who is the owner of respective Organization."
+          },
+          {
+            "required": true,
+            "type": "string",
+            "name": "token",
+            "in": "path",
+            "description": "Organization uuid, this token will uniquely identify Organization."
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "description": "Organization Viewset",
+        "summary": "Organization Viewset"
+      }
+    },
+    "/micro-service/user/{owner}/organization/{token}/services/": {
+      "get": {
+        "operationId": "user_organization_get_organization_service",
+        "tags": [
+          "micro-service"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "type": "string",
+            "name": "owner",
+            "in": "path",
+            "description": "User uuid, this token will identify who is the owner of respective Organization."
+          },
+          {
+            "required": true,
+            "type": "string",
+            "name": "token",
+            "in": "path",
+            "description": "Organization uuid, this token will uniquely identify Organization."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "description": ":param request: Django request\n:param owner: owner/user uuid\n:param token: organization uuid\n:return: Organization services",
+        "summary": ":param request: Django request"
+      }
+    }
+  },
+  "securityDefinitions": {
+    "basic": {
+      "type": "basic"
+    }
+  }
+}

@@ -1,0 +1,197 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "{project_name} API",
+    "version": ""
+  },
+  "host": "local.veris.in:8016",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/micro-service/user/": {
+      "post": {
+        "parameters": [
+          {
+            "schema": {
+              "properties": {
+                "avatar": {
+                  "description": "",
+                  "type": "string"
+                },
+                "password": {
+                  "description": "",
+                  "type": "string"
+                },
+                "name": {
+                  "description": "Required. 100 characters or fewer.",
+                  "type": "string"
+                },
+                "email": {
+                  "description": "",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "password",
+                "email",
+                "avatar"
+              ],
+              "type": "object"
+            },
+            "name": "data",
+            "in": "body"
+          }
+        ],
+        "operationId": "create",
+        "summary": "Register a new user",
+        "description": "Register a new user",
+        "tags": [
+          "user"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/micro-service/user/login/": {
+      "post": {
+        "parameters": [
+          {
+            "schema": {
+              "properties": {
+                "password": {
+                  "description": "",
+                  "type": "string"
+                },
+                "email": {
+                  "description": "",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "email",
+                "password"
+              ],
+              "type": "object"
+            },
+            "name": "data",
+            "in": "body"
+          }
+        ],
+        "operationId": "user_login",
+        "summary": "user authentication",
+        "description": "user authentication",
+        "tags": [
+          "user"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/micro-service/user/{uuid}/": {
+      "get": {
+        "parameters": [
+          {
+            "description": "User uuid, this token will be used to link user in other services.",
+            "required": true,
+            "name": "uuid",
+            "type": "string",
+            "in": "path"
+          }
+        ],
+        "operationId": "read",
+        "summary": "get user profile",
+        "description": "Note : username Cannot be updated from here.",
+        "tags": [
+          "user"
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "patch": {
+        "parameters": [
+          {
+            "description": "User uuid, this token will be used to link user in other services.",
+            "required": true,
+            "name": "uuid",
+            "type": "string",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "properties": {
+                "avatar": {
+                  "description": "",
+                  "type": "string"
+                },
+                "name": {
+                  "description": "Required. 100 characters or fewer.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": "data",
+            "in": "body"
+          }
+        ],
+        "operationId": "partial_update",
+        "summary": "Note : username Cannot be updated from here.",
+        "description": "Note : username Cannot be updated from here.",
+        "tags": [
+          "user"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "delete": {
+        "parameters": [
+          {
+            "description": "User uuid, this token will be used to link user in other services.",
+            "required": true,
+            "name": "uuid",
+            "type": "string",
+            "in": "path"
+          }
+        ],
+        "operationId": "delete",
+        "summary": "Note : username Cannot be updated from here.",
+        "description": "Note : username Cannot be updated from here.",
+        "tags": [
+          "user"
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "basic": {
+      "type": "basic"
+    }
+  }
+}
