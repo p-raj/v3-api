@@ -142,3 +142,25 @@ class SessionViewSet(AuthorableModelViewSet, DRFNestedViewMixin,
             for k, v in instance.data.get(trigger, {}).items():
                 data['data.{0}'.format(k)] = v
         return response.Response(data)
+
+    @detail_route(permission_classes=[AllowAny], methods=['post'])
+    def write(self, request, *args, **kwargs):
+        print(request._request.body)
+        data = request.data
+        data = data if type(data) == dict else json.loads(data)
+        data = {
+            request.META.get('HTTP_KEY', 'invalid'): data
+        }
+        print(data)
+
+        instance = self.get_object()
+        instance.data.update(**data)
+        print(instance.data)
+        instance.save()
+        return self.retrieve(request, *args, **kwargs)
+
+    @detail_route(permission_classes=[AllowAny], methods=['post'])
+    def read(self, request, **kwargs):
+        key = request.META.get('HTTP_KEY', 'invalid')
+        instance = self.get_object()
+        return response.Response(instance.data.get(key, {}))
