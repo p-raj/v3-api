@@ -64,7 +64,7 @@ class ProcessViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelV
             data = client.execute(params=request.data)
 
             # FIXME
-            meta = getattr(data, 'title', '200 OK')
+            meta = getattr(data, 'title', '200 OK') or '200 OK'
             return response.Response(
                 data,
                 status=int(meta.split()[0]),
