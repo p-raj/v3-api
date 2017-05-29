@@ -1,6 +1,5 @@
 import coreapi
-
-from asap.core.signals.policy import AM_SERVER_URL
+from django.conf import settings
 
 
 class ClientSchema(object):
@@ -31,7 +30,7 @@ class ClientSchema(object):
     @property
     def link(self):
         return coreapi.Link(
-            url=AM_SERVER_URL + self.spec.url_relative,
+            url=getattr(settings, 'V3__API_GATEWAY') + self.spec.url_relative,
             action=self.spec.action,
             fields=self.fields
         )

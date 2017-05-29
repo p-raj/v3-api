@@ -99,5 +99,6 @@ V3__API_GATEWAY = 'http://172.20.0.1:8080'
 # and we will need callbacks
 V3__HOST_SELF = 'apis.veris.in'
 V3__HOST_MISTRAL = 'mistral.veris.in'
+V3__HOST_AUTHORIZATION = 'am.veris.in'
 
 # ######### PROJECT SPECIFIC CONFIGURATION
