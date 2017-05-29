@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import json
+import logging
 
 from rest_framework import response, viewsets
 from rest_framework.decorators import detail_route
@@ -10,6 +11,8 @@ from rest_framework.reverse import reverse_lazy
 from asap.apps.runtime.models.session import Session
 from asap.apps.runtime.serializers.session import SessionSerializer
 from asap.core.views import AuthorableModelViewSet, DRFNestedViewMixin
+
+logger = logging.getLogger(__name__)
 
 
 class SessionViewSet(AuthorableModelViewSet, DRFNestedViewMixin,
@@ -47,17 +50,17 @@ class SessionViewSet(AuthorableModelViewSet, DRFNestedViewMixin,
 
     @detail_route(permission_classes=[AllowAny], methods=['post'])
     def write(self, request, *args, **kwargs):
-        print(request.data,
-              request.data.get('key', 'missing'),
-              request.content_type)
+        instance = self.get_object()
+
+        logger.debug('session %s', instance)
+
         data = request.data
         data = data if type(data) == dict else json.loads(data)
         data = {
             data.get('key', 'invalid'): data.get('data', {})
         }
-        print(data)
 
-        instance = self.get_object()
+        logger.debug('write %s', data)
         instance.data.update(**data)
         instance.save()
         return self.retrieve(request, *args, **kwargs)
@@ -65,6 +68,9 @@ class SessionViewSet(AuthorableModelViewSet, DRFNestedViewMixin,
     @detail_route(permission_classes=[AllowAny], methods=['post'])
     def read(self, request, **kwargs):
         key = request.data.get('key', 'invalid')
-        print('reading key: ', key)
         instance = self.get_object()
-        return response.Response(instance.data.get(key, {}))
+        logger.debug('session %s', instance)
+
+        data = instance.data.get(key, {})
+        logger.debug('read %s', data)
+        return response.Response(data)

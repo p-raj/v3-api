@@ -1,11 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import json
+import logging
 from functools import reduce
 
-import coreapi
+from coreapi import exceptions, Client
 from coreapi.transports import HTTPTransport
 from django.core.exceptions import ValidationError
+
+logger = logging.getLogger(__name__)
 
 
 def dot_to_json(a):
@@ -25,26 +28,33 @@ class HttpClient(object):
     def __init__(self, document, **kwargs):
         self.document = document
         self.transport = HTTPTransport(headers={'Host': self.document.url})
-        self.client = coreapi.Client(
+        self.client = Client(
             transports=[self.transport],
             **kwargs
         )
 
     def execute(self, *args, **kwargs):
+        logger.debug('kwargs: %s', kwargs)
         try:
             # TODO
             # documentation :/
             body = dot_to_json(kwargs.get('params', {}))
+
+            # FIXME
+            # system processes integrated from client don't
+            # send body wrapped in data
+            # get in done from client & always retrieve body from data
             body = body if not body.get('data') else body.get('data')
 
             encoding = kwargs.get('params', {}).get('encoding', 'multipart/form-data')
+            logger.debug('encoding: %s', encoding)
+
             # only for multipart/form-data
             if encoding == 'multipart/form-data':
-                    for k, v in body.items():
-                        # hack for json items in multipart/form-data :(
-                        body[k] = v if type(v) != dict else json.dumps(v)
+                for k, v in body.items():
+                    # hack for json items in multipart/form-data :(
+                    body[k] = v if type(v) != dict else json.dumps(v)
 
-            print(body)
             data = self.client.action(
                 self.document, ['api'], body,
                 # FIXME
@@ -52,14 +62,13 @@ class HttpClient(object):
                 # we are getting files or not
                 encoding=encoding
             )
-            print(data)
-        except coreapi.exceptions.ErrorMessage as e:
-            print(e)
+        except exceptions.ErrorMessage as e:
+            logger.warning('exception: %s', e, exc_info=1)
             return e.error
-        except coreapi.exceptions.ParseError as e:
-            print(e)
+        except exceptions.ParseError as e:
+            logger.warning('exception: %s', e, exc_info=1)
             return e.args
-        except coreapi.exceptions.ParameterError as e:
-            print(e)
+        except exceptions.ParameterError as e:
+            logger.warning('exception: %s', e, exc_info=1)
             raise ValidationError(e)
         return data

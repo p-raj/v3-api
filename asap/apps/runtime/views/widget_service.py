@@ -76,8 +76,7 @@ class WidgetProxyViewSet(SessionMixin, ProxyView):
                 response.data = _response.json()
             except Exception as e:
                 # let's log to check when it fails
-                # TODO: use logger
-                print(e)
+                logger.warning(e)
 
         # payload gets overridden anyways in logger._log_db_entry
         # so why bother sending it ?

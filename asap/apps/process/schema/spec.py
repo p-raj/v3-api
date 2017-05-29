@@ -7,7 +7,11 @@ The difference is the PSSpec is a subset of a CoreAPI.
 i.e It only focuses on one URL/Link of the CoreAPI schema.
 
 """
+import logging
+
 from django.core.exceptions import ValidationError
+
+logger = logging.getLogger(__name__)
 
 
 class PSSpec(object):
@@ -44,5 +48,5 @@ class PSSpec(object):
             SchemaValidator()(self.schema)
             return True
         except ValidationError as e:
-            print(e)
+            logger.warning(e)
             return False

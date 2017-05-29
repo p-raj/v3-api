@@ -293,6 +293,82 @@ PASSWORD_HASHERS = [
 # ######### END PASSWORD HASHER CONFIGURATION
 
 
+# ######### LOGGING CONFIGURATION
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-LOGGING
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'formatters': {
+        'django.server': {
+            '()': 'django.utils.log.ServerFormatter',
+            'format': '[%(server_time)s] %(message)s',
+        }
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+        },
+        'stream': {
+            'level': 'INFO',
+            'filters': ['require_debug_false'],
+            'class': 'logging.StreamHandler',
+        },
+        'django.server': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'django.server',
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'stream', 'mail_admins'],
+            'level': 'INFO',
+        },
+        'django.server': {
+            'handlers': ['django.server'],
+            'level': 'INFO',
+            'propagate': False
+        },
+        'django.request': {
+            'handlers': ['console', 'stream'],
+            'level': 'INFO'
+        },
+        'django.db.backends': {
+            'handlers': ['console', 'stream'],
+            'level': 'INFO'
+        },
+        'django.security.*': {
+            'handlers': ['console', 'stream'],
+            'level': 'INFO'
+        },
+        'asap': {
+            'handlers': ['console', 'stream'],
+            'level': 'DEBUG'
+        },
+        'bouncer': {
+            'handlers': ['console', 'stream'],
+            'level': 'DEBUG'
+        }
+    }
+}
+# ######### END LOGGING CONFIGURATION
+
+
 # ######### DJANGO REST FRAMEWORK CONFIGURATION
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
