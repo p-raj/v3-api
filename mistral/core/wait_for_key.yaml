@@ -6,13 +6,16 @@ wait_for_key:
   input:
     - key
     - url
+    - method
+    - headers: {}
+    - body: {}
   tasks:
     listen_for_key:
-      action: std.http url=<% $.url %>
+      action: std.http url=<% $.url %> method=<% $.method %> headers=<% $.headers %> body=<% $.body %>
       publish:
-        response: <% task(listen_for_key).result.content %>
+        data: <% task(listen_for_key).result.content %>
+      publish-on-error:
+        data: {}
       on-success:
-        - echo_response
-        - fail: <% not $.response.data.containsKey($.key) %>
-    echo_response:
-      action: std.echo output=<% $.response %>
+        - fail: <% not $.data.containsKey($.key) %>
+

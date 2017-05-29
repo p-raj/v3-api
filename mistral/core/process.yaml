@@ -11,7 +11,7 @@ process:
     - headers: {}
     - cookies: {}
     - auth: {}
-    - timeout: 10
+    - timeout: 60
     - allow_redirects: false
     - proxies: {}
   tasks:
