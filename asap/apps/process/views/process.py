@@ -65,6 +65,7 @@ class ProcessViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelV
 
             # FIXME
             meta = getattr(data, 'title', '200 OK') or '200 OK'
+            meta = meta if type(meta) == str else '200 OK'
             return response.Response(
                 data,
                 status=int(meta.split()[0]),

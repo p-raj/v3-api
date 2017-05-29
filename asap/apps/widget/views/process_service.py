@@ -48,6 +48,16 @@ class ProcessActionProxyViewSet(views.APIView):
         from asap.apps.widget.models.widget import Widget
         widget = Widget.objects.get(uuid=kwargs.get('uuid'))
         data = widget.data or {}
+
+        # FIXME
+        # use AST instead of this hack
+        data = json.loads(
+            json.dumps(data)
+                .replace('$.session', self.get_session())
+                .replace('$.widget', str(widget.uuid))
+                .replace('$.process', self.kwargs.get('process_uuid'))
+        )
+
         body = data.get(self.kwargs.get('process_uuid'), {})
         body.update(**request.data)
 

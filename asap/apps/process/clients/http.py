@@ -37,9 +37,12 @@ class HttpClient(object):
             body = dot_to_json(kwargs.get('params', {}))
             body = body if not body.get('data') else body.get('data')
 
-            for k, v in body.items():
-                # hack for json items in multipart/form-data :(
-                body[k] = v if type(v) != dict else json.dumps(v)
+            encoding = kwargs.get('params', {}).get('encoding', 'multipart/form-data')
+            # only for multipart/form-data
+            if encoding == 'multipart/form-data':
+                    for k, v in body.items():
+                        # hack for json items in multipart/form-data :(
+                        body[k] = v if type(v) != dict else json.dumps(v)
 
             print(body)
             data = self.client.action(
@@ -47,12 +50,15 @@ class HttpClient(object):
                 # FIXME
                 # this should be based on whether
                 # we are getting files or not
-                encoding='multipart/form-data'
+                encoding=encoding
             )
             print(data)
         except coreapi.exceptions.ErrorMessage as e:
             print(e)
             return e.error
+        except coreapi.exceptions.ParseError as e:
+            print(e)
+            return e.args
         except coreapi.exceptions.ParameterError as e:
             print(e)
             raise ValidationError(e)
