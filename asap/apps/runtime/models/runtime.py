@@ -3,15 +3,11 @@
 
 from django.conf import settings
 from django.contrib import admin
-from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.utils.functional import cached_property
 
-from asap.apps.runtime.workflow import RuntimeWorkflowBuilder
 from asap.core.models import Authorable, Humanizable, Publishable, \
     Timestampable, UniversallyIdentifiable
-from asap.core.workflow import MistralWorkflow
 
 User = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
@@ -31,29 +27,8 @@ class Runtime(Authorable, Humanizable, Publishable, Timestampable,
                     'to which will be loaded when a runtime is called.')
     )
 
-    # the workflow to start when the runtime is invoked
-    # each instance will have runtime execution / workflow execution
-    workflow_uuid = models.CharField(max_length=512, null=True, blank=True)
-
-    # the base workflow generated for each runtime
-    # the workflow will be editable as JSON,
-    # till we get a builder (~yahoo pipes)
-    workflow = JSONField(null=True, blank=True)
-
     def __str__(self):
         return '{0}'.format(self.uuid)
-
-    @cached_property
-    def workflow_builder(self):
-        return MistralWorkflow(RuntimeWorkflowBuilder(self))
-
-    @property
-    def workflow_name(self):
-        return self.workflow_builder.builder.get_workflow_name()
-
-    @property
-    def workflow_json(self):
-        return self.workflow_builder.dict()
 
 
 @admin.register(Runtime)

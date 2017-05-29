@@ -9,20 +9,15 @@ It is one of the most critical layers,
 responsible for mapping the UI components to the processes.
 
 """
-import functools
 
 from django.conf import settings
 from django.contrib import admin
 from django.contrib.postgres.fields import JSONField
 from django.db import models
-from django.urls.base import reverse
 from django.utils.translation import ugettext_lazy as _
-from django.utils.functional import cached_property
 
-from asap.apps.widget.workflow import WidgetWorkflowBuilder
 from asap.core.models import Authorable, Humanizable, Publishable, \
     Timestampable, UniversallyIdentifiable
-from asap.core.workflow import MistralWorkflow
 
 User = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
@@ -61,60 +56,6 @@ class Widget(Authorable, Humanizable, Publishable, Timestampable,
         help_text=_('Widget Data, the data to be filled by admin, '
                     'using admin widget designed by developer'),
     )
-
-    # the rules defined by the admin needs
-    # to be translated to mistral workflows :)
-    # for each rule there might be a mini workflow
-    # eg.
-    # on saving a member ---> send him a notification
-    # P1: Search Member
-    # P2: Save Member
-    # P3: Send notification
-    #  trigger: P2
-    #  condition: member.email --> contains --> veris.in
-    #  action: P3
-    #
-    # P2' (mistral): Wait for input
-    #  1.a. change the process URL, kind of proxy?, preventing changes in schema
-    #  1.b. generate the schema with a different P2 url ?
-    #  2. forwards the data to P2
-    #  3. Checks the rule on complete and starts P3
-    rules = JSONField(
-        _('Widget Rules'),
-        null=True, blank=True
-    )
-
-    # first of all, find a fucking better name :)
-    # auto generated when a rule is created
-    # eg.
-    # for each rule:
-    # P1 ----> condition ----> P2
-    # P1 ----> P1'
-    # where P1' is the temporary URL created
-    # where the data will be stored per __session/execution__
-    # process mappings ?
-    # FIXME
-    # move this to session ?
-    # UPDATE: every process is a proxy
-    # process_proxies = JSONField(
-    #     _('Process Proxy'),
-    #     null=True, blank=True
-    # )
-
-    # generate the workflow YAML and insert into mistral :)
-    # workflow_json = JSONField(
-    #     _('Workflow'),
-    #     null=True, blank=True
-    # )
-
-    # the workflow to start when the widget is invoked
-    # each instance will have widget execution / workflow execution
-    workflow_uuid = models.CharField(max_length=512, null=True, blank=True)
-
-    # the base workflow generated for each widget
-    # the workflow will be editable as JSON,
-    # till we get a builder (~yahoo pipes)
-    workflow = JSONField(null=True, blank=True)
 
     # the template consists of the layout of components
     # & their bindings to processes
