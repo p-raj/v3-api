@@ -1,11 +1,6 @@
-import uuid
 import logging
 
-from django.core.exceptions import PermissionDenied
-
 from rest_framework.permissions import AllowAny
-from rest_framework.reverse import reverse_lazy
-
 from rest_framework_proxy.views import ProxyView
 
 from asap.apps.runtime.models.runtime import Runtime
@@ -15,9 +10,6 @@ logger = logging.getLogger(__name__)
 
 
 class SessionMixin(ProxyView):
-    """
-
-    """
     # the session can't be initiated
     # in the middle of runtime calls
     # for instance the widgets rendering API may start a new session
@@ -45,58 +37,39 @@ class SessionMixin(ProxyView):
             return session
         return None
 
-    def update_session(self, key, value):
-        # a proxy can't be created if the session is not known
-        # session will either be created when fetching widgets info
-        # or through a separate initialization
-        # subjected to change :D
-        session = self.get_session()
 
-        if not session:
-            raise PermissionDenied
+class WidgetProxyViewSet(SessionMixin, ProxyView):
+    """
+    A Proxy ViewSet to fetch data from the Widgets Service
+    while maintaining a session.
 
-        session.data.update(**{
-            key: value
-        })
-        session.save()
-
-
-class LoggingProxyViewSet(SessionMixin, ProxyView):
+    Example:
+        - `/runtimes/<r_id>/widgets/` should internally call
+            `/widget-lockers/<wl_id>/widgets/` and start a session for the `Runtime`.
+        - `/runtimes/<r_id>/widgets/<w_id>/` should internally call
+            `/widgets/<w_id>/` and update the session for the `Runtime`.
     """
 
-    """
-    # TODO : remove AllowAny permission with proper permission class
     permission_classes = (AllowAny,)
 
-    logger = None
-    actor = 'vrt'
-
-    def __init__(self, **kwargs):
-        super(LoggingProxyViewSet, self).__init__(**kwargs)
+    def __init__(self):
+        super(WidgetProxyViewSet, self).__init__()
         self.runtime_uuid = None
         self.widget_uuid = None
 
-    def _init_logger_(self, request, token):
-        """
-        :param request : Django request object.
-        :param token : widget token, helps in identifying the widget
-        :return: logging class instance
-        """
-        # FIXME
-        # hack to prevent 500 :'(
-        # session can't be null, invalid requests prevent entry in DB
-        # instead an entry should be created without session id
-        # make session nullable
+    def get_source_path(self):
+        runtime = Runtime.objects.filter(uuid=self.kwargs.get('uuid')).first()
+        if not runtime or not runtime.widget_locker_uuid:
+            return None
 
-        # fake API call to generate a session
-        # if it doesn't exists :/
-        self.get_session()
-
-        session_uuid = self.get_session_uuid() or uuid.uuid4()
+        # get source path maps the kwargs to the path
+        # let's add widget_locker_uuid to it
+        self.kwargs.update(widget_locker_uuid=runtime.widget_locker_uuid)
+        return super(WidgetProxyViewSet, self).get_source_path()
 
     def create_response(self, response):
         _response = response
-        response = super(LoggingProxyViewSet, self).create_response(response)
+        response = super(WidgetProxyViewSet, self).create_response(response)
 
         if response.status_code >= 400:
             try:
@@ -113,7 +86,7 @@ class LoggingProxyViewSet(SessionMixin, ProxyView):
         return response
 
     def create_error_response(self, body, status):
-        response = super(LoggingProxyViewSet, self).create_error_response(body, status)
+        response = super(WidgetProxyViewSet, self).create_error_response(body, status)
 
         # payload gets overridden anyways in logger._log_db_entry
         # so why bother sending it ?
@@ -125,40 +98,11 @@ class LoggingProxyViewSet(SessionMixin, ProxyView):
         self.runtime_uuid = kwargs.get('uuid')
         self.widget_uuid = kwargs.get('widget_uuid')
 
-        if self.logger is None:
-            self._init_logger_(request, self.runtime_uuid)
+        # fake API call to generate a session
+        # if it doesn't exists :/
+        self.get_session()
 
-        return super(LoggingProxyViewSet, self).proxy(request, *args, **kwargs)
-
-
-class WidgetProxyViewSet(LoggingProxyViewSet):
-    """
-    A Proxy ViewSet to fetch data from the Widgets Service
-    while maintaining a session.
-
-    Example:
-        - `/runtimes/<r_id>/widgets/` should internally call
-            `/widget-lockers/<wl_id>/widgets/` and start a session for the `Runtime`.
-        - `/runtimes/<r_id>/widgets/<w_id>/` should internally call
-            `/widgets/<w_id>/` and update the session for the `Runtime`.
-    """
-
-    permission_classes = (AllowAny,)
-
-    def get_source_path(self):
-        runtime = Runtime.objects.filter(uuid=self.kwargs.get('uuid')).first()
-        if not runtime or not runtime.widget_locker_uuid:
-            return None
-
-        # get source path maps the kwargs to the path
-        # let's add widget_locker_uuid to it
-        self.kwargs.update(widget_locker_uuid=runtime.widget_locker_uuid)
-        return super(WidgetProxyViewSet, self).get_source_path()
-
-    def get_headers(self, request):
-        headers = super(WidgetProxyViewSet, self).get_headers(request)
-        # headers['Veris-Resource'] = request.META.get('HTTP_VERIS_RESOURCE')
-        return headers
+        return super(WidgetProxyViewSet, self).proxy(request, *args, **kwargs)
 
 
 class WidgetListProxyViewSet(WidgetProxyViewSet):
