@@ -35,19 +35,7 @@ class ProcessActionProxyViewSet(views.APIView):
     def get_session(self):
         return self.request.META.get('HTTP_X_VRT_SESSION', '')
 
-    def proxy_process_url(self, **kwargs):
-        return '{keystore}/{session}/set/'.format(**{
-            'keystore': KEYSTORE_SERVER,
-            'session': self.get_session(),
-            'process': kwargs.get('process_uuid')
-        })
-
     def get_process_url(self, **kwargs):
-        if self.get_session():
-            # each process data is recorded to replay the history
-            # mistral is looking for this
-            return self.proxy_process_url(**kwargs)
-
         # direct
         return '{process_server}{path}'.format(**{
             'process_server': PROCESS_SERVER,

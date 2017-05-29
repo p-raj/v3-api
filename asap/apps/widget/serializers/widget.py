@@ -26,8 +26,7 @@ class WidgetSerializer(TimestampableModelSerializer, serializers.HyperlinkedMode
 
     class Meta:
         model = Widget
-        exclude = ('author', 'processes_json', 'is_published')
-        read_only_fields = ('processes_json',)
+        exclude = ('author', 'is_published')
 
         extra_kwargs = {
             'url': {
@@ -38,11 +37,6 @@ class WidgetSerializer(TimestampableModelSerializer, serializers.HyperlinkedMode
     def get_schema(self, obj):
         # move these lame tasks to some place else
         # and make these smart
-        processes = obj.processes_json
-
-        if not processes or type(processes) == dict:
-            return processes
-
         schema = copy.deepcopy(swagger_dict)
 
         # update the open API spec title to match the widget uuid
@@ -50,13 +44,16 @@ class WidgetSerializer(TimestampableModelSerializer, serializers.HyperlinkedMode
 
         # copy the path that the process represents
         # change the path
-        for p in processes:
-            resp = requests.get('{0}server/'.format(p.get('url')))
-            process_schema = resp.json()
+        for process in obj.processes:
+            process_server = reverse_lazy('process-server', kwargs={
+                'uuid': str(process.uuid)
+            })
+
+            process_schema = requests.get('http://172.20.0.1:8000' + str(process_server)).json()
             widget_proxy = reverse_lazy('widget-process-proxy', kwargs={
                 'uuid': str(obj.uuid),
-                'process_uuid': p.get('uuid')
+                'process_uuid': process.uuid
             })
             schema['paths'][str(widget_proxy)] = process_schema.get('paths') \
-                .get('/api/v1/processes/{0}/execute/'.format(p.get('uuid')))
+                .get('/api/v1/processes/{0}/execute/'.format(process.uuid))
         return schema

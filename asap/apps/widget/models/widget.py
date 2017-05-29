@@ -34,14 +34,6 @@ class Widget(Authorable, Humanizable, Publishable, Timestampable,
     Process can be called based on some rules.
     Widget consists of a predefined Workflow.
     """
-
-    # raw processes schema
-    # we'll keep a the raw format provided by the process service
-    # it will come in handy if the process schema changes
-    # we'll have parsing according to process schema version
-    # and widget schema can change version independent of the process schema
-    processes_json = JSONField(null=True, blank=True)
-
     # we need to have a secure token
     # to access the process service, currently its more of a hack
     # and needs to be automated using a OAuth flow
@@ -137,17 +129,11 @@ class Widget(Authorable, Humanizable, Publishable, Timestampable,
     def __str__(self):
         return '{0}'.format(self.name)
 
-    @cached_property
-    def workflow_builder(self):
-        return MistralWorkflow(WidgetWorkflowBuilder(self))
-
     @property
-    def workflow_name(self):
-        return self.workflow_builder.builder.get_workflow_name()
-
-    @property
-    def workflow_json(self):
-        return self.workflow_builder.dict()
+    def processes(self):
+        from asap.apps.process.models import Process
+        return Process.objects \
+            .filter(processlocker__uuid=self.process_locker_uuid)
 
     def has_permission(self, token):
         # TODO

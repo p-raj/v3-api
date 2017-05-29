@@ -24,5 +24,3 @@ Currently there are 2 types of VRTs:
 from . import runtime
 from . import runtime_locker
 from . import session
-
-from .. import signals

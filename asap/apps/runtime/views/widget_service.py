@@ -177,16 +177,6 @@ class WidgetListProxyViewSet(WidgetProxyViewSet):
     proxy_host = 'http://172.20.0.1:8000'
     source = 'api/v1/widget-lockers/%(widget_locker_uuid)s/widgets/'
 
-    def create_response(self, response):
-        import requests
-        requests.get('http://172.20.0.1:8000' + str(reverse_lazy('runtime-execute', kwargs={
-            'uuid': self.runtime_uuid
-        })), headers={
-            'X-VRT-SESSION': str(self.get_session_uuid()),
-            'VERIS-RESOURCE': self.request.META.get('HTTP_VERIS_RESOURCE')
-        })
-        return super(WidgetListProxyViewSet, self).create_response(response)
-
 
 class WidgetDetailProxyViewSet(WidgetProxyViewSet):
     """
