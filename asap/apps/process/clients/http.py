@@ -55,6 +55,14 @@ class HttpClient(object):
                     # hack for json items in multipart/form-data :(
                     body[k] = v if type(v) != dict else json.dumps(v)
 
+            headers = {'Host': self.document.url, 'Content-type': encoding}
+            for field in self.document['api'].fields:
+                if field.location == 'header' and body.get(field.name, None):
+                    headers[field.name] = body[field.name]
+
+            self.transport = HTTPTransport(headers=headers)
+            self.client = Client(transports=[self.transport])
+
             data = self.client.action(
                 self.document, ['api'], body,
                 # FIXME
