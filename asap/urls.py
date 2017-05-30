@@ -26,8 +26,14 @@ from rest_framework.documentation import include_docs_urls
 from rest_framework_swagger.views import get_swagger_view
 
 from asap.apps import urls as app_routes
+from asap.core.views.revision import RevisionViewSet
+from asap.core.views.version import VersionViewSet
 
 from .router import Router
+
+r = Router()
+r.register('version', VersionViewSet)
+r.register('revision', RevisionViewSet)
 
 API_TITLE = 'Veris API'
 

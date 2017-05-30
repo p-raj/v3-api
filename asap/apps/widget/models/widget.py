@@ -16,6 +16,8 @@ from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+from reversion.admin import VersionAdmin
+
 from asap.core.models import Authorable, Humanizable, Publishable, \
     Timestampable, UniversallyIdentifiable
 
@@ -90,7 +92,7 @@ class Widget(Authorable, Humanizable, Publishable, Timestampable,
 
 
 @admin.register(Widget)
-class WidgetAdmin(admin.ModelAdmin):
+class WidgetAdmin(VersionAdmin):
     raw_id_fields = ['author']
     list_display = ('name', 'uuid', 'process_locker_token',)
     list_display_links = ('name',)

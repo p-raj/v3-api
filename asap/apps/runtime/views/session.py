@@ -11,12 +11,13 @@ from rest_framework.reverse import reverse_lazy
 from asap.apps.runtime.models.session import Session
 from asap.apps.runtime.serializers.session import SessionSerializer
 from asap.core.views import AuthorableModelViewSet, DRFNestedViewMixin
+from asap.core.views.version import VersionableModelViewSet
 
 logger = logging.getLogger(__name__)
 
 
 class SessionViewSet(AuthorableModelViewSet, DRFNestedViewMixin,
-                     viewsets.ModelViewSet):
+                     VersionableModelViewSet, viewsets.ModelViewSet):
     queryset = Session.objects.all()
     serializer_class = SessionSerializer
     permission_classes = (AllowAny,)

@@ -51,6 +51,8 @@ from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+from reversion.admin import VersionAdmin
+
 from asap.apps.process.schema.spec import PSSpec
 from asap.apps.process.schema.validator import SchemaValidator
 from asap.core.models import Authorable, Humanizable, Timestampable, UniversallyIdentifiable
@@ -166,6 +168,6 @@ class Process(Authorable, Humanizable, Timestampable,
 
 
 @admin.register(Process)
-class Admin(admin.ModelAdmin):
+class Admin(VersionAdmin):
     list_display = ('pk', 'name', 'uuid')
     list_display_links = ('pk', 'name')

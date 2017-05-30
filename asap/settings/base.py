@@ -184,7 +184,6 @@ TEMPLATES = [
 MIDDLEWARE = [
     # Default Django middleware.
     # 'django.middleware.cache.UpdateCacheMiddleware',
-    # 'reversion.middleware.RevisionMiddleware',
 
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -193,6 +192,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'reversion.middleware.RevisionMiddleware'
     # 'django.middleware.cache.FetchFromCacheMiddleware'
 ]
 # ######### END MIDDLEWARE CONFIGURATION
@@ -219,7 +219,7 @@ DJANGO_APPS = (
 )
 
 THIRD_PARTY_APPS = (
-    # 'reversion',
+    'reversion',
     # 'oauth2_provider',
 
     'rest_framework',

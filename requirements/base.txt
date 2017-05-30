@@ -10,6 +10,7 @@ debtcollector==1.13.0
 Django==1.10.7
 django-rest-framework-proxy==1.6.0
 django-rest-swagger==2.1.2
+django-reversion==2.0.8
 djangorestframework==3.6.2
 drf-nested-routers==0.90.0
 iso8601==0.1.11

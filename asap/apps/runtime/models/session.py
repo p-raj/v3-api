@@ -6,6 +6,8 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
+from reversion.admin import VersionAdmin
+
 from asap.apps.runtime.models.runtime import Runtime
 from asap.core.models import Authorable, Timestampable, \
     UniversallyIdentifiable
@@ -54,5 +56,5 @@ class Session(Authorable, UniversallyIdentifiable,
 
 
 @admin.register(Session)
-class SessionAdmin(admin.ModelAdmin):
+class SessionAdmin(VersionAdmin):
     raw_id_fields = ['runtime']

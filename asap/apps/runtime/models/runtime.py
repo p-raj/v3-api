@@ -6,6 +6,8 @@ from django.contrib import admin
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+from reversion.admin import VersionAdmin
+
 from asap.core.models import Authorable, Humanizable, Publishable, \
     Timestampable, UniversallyIdentifiable
 
@@ -32,7 +34,7 @@ class Runtime(Authorable, Humanizable, Publishable, Timestampable,
 
 
 @admin.register(Runtime)
-class RuntimeAdmin(admin.ModelAdmin):
+class RuntimeAdmin(VersionAdmin):
     raw_id_fields = ['author']
     list_display = ('id', 'name', 'uuid',
                     'widget_locker_uuid',)
