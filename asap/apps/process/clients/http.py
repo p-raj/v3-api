@@ -38,15 +38,13 @@ class HttpClient(object):
         try:
             # TODO
             # documentation :/
+            __params = {}
             body = dot_to_json(kwargs.get('params', {}))
+            for key in list(body.keys()):
+                if key.startswith('__'):
+                    __params[key] = body.pop(key, None)
 
-            # FIXME
-            # system processes integrated from client don't
-            # send body wrapped in data
-            # get in done from client & always retrieve body from data
-            body = body if not body.get('data') else body.get('data')
-
-            encoding = kwargs.get('params', {}).get('encoding', 'multipart/form-data')
+            encoding = __params.get('__encoding', 'multipart/form-data')
             logger.debug('encoding: %s', encoding)
 
             # only for multipart/form-data

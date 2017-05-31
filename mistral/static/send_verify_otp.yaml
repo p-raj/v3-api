@@ -19,7 +19,7 @@ send_verify_otp:
       input:
         url: http://172.20.0.1:8000/api/v1/widgets/<% $.widget %>/<% $.process_generate_otp %>/
         method: POST
-        body: '{ "data.time": 300, "encoding": "application/json" }'
+        body: '{ "time": 300, "__encoding": "application/json" }'
         headers: <% $.headers %>
       on-success:
         - send_sms
@@ -28,11 +28,11 @@ send_verify_otp:
       input:
         url: http://172.20.0.1:8000/api/v1/widgets/<% $.widget %>/<% $.process_send_sms %>/
         method: POST
-        body: '{ "data.to": "<% $.phone_number %>", "data.body": "OTP: <% task(generate_otp).result.data.otp %>", "data.provider": "plivo", "encoding": "application/json" }'
+        body: '{ "to": "<% $.phone_number %>", "body": "OTP: <% task(generate_otp).result.data.otp %>", "provider": "plivo", "__encoding": "application/json" }'
         headers: <% $.headers %>
       publish:
         key: <% $.widget %>
-        value: '{ "template": "step_2", "data": {"data.message": "OTP Sent. Valid for 5 mins.", "data.phone": "<% $.phone_number %>"} }'
+        value: '{ "template": "step_2", "data": {"__message": "OTP Sent. Valid for 5 mins.", "__phone": "<% $.phone_number %>"} }'
       on-success:
         - publish_result
         - wait_for_input
@@ -41,16 +41,16 @@ send_verify_otp:
       input:
         url: http://172.20.0.1:8000/api/v1/widgets/<% $.widget %>/<% $.process_wait_for_input %>/
         method: POST
-        body: '{ "data.key": "input__otp", "data.uuid": "<% $.session %>", "encoding": "application/json" }'
+        body: '{ "key": "input__otp", "uuid": "<% $.session %>", "__encoding": "application/json" }'
         headers: <% $.headers %>
         key: "otp"
       retry: delay=10 count=30
       publish:
         key: <% $.widget %>
-        value: '{ "data.message": "OTP Sent. Valid for 5 mins.", "data.phone": "<% $.phone_number %>" }'
+        value: '{ "message": "OTP Sent. Valid for 5 mins.", "phone": "<% $.phone_number %>" }'
       publish-on-error:
         key: <% $.widget %>
-        value: '{ "data.errors": [ "OTP expired. Request Again" ] }'
+        value: '{ "errors": [ "OTP expired. Request Again" ] }'
       on-success:
         - verify_otp
         - publish_result
@@ -61,7 +61,7 @@ send_verify_otp:
       input:
         url: http://172.20.0.1:8000/api/v1/widgets/<% $.widget %>/<% $.process_verify_otp %>/
         method: POST
-        body: '{ "data.uuid": "<% task(generate_otp).result.data.otp_uuid %>", "data.otp": "OTP: <% task(wait_for_input).result.data.otp %>", "data.otp_type": "totp", "encoding": "application/json" }'
+        body: '{ "uuid": "<% task(generate_otp).result.data.otp_uuid %>", "otp": "OTP: <% task(wait_for_input).result.data.otp %>", "otp_type": "totp", "__encoding": "application/json" }'
         headers: <% $.headers %>
       retry: delay=10 count=30
       publish:
@@ -69,7 +69,7 @@ send_verify_otp:
         value: '{ "template": "resolved", "data.message": "OTP Verified" }'
       publish-on-error:
         key: <% $.widget %>
-        value: '{ "data.errors": "Invalid OTP" }'
+        value: '{ "errors": "Invalid OTP" }'
       on-complete:
         - publish_result
     publish_result:
@@ -80,4 +80,4 @@ send_verify_otp:
         headers: {
           Content-Type: 'application/json',
         }
-        body: '{ "data.data": <% $.value %>, "data.key": "<% $.key %>", "data.uuid": "<% $.session %>", "encoding": "application/json"}'
+        body: '{ "data": <% $.value %>, "key": "<% $.key %>", "uuid": "<% $.session %>", "__encoding": "application/json"}'
