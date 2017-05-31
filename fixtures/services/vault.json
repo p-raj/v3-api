@@ -1,0 +1,190 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "{project_name} API",
+    "version": ""
+  },
+  "host": "local.veris.in:8014",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/micro-service/service-vault/service/": {
+      "get": {
+        "parameters": [
+          {
+            "description": "Number of results to return per page.",
+            "type": "integer",
+            "name": "limit",
+            "required": false,
+            "in": "query"
+          },
+          {
+            "description": "The initial index from which to return the results.",
+            "type": "integer",
+            "name": "offset",
+            "required": false,
+            "in": "query"
+          },
+          {
+            "description": "Which field to use when ordering the results.",
+            "type": "string",
+            "name": "ordering",
+            "required": false,
+            "in": "query"
+          },
+          {
+            "description": "A search term.",
+            "type": "string",
+            "name": "search",
+            "required": false,
+            "in": "query"
+          }
+        ],
+        "operationId": "service_list",
+        "description": "Service Vault Viewset, every resource http request handles by this class\n\n**Query Parameters**:\n`is_public` -- true/false, get public or private services only.\n\n- Two signals will be fired after a service is added.\n- One for adding Service in Kong\n- second for Register the Service for User on AM server if obj.assign_to_user is True\n\n- No Service can be updated once added,",
+        "summary": "Service Vault Viewset, every resource http request handles by this class",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "service"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "schema": {
+              "type": "object",
+              "required": [
+                "name",
+                "request_host",
+                "upstream_url",
+                "swagger_schema"
+              ],
+              "properties": {
+                "swagger_schema": {
+                  "description": "",
+                  "type": "string"
+                },
+                "name": {
+                  "description": "Required. 30 characters or fewer.",
+                  "type": "string"
+                },
+                "description": {
+                  "description": "Service Description",
+                  "type": "string"
+                },
+                "request_host": {
+                  "description": "Resource Host, to be passed to kong",
+                  "type": "string"
+                },
+                "upstream_url": {
+                  "description": "Required. 200 characters or fewer.",
+                  "type": "string"
+                },
+                "is_public": {
+                  "description": "If checked , this service will be publicly available for use.",
+                  "type": "boolean"
+                }
+              }
+            },
+            "name": "data",
+            "in": "body"
+          }
+        ],
+        "operationId": "service_create",
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Service Vault Viewset, every resource http request handles by this class\n\n**Query Parameters**:\n`is_public` -- true/false, get public or private services only.\n\n- Two signals will be fired after a service is added.\n- One for adding Service in Kong\n- second for Register the Service for User on AM server if obj.assign_to_user is True\n\n- No Service can be updated once added,",
+        "summary": "Service Vault Viewset, every resource http request handles by this class",
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "service"
+        ]
+      }
+    },
+    "/micro-service/service-vault/service/{id}/": {
+      "get": {
+        "parameters": [
+          {
+            "description": "A unique integer value identifying this Service Vault.",
+            "type": "integer",
+            "name": "id",
+            "required": true,
+            "in": "path"
+          }
+        ],
+        "operationId": "service_read",
+        "description": "Service Vault Viewset, every resource http request handles by this class\n\n**Query Parameters**:\n`is_public` -- true/false, get public or private services only.\n\n- Two signals will be fired after a service is added.\n- One for adding Service in Kong\n- second for Register the Service for User on AM server if obj.assign_to_user is True\n\n- No Service can be updated once added,",
+        "summary": "Service Vault Viewset, every resource http request handles by this class",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "service"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "description": "A unique integer value identifying this Service Vault.",
+            "type": "integer",
+            "name": "id",
+            "required": true,
+            "in": "path"
+          }
+        ],
+        "operationId": "service_delete",
+        "description": "Service Vault Viewset, every resource http request handles by this class\n\n**Query Parameters**:\n`is_public` -- true/false, get public or private services only.\n\n- Two signals will be fired after a service is added.\n- One for adding Service in Kong\n- second for Register the Service for User on AM server if obj.assign_to_user is True\n\n- No Service can be updated once added,",
+        "summary": "Service Vault Viewset, every resource http request handles by this class",
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "service"
+        ]
+      }
+    },
+    "/micro-service/service-vault/service/{id}/apis/": {
+      "get": {
+        "parameters": [
+          {
+            "description": "A unique integer value identifying this Service Vault.",
+            "type": "integer",
+            "name": "id",
+            "required": true,
+            "in": "path"
+          }
+        ],
+        "operationId": "service_get_service_apis_from_kong",
+        "description": ":param request: Django request param\n:param pk: service vault primary key\n:return: Service APIS or operations in swagger",
+        "summary": ":param request: Django request param",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "service"
+        ]
+      }
+    }
+  },
+  "securityDefinitions": {
+    "basic": {
+      "type": "basic"
+    }
+  }
+}
