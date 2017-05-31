@@ -14,10 +14,12 @@ from django.conf import settings
 from django.contrib import admin
 from django.contrib.postgres.fields import JSONField
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
-
 from reversion.admin import VersionAdmin
 
+from asap.apps.process.models.process import Process
 from asap.core.models import Authorable, Humanizable, Publishable, \
     Timestampable, UniversallyIdentifiable
 
@@ -36,9 +38,10 @@ class Widget(Authorable, Humanizable, Publishable, Timestampable,
     # and needs to be automated using a OAuth flow
     # process locker uuid may be shared by different widgets
     # process locker token is required for executing a process
-    process_locker_uuid = models.CharField(max_length=512)
+    process_locker_uuid = models.CharField(max_length=512, null=True, blank=True)
     process_locker_token = models.CharField(
         _('Process Locker Token'), max_length=512,
+        null=True, blank=True,
         help_text=_('Token of Process Locker '
                     'to which will be loaded when a Widget is called.')
     )
@@ -69,14 +72,18 @@ class Widget(Authorable, Humanizable, Publishable, Timestampable,
         help_text=_('Widget Template, the list of components with their layout & styles'),
     )
 
+    processes = models.ManyToManyField(
+        Process, related_name='widget_%(app_label)s_%(class)s', blank=True
+    )
+
     def __str__(self):
         return '{0}'.format(self.name)
 
-    @property
-    def processes(self):
-        from asap.apps.process.models import Process
-        return Process.objects \
-            .filter(processlocker__uuid=self.process_locker_uuid)
+    # @property
+    # def processes(self):
+    #     from asap.apps.process.models import Process
+    #     return Process.objects \
+    #         .filter(processlocker__uuid=self.process_locker_uuid)
 
     def has_permission(self, token):
         # TODO
@@ -96,3 +103,12 @@ class WidgetAdmin(VersionAdmin):
     raw_id_fields = ['author']
     list_display = ('name', 'uuid', 'process_locker_token',)
     list_display_links = ('name',)
+
+
+@receiver(post_save, sender=Widget)
+def temp_add_processes_using_process_locker(sender, **kwargs):
+    if not kwargs.get('created'):
+        return
+
+    instance = kwargs.get('instance')
+    instance.processes.add(*Process.objects.filter(processlocker__uuid=instance.process_locker_uuid))

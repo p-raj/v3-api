@@ -7,7 +7,7 @@ from rest_framework import serializers
 class RuntimeSerializer(TimestampableModelSerializer, serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Runtime
-        exclude = ('author', 'is_published',)
+        exclude = ('author', 'is_published', 'widgets')
 
         extra_kwargs = {
             'url': {

@@ -26,7 +26,7 @@ class WidgetSerializer(TimestampableModelSerializer, serializers.HyperlinkedMode
 
     class Meta:
         model = Widget
-        exclude = ('author', 'is_published')
+        exclude = ('author', 'is_published', 'processes')
 
         extra_kwargs = {
             'url': {
@@ -44,7 +44,7 @@ class WidgetSerializer(TimestampableModelSerializer, serializers.HyperlinkedMode
 
         # copy the path that the process represents
         # change the path
-        for process in obj.processes:
+        for process in obj.processes.all():
             process_server = reverse_lazy('process-server', kwargs={
                 'uuid': str(process.uuid)
             })
