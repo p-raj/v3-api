@@ -32,7 +32,7 @@ send_verify_otp:
         headers: <% $.headers %>
       publish:
         key: <% $.widget %>
-        value: '{ "template": "step_2", "data": {"__message": "OTP Sent. Valid for 5 mins.", "__phone": "<% $.phone_number %>"} }'
+        value: '{ "template": "step_2", "__message": "OTP Sent. Valid for 5 mins.", "__phone": "<% $.phone_number %>" }'
       on-success:
         - publish_result
         - wait_for_input
@@ -66,7 +66,7 @@ send_verify_otp:
       retry: delay=10 count=30
       publish:
         key: <% $.widget %>
-        value: '{ "template": "resolved", "data.message": "OTP Verified" }'
+        value: '{ "template": "resolved", "message": "OTP Verified" }'
       publish-on-error:
         key: <% $.widget %>
         value: '{ "errors": "Invalid OTP" }'

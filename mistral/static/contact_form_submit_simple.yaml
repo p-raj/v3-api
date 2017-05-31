@@ -1,0 +1,31 @@
+---
+version: '2.0'
+post_contact_form_on_keen:
+  description: Contact form submitted on keen.
+  type: direct
+  input:
+    - process_submit_contact_form: 8d45e1cf-9f8b-435b-80a6-a2149bc3c2e5
+    - process_change_template: 6fa09b21-6b88-49a8-9732-86c8c5dc49eb
+    - name
+    - email
+    - message
+    - session
+    - widget
+  tasks:
+    submit_contact_form:
+      workflow: process
+      input:
+        url: http://172.20.0.1:8000/api/v1/widgets/<% $.widget %>/<% $.process_submit_contact_form %>/
+        method: POST
+        body: '{ "__encoding": "application/json", "data.name": "<% $.name %>", "data.email": "<% $.email %>", "data.message": "<% $.message %>" }'
+        headers: {'content-type':'application/json'}
+      on-success:
+        - change_template
+    change_template:
+      workflow: process
+      input:
+        url: http://172.20.0.1:8000/api/v1/widgets/<% $.widget %>/<% $.process_change_template %>/
+        method: POST
+        headers: {'content-type':'application/json'}
+        body: '{"uuid": "<% $.session %>"}'
+
