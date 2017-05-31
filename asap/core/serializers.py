@@ -36,7 +36,7 @@ class RevisionSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Revision
-        fields = '__all__'
+        exclude = ('user',)
 
 
 class VersionSerializer(serializers.HyperlinkedModelSerializer):
