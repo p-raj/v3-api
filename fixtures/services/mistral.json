@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "Mistral API",
-    "version": ""
+    "version": "2.0"
   },
   "host": "0.0.0.0:8989",
   "schemes": [
@@ -61,11 +61,268 @@
             "in": "body"
           }
         ],
-        "operationId": "create",
+        "operationId": "execution_create",
         "summary": "Execute a mistral workflow or action",
         "description": "Execute a mistral workflow or action",
         "tags": [
           "executions"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v2/workflows/": {
+      "get": {
+        "parameters": [
+          {
+            "name": "marker",
+            "type": "string",
+            "required": false,
+            "in": "query"
+          },
+          {
+            "name": "limit",
+            "type": "string",
+            "required": false,
+            "in": "query"
+          },
+          {
+            "name": "fields",
+            "type": "string",
+            "required": false,
+            "in": "query"
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "required": false,
+            "in": "query"
+          },
+          {
+            "name": "definition",
+            "type": "string",
+            "required": false,
+            "in": "query"
+          },
+          {
+            "name": "project_id",
+            "type": "string",
+            "required": false,
+            "in": "query"
+          },
+          {
+            "name": "tags",
+            "type": "string",
+            "required": false,
+            "in": "query"
+          }
+        ],
+        "operationId": "workflow_create",
+        "summary": "List mistral workflows",
+        "description": "List mistral workflows",
+        "tags": [
+          "workflows"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      },
+      "post": {
+        "parameters": [
+          {
+            "schema": {
+              "properties": {
+                "definition": {
+                  "description": "Workflow definition in Mistral v2 DSL",
+                  "type": "string"
+                },
+                "input": {
+                  "description": "input is a JSON structure containing workflow input values",
+                  "type": "object"
+                },
+                "name": {
+                  "description": "name of workflow",
+                  "type": "string"
+                },
+                "project_id": {
+                  "description": "The same as the requester project_id or different if the scope is public.",
+                  "type": "string"
+                },
+                "scope": {
+                  "description": "state can be one of: private or public",
+                  "type": "string"
+                },
+                "tags": {
+                  "description": "reference to workflow ID",
+                  "type": "array"
+                }
+              },
+              "required": [
+                "name",
+                "input"
+              ],
+              "type": "object"
+            },
+            "name": "data",
+            "in": "body"
+          }
+        ],
+        "operationId": "workflow_create",
+        "summary": "Create a mistral workflow",
+        "description": "Create a mistral workflow",
+        "tags": [
+          "workflows"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v2/workflows/{identifier}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "operationId": "workflow_get",
+        "summary": "Retrieve a mistral workflow",
+        "description": "Retrieve a mistral workflow",
+        "tags": [
+          "workflows"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      },
+      "put": {
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "schema": {
+              "properties": {
+                "definition": {
+                  "description": "Workflow definition in Mistral v2 DSL",
+                  "type": "string"
+                },
+                "input": {
+                  "description": "input is a JSON structure containing workflow input values",
+                  "type": "object"
+                },
+                "name": {
+                  "description": "name of workflow",
+                  "type": "string"
+                },
+                "project_id": {
+                  "description": "The same as the requester project_id or different if the scope is public.",
+                  "type": "string"
+                },
+                "scope": {
+                  "description": "state can be one of: private or public",
+                  "type": "string"
+                },
+                "tags": {
+                  "description": "reference to workflow ID",
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            },
+            "name": "data",
+            "in": "body"
+          }
+        ],
+        "operationId": "workflow_update",
+        "summary": "Update a mistral workflow",
+        "description": "Update a mistral workflow",
+        "tags": [
+          "workflows"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      },
+      "delete": {
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "schema": {
+              "properties": {
+                "definition": {
+                  "description": "Workflow definition in Mistral v2 DSL",
+                  "type": "string"
+                },
+                "input": {
+                  "description": "input is a JSON structure containing workflow input values",
+                  "type": "object"
+                },
+                "name": {
+                  "description": "name of workflow",
+                  "type": "string"
+                },
+                "project_id": {
+                  "description": "The same as the requester project_id or different if the scope is public.",
+                  "type": "string"
+                },
+                "scope": {
+                  "description": "state can be one of: private or public",
+                  "type": "string"
+                },
+                "tags": {
+                  "description": "reference to workflow ID",
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            },
+            "name": "data",
+            "in": "body"
+          }
+        ],
+        "operationId": "workflow_delete",
+        "summary": "Delete a mistral workflow",
+        "description": "Delete a mistral workflow",
+        "tags": [
+          "workflows"
         ],
         "consumes": [
           "application/json"
@@ -115,6 +372,46 @@
         },
         "workflow_name": {
           "description": "reference to workflow definition",
+          "type": "string"
+        }
+      }
+    },
+    "workflow": {
+      "properties": {
+        "created_at": {
+          "description": "description of workflow",
+          "type": "string"
+        },
+        "definition": {
+          "description": "Workflow definition in Mistral v2 DSL",
+          "type": "string"
+        },
+        "id": {
+          "description": "id is immutable and auto assigned",
+          "type": "string"
+        },
+        "input": {
+          "description": "input is a JSON structure containing workflow input values",
+          "type": "object"
+        },
+        "name": {
+          "description": "name of workflow",
+          "type": "string"
+        },
+        "project_id": {
+          "description": "The same as the requester project_id or different if the scope is public.",
+          "type": "string"
+        },
+        "scope": {
+          "description": "state can be one of: private or public",
+          "type": "string"
+        },
+        "tags": {
+          "description": "reference to workflow ID",
+          "type": "array"
+        },
+        "updated_at": {
+          "description": "",
           "type": "string"
         }
       }
