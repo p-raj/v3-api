@@ -13,6 +13,13 @@
       "post": {
         "parameters": [
           {
+            "name": "accept",
+            "in": "header",
+            "type": "string",
+            "required": true,
+            "description": "hack :("
+          },
+          {
             "schema": {
               "properties": {
                 "description": {
@@ -81,6 +88,13 @@
       "get": {
         "parameters": [
           {
+            "name": "accept",
+            "in": "header",
+            "type": "string",
+            "required": true,
+            "description": "hack :("
+          },
+          {
             "name": "marker",
             "type": "string",
             "required": false,
@@ -123,7 +137,7 @@
             "in": "query"
           }
         ],
-        "operationId": "workflow_create",
+        "operationId": "workflow_list",
         "summary": "List mistral workflows",
         "description": "List mistral workflows",
         "tags": [
@@ -140,6 +154,13 @@
       },
       "post": {
         "parameters": [
+          {
+            "name": "accept",
+            "in": "header",
+            "type": "string",
+            "required": true,
+            "description": "hack :("
+          },
           {
             "schema": {
               "properties": {
@@ -170,7 +191,7 @@
               },
               "required": [
                 "name",
-                "input"
+                "definition"
               ],
               "type": "object"
             },
@@ -198,6 +219,13 @@
       "get": {
         "parameters": [
           {
+            "name": "accept",
+            "in": "header",
+            "type": "string",
+            "required": true,
+            "description": "hack :("
+          },
+          {
             "name": "identifier",
             "in": "path",
             "required": true,
@@ -221,6 +249,13 @@
       },
       "put": {
         "parameters": [
+          {
+            "name": "accept",
+            "in": "header",
+            "type": "string",
+            "required": true,
+            "description": "hack :("
+          },
           {
             "name": "identifier",
             "in": "path",
@@ -278,6 +313,13 @@
       },
       "delete": {
         "parameters": [
+          {
+            "name": "accept",
+            "in": "header",
+            "type": "string",
+            "required": true,
+            "description": "hack :("
+          },
           {
             "name": "identifier",
             "in": "path",
