@@ -6,11 +6,11 @@ from rest_framework import serializers
 
 class SessionSerializer(TimestampableModelSerializer, serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(lookup_field='uuid', view_name='runtimesession-detail')
-    is_expired = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = Session
-        exclude = ('expires_at', 'uuid', 'author')
+        exclude = ('uuid', 'author',)
+        read_only_fields = ('state',)
 
         extra_kwargs = {
             'url': {

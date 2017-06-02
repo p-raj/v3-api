@@ -8,7 +8,7 @@ from rest_framework.decorators import detail_route
 from rest_framework.permissions import AllowAny
 from rest_framework.reverse import reverse_lazy
 
-from asap.apps.runtime.models.session import Session
+from asap.apps.runtime.models.session import Session, STATE_SUCCESS, STATE_CANCELLED
 from asap.apps.runtime.serializers.session import SessionSerializer
 from asap.core.views import AuthorableModelViewSet, DRFNestedViewMixin
 from asap.core.views.version import VersionableModelViewSet
@@ -75,3 +75,17 @@ class SessionViewSet(AuthorableModelViewSet, DRFNestedViewMixin,
         data = instance.data.get(key, {})
         logger.debug('read %s', data)
         return response.Response(data)
+
+    @detail_route(methods=['post'])
+    def success(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.state = STATE_SUCCESS
+        instance.save()
+        return self.retrieve(request, *args, **kwargs)
+
+    @detail_route(methods=['post'])
+    def cancel(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.state = STATE_CANCELLED
+        instance.save()
+        return self.retrieve(request, *args, **kwargs)

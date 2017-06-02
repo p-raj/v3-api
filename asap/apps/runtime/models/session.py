@@ -3,14 +3,52 @@ import uuid
 from django.contrib import admin
 from django.contrib.postgres.fields import JSONField
 from django.db import models
-from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-
 from reversion.admin import VersionAdmin
 
 from asap.apps.runtime.models.runtime import Runtime
 from asap.core.models import Authorable, Timestampable, \
     UniversallyIdentifiable
+
+# various states the session can have
+# session is by default in started state
+STATE_STARTED = 'started'
+
+# clicking done on the runtime marks
+# the success of session, & session should not
+# accept any changes after that
+STATE_SUCCESS = 'success'
+
+# clicking cancel on the runtime marks
+# the cancellation of session, & session should not
+# accept any changes after that
+STATE_CANCELLED = 'cancelled'
+
+# in future we may have to monitor
+# the applications using too much ram/cpu
+# and kill them if necessary
+STATE_KILLED = 'killed'
+
+# we might end up handling lifecycle events for all apps
+# which includes if the user switch to another application
+# while doing some work on one application
+# & came back to finish the task in this application
+STATE_PAUSED = 'paused'
+STATE_RESUMED = 'resumed'
+
+# we might have some long inactivity
+# & may wanna mark the session as expired
+STATE_EXPIRED = 'expired'
+
+STATES = [
+    (STATE_STARTED, _('Started')),
+    (STATE_PAUSED, _('Paused')),
+    (STATE_RESUMED, _('Resumed')),
+    (STATE_SUCCESS, _('Success')),
+    (STATE_CANCELLED, _('Cancelled')),
+    (STATE_KILLED, _('Killed')),
+    (STATE_EXPIRED, _('Expired'))
+]
 
 
 class Session(Authorable, UniversallyIdentifiable,
@@ -32,21 +70,14 @@ class Session(Authorable, UniversallyIdentifiable,
     # it seems it will be easier to apply rules if we have this
     data = JSONField(blank=True, null=True, default={})
 
-    # the runtime session may expire as well,
-    # for instance the session from the user app may not expire
-    # but may expire when initiated via the terminal
-    expires_at = models.DateTimeField(null=True, blank=True)
-
-    @property
-    def is_expired(self):
-        """
-        We will not let anyone edited expired sessions.
-
-        :return:
-        """
-        if not self.expires_at:
-            return False
-        return timezone.now() > self.expires_at
+    # each runtime session has some state associated with it,
+    # which should come handy for app analytics
+    # it can even help determine the session length
+    # & the breaks in between
+    state = models.CharField(
+        max_length=16, choices=STATES,
+        default=STATE_STARTED
+    )
 
     def __str__(self):
         return '{0}'.format(self.uuid)
