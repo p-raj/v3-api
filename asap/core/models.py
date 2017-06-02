@@ -36,10 +36,10 @@ class Authorable(models.Model):
 
 class Publishable(models.Model):
     """
-    Some entities might be either published. 
-        i.e The entity will be visible to all whether 
+    Some entities might be either published.
+        i.e The entity will be visible to all whether
         or not the user has access to them.
-    
+
     eg. Apps marketplace (Default Apps)
 
     """
@@ -54,7 +54,7 @@ class Humanizable(models.Model):
     Any Entity that needs a human friendly name
     & a description to describe __why__ it was created!!
     """
-    name = models.CharField(max_length=30, blank=False, null=False)
+    name = models.CharField(max_length=64, blank=False, null=False)
     description = models.TextField(blank=True)
 
     class Meta:
