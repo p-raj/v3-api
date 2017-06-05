@@ -44,7 +44,7 @@ class HttpClient(object):
                 if key.startswith('__'):
                     __params[key] = body.pop(key, None)
 
-            encoding = __params.get('__encoding', 'multipart/form-data')
+            encoding = __params.get('__encoding', 'application/json')
             logger.debug('encoding: %s', encoding)
 
             # only for multipart/form-data

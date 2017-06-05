@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import json
+import logging
+
 from time import sleep
 
 from mistralclient.api.v2.executions import ExecutionManager
@@ -16,6 +18,8 @@ MISTRAL_PROCESS_EXECUTION_NAME = 'process'
 # TODO
 PROCESS_SERVER = 'http://172.19.0.1:8000/'
 KEYSTORE_SERVER = 'http://172.19.0.1:8000/api/v1/sessions'
+
+logger = logging.getLogger(__name__)
 
 
 class ProcessActionProxyViewSet(views.APIView):
@@ -44,10 +48,13 @@ class ProcessActionProxyViewSet(views.APIView):
 
     def post(self, request, *args, **kwargs):
         raw_request = getattr(request, '_request')
+        logger.debug('content-type: %s', request.content_type)
 
         from asap.apps.widget.models.widget import Widget
         widget = Widget.objects.get(uuid=kwargs.get('uuid'))
+        logger.debug('widget: %s', widget)
         data = widget.data or {}
+        logger.debug('widget data: %s', data)
 
         # FIXME
         # use AST instead of this hack
@@ -69,7 +76,7 @@ class ProcessActionProxyViewSet(views.APIView):
             'body': body,
             'cookies': raw_request.COOKIES,
             'headers': {
-                'Content-Type': request.content_type,
+                'Content-Type': 'application/json',
                 'Authorization': widget.process_locker_token,
                 'Process': kwargs.get('process_uuid'),
                 'Widget': kwargs.get('uuid')

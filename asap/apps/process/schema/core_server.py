@@ -40,7 +40,8 @@ class ServerSchema(object):
         return coreapi.Link(
             url=self.url,
             action='post',
-            description=self.process.description,
+            title=self.process.name,
+            description=self.process.name,
             fields=self.fields
         )
 
