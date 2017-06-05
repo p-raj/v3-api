@@ -1,0 +1,41 @@
+---
+version: '2.0'
+send_otp_switch_template_ND:
+  description: Send the OTP & switch template.
+  type: direct
+  input:
+    - process_generate_otp: ab9ea4fa-4be7-473a-ae91-90efe8ffb95e
+    - process_send_sms: 5160836d-9ca7-4105-bc36-0b6509782118
+    - process_switch_to_verify_template: 4d57ccf0-1c7c-4d1e-a898-b75175a6000e
+    - phone_number
+    - session
+    - widget
+    - headers
+  tasks:
+    generate_otp:
+      workflow: process
+      input:
+        url: http://172.20.0.1:8000/api/v1/widgets/<% $.widget %>/<% $.process_generate_otp %>/
+        method: POST
+        body: '{ "time": 300, "__encoding": "application/json" }'
+        headers: <% $.headers %>
+      on-success:
+        - send_sms
+    send_sms:
+      workflow: process
+      input:
+        url: http://172.20.0.1:8000/api/v1/widgets/<% $.widget %>/<% $.process_send_sms %>/
+        method: POST
+        body: '{ "to": "<% $.phone_number %>", "body": "OTP: <% task(generate_otp).result.data.otp %>", "provider": "plivo", "__encoding": "application/json" }'
+        headers: <% $.headers %>
+      on-success:
+        - switch_to_verify_template
+    switch_to_verify_template:
+      workflow: process
+      input:
+        url: http://172.20.0.1:8000/api/v1/widgets/<% $.widget %>/<% $.process_switch_to_verify_template %>/
+        method: POST
+        headers: {
+          Content-Type: 'application/json',
+        }
+        body: '{ "phone_number": "<% $.phone_number %>", "key": "<% $.widget %>", "uuid": "<% $.session %>"}'

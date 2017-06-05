@@ -1,0 +1,32 @@
+---
+version: '2.0'
+resend_send_otp_main_API_ND:
+  description: resnd otp no template switch.
+  type: direct
+  input:
+    - process_generate_otp: ce1be4b1-fbed-47e5-b9ca-38a7b302b8f8
+    - process_send_sms: 5160836d-9ca7-4105-bc36-0b6509782118
+    - phone_number
+    - session
+    - widget
+    - headers
+  tasks:
+    generate_otp:
+      workflow: process
+      input:
+        url: http://172.20.0.1:8000/api/v1/widgets/<% $.widget %>/<% $.process_generate_otp %>/
+        method: POST
+        body: '{ "time": 300, "__encoding": "application/json" }'
+        headers: <% $.headers %>
+      on-success:
+        - send_sms
+    send_sms:
+      workflow: process
+      input:
+        url: http://172.20.0.1:8000/api/v1/widgets/<% $.widget %>/<% $.process_send_sms %>/
+        method: POST
+        body: '{ "to": "<% $.phone_number %>", "body": "OTP: <% task(generate_otp).result.data.otp %>", "provider": "plivo", "__encoding": "application/json" }'
+        headers: <% $.headers %>
+      publish:
+        key: <% $.widget %>
+        value: '{ "template": "step_2", "__message": "OTP Sent. Valid for 5 mins.", "__phone": "<% $.phone_number %>" }'

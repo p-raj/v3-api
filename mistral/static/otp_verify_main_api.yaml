@@ -1,0 +1,45 @@
+---
+version: '2.0'
+verify_otp_switch_template_main_ND:
+  description: verify OTP & switch template (main PAI for verify).
+  type: direct
+  input:
+    - process_verify_otp: ce1be4b1-fbed-47e5-b9ca-38a7b302b8f8
+    - process_switch_sucess_template: 4d57ccf0-1c7c-4d1e-a898-b75175a6000e
+    - process_switch_fail_template: 4d57ccf0-1c7c-4d1e-a898-b75175a6000e
+    - otp
+    - otp_uuid
+    - session
+    - widget
+    - headers
+  tasks:
+    verify_otp:
+      workflow: process
+      input:
+        url: http://172.20.0.1:8000/api/v1/widgets/<% $.widget %>/<% $.process_verify_otp %>/
+        method: POST
+        body: '{ "uuid": "<% $.otp_uuid %>", "otp": "<% $.otp %>", "otp_type": "totp", "__encoding": "application/json" }'
+        headers: <% $.headers %>
+      retry: delay=10 count=30
+      on-success:
+        - switch_sucess_template
+      on-success:
+        - switch_fail_template
+    switch_sucess_template:
+      workflow: process
+      input:
+        url: http://172.20.0.1:8000/api/v1/widgets/<% $.widget %>/<% $.process_publish_result %>/
+        method: POST
+        headers: {
+          Content-Type: 'application/json',
+        }
+        body: '{ "data": <% $.value %>, "key": "<% $.key %>", "uuid": "<% $.session %>", "__encoding": "application/json"}'
+    switch_fail_template:
+      workflow: process
+      input:
+        url: http://172.20.0.1:8000/api/v1/widgets/<% $.widget %>/<% $.process_publish_result %>/
+        method: POST
+        headers: {
+          Content-Type: 'application/json',
+        }
+        body: '{ "key": "<% $.key %>", "uuid": "<% $.session %>", "__encoding": "application/json"}'
