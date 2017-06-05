@@ -3,7 +3,8 @@
 
 import logging
 
-from rest_framework import viewsets
+from rest_framework import viewsets, response
+from rest_framework.decorators import list_route
 from rest_framework.permissions import AllowAny
 
 from asap.apps.widget.models.widget import Widget
@@ -28,3 +29,14 @@ class WidgetViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelVi
         if self.request.user.is_authenticated:
             return queryset.filter(author=self.request.user)
         return queryset
+
+    @list_route(permission_classes=(AllowAny,))
+    def system(self, request, *args, **kwargs):
+        instance = self.queryset.filter(name='__system__').first()
+        serializer = self.get_serializer_class()(
+            instance=instance,
+            context={
+                'request': request
+            }
+        )
+        return response.Response(serializer.data)
