@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from django.core.exceptions import ValidationError
 from rest_framework import renderers, response, viewsets
-from rest_framework.decorators import detail_route, list_route
+from rest_framework.decorators import detail_route
 from rest_framework.permissions import AllowAny
 from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework_swagger.renderers import OpenAPIRenderer
@@ -27,11 +27,6 @@ class ProcessViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelV
         if self.request.user.is_authenticated:
             return queryset.filter(author=self.request.user)
         return queryset
-
-    @list_route(permission_classes=(AllowAny,))
-    def system(self, request, *args, **kwargs):
-        self.queryset = Process.objects.filter(is_system=True)
-        return self.list(request, *args, **kwargs)
 
     @detail_route(renderer_classes=[renderers.JSONRenderer])
     def schema(self, request, **kwargs):
