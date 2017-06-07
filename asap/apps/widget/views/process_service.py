@@ -3,6 +3,7 @@
 
 import json
 import logging
+from functools import reduce
 
 from time import sleep
 
@@ -20,6 +21,19 @@ PROCESS_SERVER = 'http://172.19.0.1:8000/'
 KEYSTORE_SERVER = 'http://172.19.0.1:8000/api/v1/sessions'
 
 logger = logging.getLogger(__name__)
+
+
+def dot_to_json(a):
+    # TODO
+    # move to utils
+    output = {}
+    for key, value in a.items():
+        path = key.split('.')
+        if path[0] == 'json':
+            path = path[1:]
+        target = reduce(lambda d, k: d.setdefault(k, {}), path[:-1], output)
+        target[path[-1]] = value
+    return output
 
 
 class ProcessActionProxyViewSet(views.APIView):
@@ -69,19 +83,26 @@ class ProcessActionProxyViewSet(views.APIView):
         body.update(**request.data)
 
         em = ExecutionManager(MistralHTTPClient())
-        execution = em.create(MISTRAL_PROCESS_EXECUTION_NAME, workflow_input={
-            'url': self.get_process_url(**kwargs),
-            'method': 'post',
-            'params': dict(request.query_params),
-            'body': body,
-            'cookies': raw_request.COOKIES,
-            'headers': {
-                'Content-Type': 'application/json',
-                'Authorization': widget.process_locker_token,
-                'Process': kwargs.get('process_uuid'),
-                'Widget': kwargs.get('uuid')
-            }
-        })
+        if body.pop('__sync', None):
+            workflow_data = dot_to_json(body)
+            execution = em.create(
+                workflow_data.get('workflow_name'),
+                workflow_input=workflow_data.get('input', {})
+            )
+        else:
+            execution = em.create(MISTRAL_PROCESS_EXECUTION_NAME, workflow_input={
+                'url': self.get_process_url(**kwargs),
+                'method': 'post',
+                'params': dict(request.query_params),
+                'body': body,
+                'cookies': raw_request.COOKIES,
+                'headers': {
+                    'Content-Type': 'application/json',
+                    'Authorization': widget.process_locker_token,
+                    'Process': kwargs.get('process_uuid'),
+                    'Widget': kwargs.get('uuid')
+                }
+            })
 
         while execution.state == 'RUNNING':
             # FIXME
@@ -91,6 +112,7 @@ class ProcessActionProxyViewSet(views.APIView):
             execution = em.get(execution.id)
 
         result = json.loads(execution.output)
+        logger.debug('workflow result: %s', result)
         return response.Response(
             data=result.get('data') or result.get('error'),
             status=result.get('status'),

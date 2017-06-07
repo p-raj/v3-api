@@ -24,6 +24,14 @@ assign_default_apps_to_member:
         method: POST
         body: <% $.body %>
         headers: <% $.headers %>
+      publish:
+        data: <% task(add_member).result.data %>
+        status: <% task(add_member).result.status %>
+        headers: <% task(add_member).result.headers %>
+      publish-on-error:
+        data: <% task(add_member).result.data %>
+        status: <% task(add_member).result.status %>
+        headers: <% task(add_member).result.headers %>
       on-success:
         - assign_apps
     assign_apps:

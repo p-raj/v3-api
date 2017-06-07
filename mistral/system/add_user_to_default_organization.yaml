@@ -19,6 +19,14 @@ add_user_to_default_organization:
         method: POST
         body: <% $.body %>
         headers: <% $.headers %>
+      publish:
+        data: <% task(register).result.data %>
+        status: <% task(register).result.status %>
+        headers: <% task(register).result.headers %>
+      publish-on-error:
+        data: <% task(register).result.data %>
+        status: <% task(register).result.status %>
+        headers: <% task(register).result.headers %>
       on-success:
         - create_organization_member
     create_organization_member:
