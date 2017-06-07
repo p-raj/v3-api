@@ -4,10 +4,10 @@ add_admin_as_default_member:
   description: Add the User creating the organization as the member as well.
   type: direct
   input:
-    - create_organization_process
-    - fetch_user_profile_process
-    - create_organization_member_process
-    - body: {}
+    - body
+    - create_organization_process: d6d4edf8-aab0-44b9-a3ee-a93d56008c4b
+    - fetch_user_profile_process: fe91e51c-f4aa-4314-9800-70b7a737b9d1
+    - create_organization_member_process: 2b4735da-9c43-4916-aae5-2e38755a6c8a
     - headers: {}
   tasks:
     create_organization:
@@ -75,5 +75,3 @@ add_admin_as_default_member:
         method: POST
         body: '{ "name": "<% task(fetch_user_profile).result.data.name %>", "email": "<% task(fetch_user_profile).result.data.email %>", "type": "user", "owner": "<% task(create_organization).result.data.owner %>", "organization" : "<% task(create_organization).result.data.uuid %>"}'
         headers: <% $.headers %>
-
-
