@@ -1,0 +1,35 @@
+---
+version: '2.0'
+assign_default_apps_to_member:
+  description: ''
+  type: direct
+  input:
+    - body
+    - headers: { 'Content-Type' : 'application/json' }
+    - process__add_member: 2b4735da-9c43-4916-aae5-2e38755a6c8a
+    - process__assign_apps: dc65c4b9-d0e5-4c9c-90ef-e6ddd11db805
+    - permissions: [{
+        target: 'vrn:resource:runtime:74f5b015-1474-4471-981c-e50bff3ecce2:',
+        create: false,
+        read: true,
+        update: false,
+        delete: false
+      }]
+    - widget
+  tasks:
+    add_member:
+      workflow: process
+      input:
+        url: http://172.20.0.1:8000/api/v1/widgets/<% $.widget %>/<% $.process__add_member %>/
+        method: POST
+        body: <% $.body %>
+        headers: <% $.headers %>
+      on-success:
+        - assign_apps
+    assign_apps:
+      workflow: process
+      input:
+        url: http://172.20.0.1:8000/api/v1/widgets/<% $.widget %>/<% $.process__assign_apps %>/
+        method: POST
+        body: { source: 'organization:<% $.body.organization %>:member:<% task(add_member).result.data.uuid %>', source_permission_set: <% $.permissions %>, __encoding: 'application/json' }
+        headers: <% $.headers %>
