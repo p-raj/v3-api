@@ -1,0 +1,223 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "V-Notification API",
+    "version": ""
+  },
+  "host": "local.veris.in:8011",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/micro-service/notification/email/gmail/": {
+      "post": {
+        "parameters": [
+          {
+            "in": "body",
+            "name": "data",
+            "schema": {
+              "properties": {
+                "subject": {
+                  "description": "",
+                  "type": "string"
+                },
+                "body": {
+                  "description": "",
+                  "type": "string"
+                },
+                "password": {
+                  "description": "Gmail Account Password",
+                  "type": "string"
+                },
+                "notification_type": {
+                  "description": "",
+                  "type": "string"
+                },
+                "from_email": {
+                  "description": "",
+                  "type": "string"
+                },
+                "html_message": {
+                  "description": "",
+                  "type": "boolean"
+                },
+                "to": {
+                  "description": "",
+                  "type": "string"
+                },
+                "provider": {
+                  "description": "",
+                  "type": "string"
+                },
+                "username": {
+                  "description": "Gmail Account Username",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "to",
+                "subject",
+                "body",
+                "provider",
+                "username",
+                "password"
+              ],
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "description": ":param request:\n:return:",
+        "consumes": [
+          "application/json"
+        ],
+        "tags": [
+          "email"
+        ],
+        "summary": ":param request:",
+        "operationId": "gmail"
+      }
+    },
+    "/micro-service/notification/email/sendgrid/": {
+      "post": {
+        "parameters": [
+          {
+            "in": "body",
+            "name": "data",
+            "schema": {
+              "properties": {
+                "subject": {
+                  "description": "",
+                  "type": "string"
+                },
+                "body": {
+                  "description": "",
+                  "type": "string"
+                },
+                "sendgrid_api_key": {
+                  "description": "SendGrid API key.",
+                  "type": "string"
+                },
+                "notification_type": {
+                  "description": "",
+                  "type": "string"
+                },
+                "from_email": {
+                  "description": "",
+                  "type": "string"
+                },
+                "html_message": {
+                  "description": "",
+                  "type": "boolean"
+                },
+                "to": {
+                  "description": "",
+                  "type": "string"
+                },
+                "provider": {
+                  "description": "",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "to",
+                "subject",
+                "body",
+                "provider",
+                "sendgrid_api_key"
+              ],
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "description": ":param request:\n:return:",
+        "consumes": [
+          "application/json"
+        ],
+        "tags": [
+          "email"
+        ],
+        "summary": ":param request:",
+        "operationId": "sendgrid"
+      }
+    },
+    "/micro-service/notification/sms/twilio/": {
+      "post": {
+        "parameters": [
+          {
+            "in": "body",
+            "name": "data",
+            "schema": {
+              "properties": {
+                "auth_token": {
+                  "description": "Twilio Auth Token.",
+                  "type": "string"
+                },
+                "body": {
+                  "description": "",
+                  "type": "string"
+                },
+                "account_sid": {
+                  "description": "Twilio Account SID.",
+                  "type": "string"
+                },
+                "notification_type": {
+                  "description": "",
+                  "type": "string"
+                },
+                "from_": {
+                  "description": "",
+                  "type": "string"
+                },
+                "to": {
+                  "description": "",
+                  "type": "string"
+                },
+                "provider": {
+                  "description": "",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "to",
+                "body",
+                "provider",
+                "account_sid",
+                "auth_token"
+              ],
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "description": ":param request:\n:return:",
+        "consumes": [
+          "application/json"
+        ],
+        "tags": [
+          "sms"
+        ],
+        "summary": ":param request:",
+        "operationId": "send_sms"
+      }
+    }
+  },
+  "securityDefinitions": {
+    "basic": {
+      "type": "basic"
+    }
+  }
+}
