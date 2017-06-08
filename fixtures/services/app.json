@@ -6,7 +6,8 @@
   },
   "host": "localhost:8000",
   "schemes": [
-    "http"
+    "http",
+    "https"
   ],
   "paths": {
     "/api/v1/process-lockers/": {
@@ -1175,551 +1176,6 @@
             "name": "id",
             "type": "integer"
           }
-        ]
-      }
-    },
-    "/api/v1/runtime-lockers/": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "runtime-lockers"
-        ],
-        "operationId": "runtime-lockers_list",
-        "parameters": [
-          {
-            "required": false,
-            "description": "Number of results to return per page.",
-            "in": "query",
-            "name": "limit",
-            "type": "integer"
-          },
-          {
-            "required": false,
-            "description": "The initial index from which to return the results.",
-            "in": "query",
-            "name": "offset",
-            "type": "integer"
-          },
-          {
-            "required": false,
-            "description": "Which field to use when ordering the results.",
-            "in": "query",
-            "name": "ordering",
-            "type": "string"
-          },
-          {
-            "required": false,
-            "description": "A search term.",
-            "in": "query",
-            "name": "search",
-            "type": "string"
-          }
-        ]
-      },
-      "post": {
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "runtime-lockers"
-        ],
-        "operationId": "runtime-lockers_create",
-        "parameters": [
-          {
-            "in": "body",
-            "name": "data",
-            "schema": {
-              "type": "object",
-              "required": [
-                "runtimes"
-              ],
-              "properties": {
-                "runtimes": {
-                  "description": "",
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        ],
-        "consumes": [
-          "application/json"
-        ]
-      }
-    },
-    "/api/v1/runtime-lockers/{runtime_locker_uuid}/runtimes/": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "runtime-lockers"
-        ],
-        "operationId": "runtime-lockers_runtimes_list",
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "runtime_locker_uuid",
-            "type": "string"
-          },
-          {
-            "required": false,
-            "description": "Number of results to return per page.",
-            "in": "query",
-            "name": "limit",
-            "type": "integer"
-          },
-          {
-            "required": false,
-            "description": "The initial index from which to return the results.",
-            "in": "query",
-            "name": "offset",
-            "type": "integer"
-          }
-        ]
-      },
-      "post": {
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "runtime-lockers"
-        ],
-        "operationId": "runtime-lockers_runtimes_create",
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "runtime_locker_uuid",
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "data",
-            "schema": {
-              "type": "object",
-              "required": [
-                "name"
-              ],
-              "properties": {
-                "description": {
-                  "description": "",
-                  "type": "string"
-                },
-                "widget_locker_uuid": {
-                  "description": "",
-                  "type": "string"
-                },
-                "name": {
-                  "description": "",
-                  "type": "string"
-                },
-                "widget_locker_token": {
-                  "description": "Token of Widget Locker to which will be loaded when a runtime is called.",
-                  "type": "string"
-                }
-              }
-            }
-          }
-        ],
-        "consumes": [
-          "application/json"
-        ]
-      }
-    },
-    "/api/v1/runtime-lockers/{runtime_locker_uuid}/runtimes/{uuid}/": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "runtime-lockers"
-        ],
-        "operationId": "runtime-lockers_runtimes_read",
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "runtime_locker_uuid",
-            "type": "string"
-          },
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          }
-        ]
-      },
-      "put": {
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "runtime-lockers"
-        ],
-        "operationId": "runtime-lockers_runtimes_update",
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "runtime_locker_uuid",
-            "type": "string"
-          },
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "data",
-            "schema": {
-              "type": "object",
-              "required": [
-                "name"
-              ],
-              "properties": {
-                "description": {
-                  "description": "",
-                  "type": "string"
-                },
-                "widget_locker_uuid": {
-                  "description": "",
-                  "type": "string"
-                },
-                "name": {
-                  "description": "",
-                  "type": "string"
-                },
-                "widget_locker_token": {
-                  "description": "Token of Widget Locker to which will be loaded when a runtime is called.",
-                  "type": "string"
-                }
-              }
-            }
-          }
-        ],
-        "consumes": [
-          "application/json"
-        ]
-      },
-      "patch": {
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "runtime-lockers"
-        ],
-        "operationId": "runtime-lockers_runtimes_partial_update",
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "runtime_locker_uuid",
-            "type": "string"
-          },
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "data",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "description": {
-                  "description": "",
-                  "type": "string"
-                },
-                "widget_locker_uuid": {
-                  "description": "",
-                  "type": "string"
-                },
-                "name": {
-                  "description": "",
-                  "type": "string"
-                },
-                "widget_locker_token": {
-                  "description": "Token of Widget Locker to which will be loaded when a runtime is called.",
-                  "type": "string"
-                }
-              }
-            }
-          }
-        ],
-        "consumes": [
-          "application/json"
-        ]
-      },
-      "delete": {
-        "responses": {
-          "204": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "runtime-lockers"
-        ],
-        "operationId": "runtime-lockers_runtimes_delete",
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "runtime_locker_uuid",
-            "type": "string"
-          },
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          }
-        ]
-      }
-    },
-    "/api/v1/runtime-lockers/{uuid}/": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "runtime-lockers"
-        ],
-        "operationId": "runtime-lockers_read",
-        "parameters": [
-          {
-            "required": true,
-            "description": "Non-editable, to be generated by system itself.",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          }
-        ]
-      },
-      "put": {
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "runtime-lockers"
-        ],
-        "operationId": "runtime-lockers_update",
-        "parameters": [
-          {
-            "required": true,
-            "description": "Non-editable, to be generated by system itself.",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "data",
-            "schema": {
-              "type": "object",
-              "required": [
-                "runtimes"
-              ],
-              "properties": {
-                "runtimes": {
-                  "description": "",
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        ],
-        "consumes": [
-          "application/json"
-        ]
-      },
-      "patch": {
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "runtime-lockers"
-        ],
-        "operationId": "runtime-lockers_partial_update",
-        "parameters": [
-          {
-            "required": true,
-            "description": "Non-editable, to be generated by system itself.",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "data",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "runtimes": {
-                  "description": "",
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        ],
-        "consumes": [
-          "application/json"
-        ]
-      },
-      "delete": {
-        "responses": {
-          "204": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "runtime-lockers"
-        ],
-        "operationId": "runtime-lockers_delete",
-        "parameters": [
-          {
-            "required": true,
-            "description": "Non-editable, to be generated by system itself.",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          }
-        ]
-      }
-    },
-    "/api/v1/runtime-lockers/{uuid}/add/": {
-      "post": {
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "runtime-lockers"
-        ],
-        "operationId": "runtime-lockers_add",
-        "parameters": [
-          {
-            "required": true,
-            "description": "Non-editable, to be generated by system itself.",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "data",
-            "schema": {
-              "type": "object",
-              "required": [
-                "runtimes"
-              ],
-              "properties": {
-                "runtimes": {
-                  "description": "",
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        ],
-        "consumes": [
-          "application/json"
-        ]
-      }
-    },
-    "/api/v1/runtime-lockers/{uuid}/session/": {
-      "post": {
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "runtime-lockers"
-        ],
-        "operationId": "runtime-lockers_session",
-        "parameters": [
-          {
-            "required": true,
-            "description": "Non-editable, to be generated by system itself.",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "data",
-            "schema": {
-              "type": "object",
-              "required": [
-                "runtimes"
-              ],
-              "properties": {
-                "runtimes": {
-                  "description": "",
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        ],
-        "consumes": [
-          "application/json"
         ]
       }
     },
@@ -3719,6 +3175,480 @@
             "type": "string"
           }
         ]
+      }
+    },
+    "/api/v1/feedbacks/": {
+      "get": {
+        "tags": [
+          "feedbacks"
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "parameters": [
+          {
+            "description": "Number of results to return per page.",
+            "in": "query",
+            "type": "integer",
+            "required": false,
+            "name": "limit"
+          },
+          {
+            "description": "The initial index from which to return the results.",
+            "in": "query",
+            "type": "integer",
+            "required": false,
+            "name": "offset"
+          },
+          {
+            "description": "Which field to use when ordering the results.",
+            "in": "query",
+            "type": "string",
+            "required": false,
+            "name": "ordering"
+          },
+          {
+            "description": "A search term.",
+            "in": "query",
+            "type": "string",
+            "required": false,
+            "name": "search"
+          }
+        ],
+        "operationId": "feedbacks_list"
+      },
+      "post": {
+        "tags": [
+          "feedbacks"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "parameters": [
+          {
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "comment": {
+                  "description": "",
+                  "type": "string"
+                },
+                "rating": {
+                  "description": "",
+                  "type": "integer"
+                },
+                "app": {
+                  "description": "",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "app"
+              ]
+            },
+            "name": "data"
+          }
+        ],
+        "operationId": "feedbacks_create"
+      }
+    },
+    "/api/v1/feedbacks/{id}/": {
+      "get": {
+        "tags": [
+          "feedbacks"
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "parameters": [
+          {
+            "description": "A unique integer value identifying this feedback.",
+            "in": "path",
+            "type": "integer",
+            "required": true,
+            "name": "id"
+          }
+        ],
+        "operationId": "feedbacks_read"
+      },
+      "put": {
+        "tags": [
+          "feedbacks"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "parameters": [
+          {
+            "description": "A unique integer value identifying this feedback.",
+            "in": "path",
+            "type": "integer",
+            "required": true,
+            "name": "id"
+          },
+          {
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "comment": {
+                  "description": "",
+                  "type": "string"
+                },
+                "rating": {
+                  "description": "",
+                  "type": "integer"
+                },
+                "app": {
+                  "description": "",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "app"
+              ]
+            },
+            "name": "data"
+          }
+        ],
+        "operationId": "feedbacks_update"
+      },
+      "patch": {
+        "tags": [
+          "feedbacks"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "parameters": [
+          {
+            "description": "A unique integer value identifying this feedback.",
+            "in": "path",
+            "type": "integer",
+            "required": true,
+            "name": "id"
+          },
+          {
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "comment": {
+                  "description": "",
+                  "type": "string"
+                },
+                "rating": {
+                  "description": "",
+                  "type": "integer"
+                },
+                "app": {
+                  "description": "",
+                  "type": "string"
+                }
+              }
+            },
+            "name": "data"
+          }
+        ],
+        "operationId": "feedbacks_partial_update"
+      },
+      "delete": {
+        "tags": [
+          "feedbacks"
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "parameters": [
+          {
+            "description": "A unique integer value identifying this feedback.",
+            "in": "path",
+            "type": "integer",
+            "required": true,
+            "name": "id"
+          }
+        ],
+        "operationId": "feedbacks_delete"
+      }
+    },
+    "/api/v1/runtimes/{app_uuid}/feedbacks/": {
+      "get": {
+        "tags": [
+          "runtimes"
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "name": "app_uuid"
+          },
+          {
+            "description": "Number of results to return per page.",
+            "in": "query",
+            "type": "integer",
+            "required": false,
+            "name": "limit"
+          },
+          {
+            "description": "The initial index from which to return the results.",
+            "in": "query",
+            "type": "integer",
+            "required": false,
+            "name": "offset"
+          },
+          {
+            "description": "Which field to use when ordering the results.",
+            "in": "query",
+            "type": "string",
+            "required": false,
+            "name": "ordering"
+          },
+          {
+            "description": "A search term.",
+            "in": "query",
+            "type": "string",
+            "required": false,
+            "name": "search"
+          }
+        ],
+        "operationId": "runtimes_feedbacks_list"
+      },
+      "post": {
+        "tags": [
+          "runtimes"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "name": "app_uuid"
+          },
+          {
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "comment": {
+                  "description": "",
+                  "type": "string"
+                },
+                "rating": {
+                  "description": "",
+                  "type": "integer"
+                },
+                "app": {
+                  "description": "",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "app"
+              ]
+            },
+            "name": "data"
+          }
+        ],
+        "operationId": "runtimes_feedbacks_create"
+      }
+    },
+    "/api/v1/runtimes/{app_uuid}/feedbacks/{id}/": {
+      "get": {
+        "tags": [
+          "runtimes"
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "name": "app_uuid"
+          },
+          {
+            "description": "A unique integer value identifying this feedback.",
+            "in": "path",
+            "type": "integer",
+            "required": true,
+            "name": "id"
+          }
+        ],
+        "operationId": "runtimes_feedbacks_read"
+      },
+      "put": {
+        "tags": [
+          "runtimes"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "name": "app_uuid"
+          },
+          {
+            "description": "A unique integer value identifying this feedback.",
+            "in": "path",
+            "type": "integer",
+            "required": true,
+            "name": "id"
+          },
+          {
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "comment": {
+                  "description": "",
+                  "type": "string"
+                },
+                "rating": {
+                  "description": "",
+                  "type": "integer"
+                },
+                "app": {
+                  "description": "",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "app"
+              ]
+            },
+            "name": "data"
+          }
+        ],
+        "operationId": "runtimes_feedbacks_update"
+      },
+      "patch": {
+        "tags": [
+          "runtimes"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "name": "app_uuid"
+          },
+          {
+            "description": "A unique integer value identifying this feedback.",
+            "in": "path",
+            "type": "integer",
+            "required": true,
+            "name": "id"
+          },
+          {
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "comment": {
+                  "description": "",
+                  "type": "string"
+                },
+                "rating": {
+                  "description": "",
+                  "type": "integer"
+                },
+                "app": {
+                  "description": "",
+                  "type": "string"
+                }
+              }
+            },
+            "name": "data"
+          }
+        ],
+        "operationId": "runtimes_feedbacks_partial_update"
+      },
+      "delete": {
+        "tags": [
+          "runtimes"
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "name": "app_uuid"
+          },
+          {
+            "description": "A unique integer value identifying this feedback.",
+            "in": "path",
+            "type": "integer",
+            "required": true,
+            "name": "id"
+          }
+        ],
+        "operationId": "runtimes_feedbacks_delete"
       }
     }
   },
