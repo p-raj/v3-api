@@ -18,6 +18,3 @@ class RuntimeViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelV
     filter_backends = (AMFilter,)
 
     lookup_field = 'uuid'
-    lookup_parent = [
-        ('runtime_locker_uuid', 'runtimelocker__uuid')
-    ]
