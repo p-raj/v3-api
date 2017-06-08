@@ -16,6 +16,9 @@ class Feedback(Authorable, Timestampable, models.Model):
 
     comment = models.TextField(blank=True)
 
+    class Meta:
+        unique_together = ('author', 'app',)
+
     def __str__(self):
         return '{0}: {1}'.format(self.rating, self.app)
 

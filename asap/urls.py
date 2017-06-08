@@ -23,9 +23,12 @@ from django.conf.urls.static import static
 from django.contrib import admin
 
 from rest_framework.documentation import include_docs_urls
+from rest_framework_nested import routers
 from rest_framework_swagger.views import get_swagger_view
 
 from asap.apps import urls as app_routes
+from asap.apps.runtime.views import FeedbackViewSet
+from asap.apps.runtime.views.runtime import RuntimeViewSet
 from asap.core.views.revision import RevisionViewSet
 from asap.core.views.version import VersionViewSet
 
@@ -34,6 +37,11 @@ from .router import Router
 r = Router()
 r.register('version', VersionViewSet)
 r.register('revision', RevisionViewSet)
+
+r.register('feedbacks', FeedbackViewSet)
+r.register('runtimes', RuntimeViewSet)
+r_runtime = routers.NestedSimpleRouter(r, 'runtimes', lookup='app')
+r_runtime.register('feedbacks', FeedbackViewSet)
 
 API_TITLE = 'Veris API'
 
@@ -45,6 +53,7 @@ urlpatterns = [
     url(r'^auth/', include('rest_framework.urls', namespace='rest_framework')),
 
     url(r'^api/v1/', include(app_routes)),
+    url(r'^api/v1/', include(r_runtime.urls)),
     url(r'^api/v1/', include(Router.shared_router.urls)),
 ]
 

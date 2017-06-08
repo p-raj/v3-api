@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 @receiver(post_save)
 def create_policy(sender, **kwargs):
-    if not hasattr(sender, 'author'):
+    if not hasattr(sender, 'author') or not hasattr(sender, 'uuid'):
         # we are creating policies only
         # for our models :)
         return
