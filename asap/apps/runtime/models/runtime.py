@@ -18,6 +18,11 @@ User = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
 class Runtime(Authorable, Humanizable, Publishable, Timestampable,
               UniversallyIdentifiable, models.Model):
+
+    # images are being stored on the media service
+    # and only the URLs are saved here
+    logo = models.URLField(blank=True)
+
     # TODO:
     # remove obsolete comments
     # the runtime service was built on Widget Service
