@@ -1,13 +1,20 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import copy
-import requests
+import json
+
 from django.urls import reverse_lazy
 
-from rest_framework import serializers
+from rest_framework import response, serializers
+from rest_framework_swagger.renderers import OpenAPIRenderer
 
 from asap.apps.widget.models.widget import Widget
 from asap.core.serializers import TimestampableModelSerializer
+
+renderer = OpenAPIRenderer()
+context = {
+    'response': response.Response()
+}
 
 swagger_dict = {
     'swagger': '2.0',
@@ -45,11 +52,11 @@ class WidgetSerializer(TimestampableModelSerializer, serializers.HyperlinkedMode
         # copy the path that the process represents
         # change the path
         for process in obj.processes.all():
-            process_server = reverse_lazy('process-server', kwargs={
-                'uuid': str(process.uuid)
-            })
-
-            process_schema = requests.get('http://172.20.0.1:8000' + str(process_server)).json()
+            process_schema = json.loads(
+                renderer.render(
+                    process.schema_server, 'application/json', context
+                ).decode()
+            )
             widget_proxy = reverse_lazy('widget-process-proxy', kwargs={
                 'uuid': str(obj.uuid),
                 'process_uuid': process.uuid
