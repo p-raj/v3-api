@@ -11,6 +11,7 @@ send_direct_link_of_app_to_member:
     - headers: { 'Content-Type' : 'application/json' }
     - process__assign_apps: dc65c4b9-d0e5-4c9c-90ef-e6ddd11db805
     - process__send_mail: 0e726a05-4486-4b1d-b4c3-0d1b1b2bffed
+    - process__retrieve_organization_member: 77bcfa37-5b57-48a8-9ab0-720698ea8452
     - process__fetch_user_profile: fe91e51c-f4aa-4314-9800-70b7a737b9d1
     - process__fetch_organization_profile: f714d37a-b07a-4ab8-922d-2ac248419fbe
     - widget
@@ -30,20 +31,28 @@ send_direct_link_of_app_to_member:
         organization: <% $.body.source.split(":")[1] %>
         app_count: <% $.body.source_permission_set.count() %>
         app_id: <% $.body.source_permission_set.first().target.split(":")[-2] %>
-        membership_link: <% $.body.source_permission_set.count() %>
       publish-on-error:
         data: <% task(assign_apps).result.data %>
         status: <% task(assign_apps).result.status %>
         headers: <% task(assign_apps).result.headers %>
       on-success:
-        - fetch_user_profile
+        - retrieve_organization_member
         - fetch_organization_profile
+    retrieve_organization_member:
+      workflow: process
+      input:
+        url: <% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process__retrieve_organization_member %>/
+        method: POST
+        body: '{ "owner": "<% $.owner %>", "organization": "<% $.organization %>", "uuid": "<% $.member %>" }'
+        headers: { 'Content-type': 'application/json' }
+      on-success:
+        - fetch_user_profile
     fetch_user_profile:
       workflow: process
       input:
         url: <% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process__fetch_user_profile %>/
         method: POST
-        body: '{ "uuid": "<% $.member %>" }'
+        body: '{ "uuid": "<% task(retrieve_organization_member).result.data.user %>" }'
         headers: { 'Content-type': 'application/json' }
       on-success:
         - send_app_link: <% $.app_count = 1 %>
@@ -64,7 +73,7 @@ send_direct_link_of_app_to_member:
       input:
         url: <% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process__send_mail %>/
         method: POST
-        body: '{ "to": "<% task(fetch_user_profile).result.data.email %>", "subject": "<% task(fetch_organization_profile).result.data.name %> has assigned you one application.", "body": "Direct link to application: <% $.app_server %>/application/<% $.app_id %>/?auth=<% $.body.source %>" }'
+        body: '{ "from_email": "admin@noapp.mobi", "to": "<% task(fetch_user_profile).result.data.email %>", "subject": "<% task(fetch_organization_profile).result.data.name %> has assigned you one application.", "body": "Direct link to application: <% $.app_server %>/application/<% $.app_id %>/?auth=<% $.body.source %>" }'
         headers: { 'Content-type': 'application/json' }
     send_membership_link:
       join: 2
@@ -72,5 +81,5 @@ send_direct_link_of_app_to_member:
       input:
         url: <% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process__send_mail %>/
         method: POST
-        body: '{ "to": "<% task(fetch_user_profile).result.data.email %>", "subject": "<% task(fetch_organization_profile).result.data.name %> has assigned you <% $.app_count %> applications.", "body": "You can see all your applications here: <% $.app_server %>/applications/?auth=<% $.body.source %>" }'
+        body: '{ "from_email": "admin@noapp.mobi", "to": "<% task(fetch_user_profile).result.data.email %>", "subject": "<% task(fetch_organization_profile).result.data.name %> has assigned you <% $.app_count %> applications.", "body": "You can see all your applications here: <% $.app_server %>/applications/?auth=<% $.body.source %>" }'
         headers: { 'Content-type': 'application/json' }
