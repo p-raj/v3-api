@@ -103,6 +103,7 @@ class WidgetAdmin(VersionAdmin):
     raw_id_fields = ['author']
     list_display = ('name', 'uuid', 'process_locker_token',)
     list_display_links = ('name',)
+    search_fields = ('name', 'description', 'uuid')
 
 
 @receiver(post_save, sender=Widget)

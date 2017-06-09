@@ -53,6 +53,7 @@ class RuntimeAdmin(VersionAdmin):
     raw_id_fields = ['author']
     list_display = ('id', 'name', 'uuid',
                     'widget_locker_uuid',)
+    search_fields = ('name', 'description', 'uuid')
 
 
 @receiver(post_save, sender=Runtime)

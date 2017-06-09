@@ -23,9 +23,14 @@ class SessionViewSet(AuthorableModelViewSet, DRFNestedViewMixin,
     permission_classes = (AllowAny,)
 
     lookup_field = 'uuid'
+    lookup_fields = ('uuid', 'runtime', 'state')
     lookup_parent = [
         ('runtime_uuid', 'runtime__uuid')
     ]
+    ordering_fields = (
+        'created_at', 'modified_at',
+        'state'
+    )
 
     def create(self, request, *args, **kwargs):
         self.filter_nested_queryset(**kwargs)

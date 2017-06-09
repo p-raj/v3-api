@@ -21,6 +21,12 @@ class ProcessViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelV
     lookup_parent = [
         ('process_locker_uuid', 'processlocker__uuid')
     ]
+    lookup_fields = (
+        'name', 'description'
+    )
+    ordering_fields = (
+        'created_at', 'modified_at'
+    )
 
     def get_queryset(self):
         queryset = super(ProcessViewSet, self).get_queryset()

@@ -89,3 +89,5 @@ class Session(Authorable, UniversallyIdentifiable,
 @admin.register(Session)
 class SessionAdmin(VersionAdmin):
     raw_id_fields = ['runtime']
+    list_display = ('__str__', 'runtime', 'data', 'state')
+    search_fields = ('data', 'state', 'uuid')

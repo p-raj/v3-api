@@ -27,3 +27,5 @@ class Feedback(Authorable, Timestampable, models.Model):
 class FeedbackAdmin(VersionAdmin):
     raw_id_fields = ['author']
     list_display = ('id', 'app', 'rating', 'comment')
+    search_fields = ('app', 'comment')
+    list_filter = ('rating',)

@@ -17,3 +17,10 @@ class FeedbackViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.Model
     lookup_parent = [
         ('app_uuid', 'app__uuid')
     ]
+    lookup_fields = (
+        'app', 'comment'
+    )
+    ordering_fields = (
+        'created_at', 'modified_at',
+        'rating'
+    )

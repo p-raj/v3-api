@@ -23,6 +23,12 @@ class WidgetViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelVi
     lookup_parent = [
         ('widget_locker_uuid', 'widgetlocker__uuid')
     ]
+    lookup_fields = (
+        'name', 'description'
+    )
+    ordering_fields = (
+        'created_at', 'modified_at'
+    )
 
     def get_queryset(self):
         queryset = super(WidgetViewSet, self).get_queryset()
