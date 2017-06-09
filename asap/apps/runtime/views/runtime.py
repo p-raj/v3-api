@@ -29,3 +29,9 @@ class RuntimeViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelV
     ordering_fields = (
         'created_at', 'modified_at'
     )
+
+    def get_queryset(self):
+        queryset = super(RuntimeViewSet, self).get_queryset()
+        if self.request.user.is_authenticated():
+            return queryset.annotate_has_feedback(self.request.user)
+        return queryset
