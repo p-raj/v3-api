@@ -76,14 +76,14 @@ class Widget(Authorable, Humanizable, Publishable, Timestampable,
         Process, related_name='widget_%(app_label)s_%(class)s', blank=True
     )
 
+    # FIXME
+    # temp hack
+    # move to the through relation
+    # between app/runtime/screen & widgets
+    index = models.PositiveIntegerField(default=0, blank=True)
+
     def __str__(self):
         return '{0}'.format(self.name)
-
-    # @property
-    # def processes(self):
-    #     from asap.apps.process.models import Process
-    #     return Process.objects \
-    #         .filter(processlocker__uuid=self.process_locker_uuid)
 
     def has_permission(self, token):
         # TODO
