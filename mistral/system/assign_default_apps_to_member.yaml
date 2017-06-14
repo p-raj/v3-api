@@ -4,6 +4,7 @@ assign_default_apps_to_member:
   description: ''
   type: direct
   input:
+    - api_server: http://172.20.0.1:8000
     - body
     - headers: { 'Content-Type' : 'application/json' }
     - process__add_member: 2b4735da-9c43-4916-aae5-2e38755a6c8a
@@ -20,7 +21,7 @@ assign_default_apps_to_member:
     add_member:
       workflow: process
       input:
-        url: http://172.20.0.1:8000/api/v1/widgets/<% $.widget %>/<% $.process__add_member %>/
+        url: <% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process__add_member %>/
         method: POST
         body: <% $.body %>
         headers: <% $.headers %>
@@ -37,7 +38,7 @@ assign_default_apps_to_member:
     assign_apps:
       workflow: process
       input:
-        url: http://172.20.0.1:8000/api/v1/widgets/<% $.widget %>/<% $.process__assign_apps %>/
+        url: <% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process__assign_apps %>/
         method: POST
         body: { source: 'organization:<% $.body.organization %>:member:<% task(add_member).result.data.uuid %>', source_permission_set: <% $.permissions %>, __encoding: 'application/json' }
         headers: <% $.headers %>

@@ -4,10 +4,11 @@ add_user_to_default_organization:
   description: Add the User creating the organization as the member as well.
   type: direct
   input:
+    - api_server: http://172.20.0.1:8000
     - body
     - headers: { 'Content-Type' : 'application/json' }
     - process__register: 123b299f-7766-426c-b892-41f8b3ade8d5
-    - process__create_organization_member: 2b4735da-9c43-4916-aae5-2e38755a6c8a
+    - process__add_member: 2b4735da-9c43-4916-aae5-2e38755a6c8a
     - default_organization: 01bf6d2b-9c79-4a86-a1b6-f7ad0f4a5324
     - default_organization_owner: e153f849-3a31-4995-98a0-b9f91932a20c
     - widget
@@ -15,7 +16,7 @@ add_user_to_default_organization:
     register:
       workflow: process
       input:
-        url: http://172.20.0.1:8000/api/v1/widgets/<% $.widget %>/<% $.process__register %>/
+        url: <% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process__register %>/
         method: POST
         body: <% $.body %>
         headers: <% $.headers %>
@@ -28,11 +29,11 @@ add_user_to_default_organization:
         status: <% task(register).result.status %>
         headers: <% task(register).result.headers %>
       on-success:
-        - create_organization_member
-    create_organization_member:
+        - add_member
+    add_member:
       workflow: process
       input:
-        url: http://172.20.0.1:8000/api/v1/widgets/<% $.widget %>/<% $.process__create_organization_member %>/
+        url: <% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process__add_member %>/
         method: POST
         body: '{ "input.body.name": "<% task(register).result.data.name %>", "input.body.email": "<% task(register).result.data.email %>", "input.body.type": "user", "input.body.owner": "<% $.default_organization_owner %>", "input.body.organization" : "<% $.default_organization %>"}'
         headers: { 'Content-Type' : 'application/json' }
