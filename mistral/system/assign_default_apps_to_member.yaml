@@ -15,6 +15,12 @@ assign_default_apps_to_member:
         read: true,
         update: false,
         delete: false
+      }, {
+        target: 'vrn:resource:runtime:b0de98fa-d082-4d04-a231-b852412c468b:',
+        create: false,
+        read: true,
+        update: false,
+        delete: false
       }]
     - widget
   tasks:

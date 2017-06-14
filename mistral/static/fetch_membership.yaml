@@ -1,0 +1,41 @@
+---
+version: '2.0'
+fetch_membership:
+  description: ''
+  type: direct
+  input:
+    - api_server: http://172.20.0.1:8000
+    - headers: { 'Content-Type' : 'application/json' }
+    - process__get_member: 77bcfa37-5b57-48a8-9ab0-720698ea8452
+    - process__publish_result: 29c392aa-4181-4ad3-acbf-860c84405795
+    - widget
+    - session
+    - owner
+    - auth
+  tasks:
+    get_member:
+      workflow: process
+      input:
+        url: <% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process__get_member %>/
+        method: POST
+        body: { "uuid": "<% $.auth.split(':')[3] %>", "organization": "<% $.auth.split(':')[1] %>", "owner": "<% $.owner %>" }
+        headers: <% $.headers %>
+      publish:
+        data: <% task(get_member).result.data %>
+        status: <% task(get_member).result.status %>
+        headers: <% task(get_member).result.headers %>
+        value: '{ "template": "resolved", "name": "<% task(get_member).result.data.name %>", "since": "Member since <%task(get_member).result.data.created_at %>" }'
+      publish-on-error:
+        data: <% task(get_member).result.data %>
+        status: <% task(get_member).result.status %>
+        headers: <% task(get_member).result.headers %>
+        value: '{ "template": "error" }'
+      on-complete:
+        - publish_result
+    publish_result:
+      workflow: process
+      input:
+        url: <% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process__publish_result %>/
+        method: POST
+        body: '{ "data": <% $.value %>, "uuid": "<% $.session %>" }'
+        headers: <% $.headers %>

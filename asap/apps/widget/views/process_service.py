@@ -11,6 +11,7 @@ from mistralclient.api.v2.executions import ExecutionManager
 from rest_framework import response, views
 from rest_framework.permissions import AllowAny
 
+from asap.apps.runtime.models.session import Session
 from asap.libs.mistral.http_client import MistralHTTPClient
 
 # TODO
@@ -70,10 +71,19 @@ class ProcessActionProxyViewSet(views.APIView):
         data = widget.data or {}
         logger.debug('widget data: %s', data)
 
+        username = ''
+        if self.get_session():
+            session = Session.objects.filter(uuid=self.get_session()).first()
+            if session:
+                username = session.author.username
+            else:
+                logger.debug('invalid session: %s', session)
+
         # FIXME
         # use AST instead of this hack
         data = json.loads(
             json.dumps(data)
+                .replace('$.auth', username)
                 .replace('$.session', self.get_session())
                 .replace('$.widget', str(widget.uuid))
                 .replace('$.process', self.kwargs.get('process_uuid'))
