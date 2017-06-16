@@ -6,6 +6,7 @@ add_admin_as_default_member:
   input:
     - api_server: http://172.20.0.1:8000
     - body
+    - widget
     - process__create_organization: d6d4edf8-aab0-44b9-a3ee-a93d56008c4b
     - process__fetch_user_profile: fe91e51c-f4aa-4314-9800-70b7a737b9d1
     - process__add_member: 2b4735da-9c43-4916-aae5-2e38755a6c8a
