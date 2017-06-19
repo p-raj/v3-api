@@ -3,4 +3,5 @@
 
 django-debug-toolbar==1.6
 django-extensions==1.7.4
+mkdocs==0.16.3
 ipdb==0.10.3
