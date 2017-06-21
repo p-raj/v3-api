@@ -24,8 +24,6 @@ router.register('processes', ProcessViewSet, base_name='process')
 routes_process = routers.NestedSimpleRouter(Router.shared_router, 'process-lockers', lookup='process_locker')
 routes_process.register('processes', ProcessViewSet, base_name='process-lockers')
 
-UUID_REGEX = '[0-9a-fA-F]{8}-(?:[0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}'
-
 urlpatterns = [
     url('', include(routes_process.urls))
 ]

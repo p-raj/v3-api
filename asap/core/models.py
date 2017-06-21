@@ -1,21 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-"""
-- core.models
-~~~~~~~~~~~~~~
+import uuid
 
-- This file contains Abstract models of Veris Project.
-"""
-
-# future
-from __future__ import unicode_literals
-
-# Django
 from django.conf import settings
 from django.db import models
-
-import uuid
 
 User = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
@@ -83,7 +72,13 @@ class UniversallyIdentifiable(models.Model):
     # this will be used in URLs to make it the urls non obvious
     # for eg. /r/1/ ---> /r/3b546b31-67aa-448c-b3f2-ed906268b08c/
     # the former one can lead to /r/2/
-    uuid = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+    # it seems the argument is wrong that URLs should be not obvious
+    # it also makes the development harder, at least in our case
+    # so lets change it to char field &
+    # slowly move away from non readable UUIDs :)
+    # TODO we'll make some rules to make sure it's urlencoded easily
+    uuid = models.CharField(max_length=64, default=uuid.uuid4,
+                            unique=True, editable=True)
 
     class Meta:
         abstract = True
