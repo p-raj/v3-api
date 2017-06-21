@@ -14,26 +14,26 @@ add_user_to_default_organization:
     - widget
   tasks:
     register:
-      workflow: process
+      action: std.http
       input:
         url: <% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process__register %>/
         method: POST
         body: <% $.body %>
         headers: <% $.headers %>
       publish:
-        data: <% task(register).result.data %>
+        data: <% task(register).result.content %>
         status: <% task(register).result.status %>
         headers: <% task(register).result.headers %>
       publish-on-error:
-        data: <% task(register).result.data %>
+        data: <% task(register).result.content %>
         status: <% task(register).result.status %>
         headers: <% task(register).result.headers %>
       on-success:
         - add_member
     add_member:
-      workflow: process
+      action: std.http
       input:
         url: <% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process__add_member %>/
         method: POST
-        body: '{ "input.body.name": "<% task(register).result.data.name %>", "input.body.email": "<% task(register).result.data.email %>", "input.body.type": "user", "input.body.owner": "<% $.default_organization_owner %>", "input.body.organization" : "<% $.default_organization %>"}'
+        body: '{ "input.body.name": "<% task(register).result.content.name %>", "input.body.email": "<% task(register).result.content.email %>", "input.body.type": "user", "input.body.owner": "<% $.default_organization_owner %>", "input.body.organization" : "<% $.default_organization %>"}'
         headers: { 'Content-Type' : 'application/json' }

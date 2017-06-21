@@ -25,26 +25,26 @@ assign_default_apps_to_member:
     - widget
   tasks:
     add_member:
-      workflow: process
+      action: std.http
       input:
         url: <% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process__add_member %>/
         method: POST
         body: <% $.body %>
         headers: <% $.headers %>
       publish:
-        data: <% task(add_member).result.data %>
+        data: <% task(add_member).result.content %>
         status: <% task(add_member).result.status %>
         headers: <% task(add_member).result.headers %>
       publish-on-error:
-        data: <% task(add_member).result.data %>
+        data: <% task(add_member).result.content %>
         status: <% task(add_member).result.status %>
         headers: <% task(add_member).result.headers %>
       on-success:
         - assign_apps
     assign_apps:
-      workflow: process
+      action: std.http
       input:
         url: <% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process__assign_apps %>/
         method: POST
-        body: { source: 'organization:<% $.body.organization %>:member:<% task(add_member).result.data.uuid %>', source_permission_set: <% $.permissions %>, __encoding: 'application/json' }
+        body: { source: 'organization:<% $.body.organization %>:member:<% task(add_member).result.content.uuid %>', source_permission_set: <% $.permissions %>, __encoding: 'application/json' }
         headers: <% $.headers %>

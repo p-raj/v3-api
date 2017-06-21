@@ -13,14 +13,14 @@ add_admin_as_default_member:
     - headers: {}
   tasks:
     create_organization:
-      workflow: process
+      action: std.http
       input:
         url: <% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process__create_organization %>/
         method: POST
         body: <% $.body %>
         headers: <% $.headers %>
       publish:
-        data: <% task(create_organization).result.data %>
+        data: <% task(create_organization).result.content %>
         cookies: <% task(create_organization).result.cookies %>
         elapsed: <% task(create_organization).result.elapsed %>
         encoding: <% task(create_organization).result.encoding %>
@@ -30,7 +30,7 @@ add_admin_as_default_member:
         status: <% task(create_organization).result.status %>
         url: <% task(create_organization).result.url %>
       publish-on-error:
-        data: <% task(create_organization).result.data %>
+        data: <% task(create_organization).result.content %>
         cookies: <% task(create_organization).result.cookies %>
         elapsed: <% task(create_organization).result.elapsed %>
         encoding: <% task(create_organization).result.encoding %>
@@ -42,14 +42,14 @@ add_admin_as_default_member:
       on-success:
         - fetch_user_profile
     fetch_user_profile:
-      workflow: process
+      action: std.http
       input:
         url: <% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process__fetch_user_profile %>/
         method: POST
-        body: '{ "uuid": "<% task(create_organization).result.data.owner %>" }'
+        body: '{ "uuid": "<% task(create_organization).result.content.owner %>" }'
         headers: <% $.headers %>
       publish:
-        data: <% task(fetch_user_profile).result.data %>
+        data: <% task(fetch_user_profile).result.content %>
         cookies: <% task(fetch_user_profile).result.cookies %>
         elapsed: <% task(fetch_user_profile).result.elapsed %>
         encoding: <% task(fetch_user_profile).result.encoding %>
@@ -59,7 +59,7 @@ add_admin_as_default_member:
         status: <% task(fetch_user_profile).result.status %>
         url: <% task(fetch_user_profile).result.url %>
       publish-on-error:
-        data: <% task(fetch_user_profile).result.data %>
+        data: <% task(fetch_user_profile).result.content %>
         cookies: <% task(fetch_user_profile).result.cookies %>
         elapsed: <% task(fetch_user_profile).result.elapsed %>
         encoding: <% task(fetch_user_profile).result.encoding %>
@@ -71,9 +71,9 @@ add_admin_as_default_member:
       on-success:
         - add_member
     add_member:
-      workflow: process
+      action: std.http
       input:
         url: <% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process__add_member %>/
         method: POST
-        body: '{ "name": "<% task(fetch_user_profile).result.data.name %>", "email": "<% task(fetch_user_profile).result.data.email %>", "type": "user", "owner": "<% task(create_organization).result.data.owner %>", "organization" : "<% task(create_organization).result.data.uuid %>"}'
+        body: '{ "name": "<% task(fetch_user_profile).result.content.name %>", "email": "<% task(fetch_user_profile).result.content.email %>", "type": "user", "owner": "<% task(create_organization).result.content.owner %>", "organization" : "<% task(create_organization).result.content.uuid %>"}'
         headers: <% $.headers %>

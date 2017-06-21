@@ -17,14 +17,14 @@ send_direct_link_of_app_to_member:
     - widget
   tasks:
     assign_apps:
-      workflow: process
+      action: std.http
       input:
         url: <% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process__assign_apps %>/
         method: POST
         body: <% $.body %>
         headers: <% $.headers %>
       publish:
-        data: <% task(assign_apps).result.data %>
+        data: <% task(assign_apps).result.content %>
         status: <% task(assign_apps).result.status %>
         headers: <% task(assign_apps).result.headers %>
         member: <% $.body.source.split(":")[3] %>
@@ -32,14 +32,14 @@ send_direct_link_of_app_to_member:
         app_count: <% $.body.source_permission_set.count() %>
         app_id: <% $.body.source_permission_set.first().target.split(":")[-2] %>
       publish-on-error:
-        data: <% task(assign_apps).result.data %>
+        data: <% task(assign_apps).result.content %>
         status: <% task(assign_apps).result.status %>
         headers: <% task(assign_apps).result.headers %>
       on-success:
         - retrieve_organization_member
         - fetch_organization_profile
     retrieve_organization_member:
-      workflow: process
+      action: std.http
       input:
         url: <% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process__retrieve_organization_member %>/
         method: POST
@@ -48,17 +48,17 @@ send_direct_link_of_app_to_member:
       on-success:
         - fetch_user_profile
     fetch_user_profile:
-      workflow: process
+      action: std.http
       input:
         url: <% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process__fetch_user_profile %>/
         method: POST
-        body: '{ "uuid": "<% task(retrieve_organization_member).result.data.user %>" }'
+        body: '{ "uuid": "<% task(retrieve_organization_member).result.content.user %>" }'
         headers: { 'Content-type': 'application/json' }
       on-success:
         - send_app_link: <% $.app_count = 1 %>
         - send_membership_link: <% $.app_count > 1 %>
     fetch_organization_profile:
-      workflow: process
+      action: std.http
       input:
         url: <% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process__fetch_organization_profile %>/
         method: POST
@@ -69,17 +69,17 @@ send_direct_link_of_app_to_member:
         - send_membership_link: <% $.app_count > 1 %>
     send_app_link:
       join: 2
-      workflow: process
+      action: std.http
       input:
         url: <% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process__send_mail %>/
         method: POST
-        body: '{ "from_email": "admin@noapp.mobi", "to": "<% task(fetch_user_profile).result.data.email %>", "subject": "<% task(fetch_organization_profile).result.data.name %> has assigned you one application.", "body": "Direct link to application: <% $.app_server %>/application/<% $.app_id %>/?auth=<% $.body.source %>" }'
+        body: '{ "from_email": "admin@noapp.mobi", "to": "<% task(fetch_user_profile).result.content.email %>", "subject": "<% task(fetch_organization_profile).result.content.name %> has assigned you one application.", "body": "Direct link to application: <% $.app_server %>/application/<% $.app_id %>/?auth=<% $.body.source %>" }'
         headers: { 'Content-type': 'application/json' }
     send_membership_link:
       join: 2
-      workflow: process
+      action: std.http
       input:
         url: <% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process__send_mail %>/
         method: POST
-        body: '{ "from_email": "admin@noapp.mobi", "to": "<% task(fetch_user_profile).result.data.email %>", "subject": "<% task(fetch_organization_profile).result.data.name %> has assigned you <% $.app_count %> applications.", "body": "You can see all your applications here: <% $.app_server %>/applications/?auth=<% $.body.source %>" }'
+        body: '{ "from_email": "admin@noapp.mobi", "to": "<% task(fetch_user_profile).result.content.email %>", "subject": "<% task(fetch_organization_profile).result.content.name %> has assigned you <% $.app_count %> applications.", "body": "You can see all your applications here: <% $.app_server %>/applications/?auth=<% $.body.source %>" }'
         headers: { 'Content-type': 'application/json' }
