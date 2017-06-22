@@ -18,8 +18,7 @@ from asap.libs.mistral.http_client import MistralHTTPClient
 MISTRAL_PROCESS_EXECUTION_NAME = 'process'
 
 # TODO
-PROCESS_SERVER = 'http://172.19.0.1:8000/'
-KEYSTORE_SERVER = 'http://172.19.0.1:8000/api/v1/sessions'
+PROCESS_SERVER = 'http://172.18.0.1:8000/'
 
 logger = logging.getLogger(__name__)
 

@@ -117,7 +117,7 @@ class WidgetListProxyViewSet(WidgetProxyViewSet):
     """
     allow_new = True
 
-    proxy_host = 'http://172.20.0.1:8000'
+    proxy_host = 'http://172.18.0.1:8000'
     source = 'api/v1/widget-lockers/%(widget_locker_uuid)s/widgets/'
 
 
@@ -132,7 +132,7 @@ class WidgetDetailProxyViewSet(WidgetProxyViewSet):
         - `/runtimes/<r_id>/widgets/<w_id>/` should internally call
             `/widgets/<w_id>/` and update the session for the `Runtime`.
     """
-    proxy_host = 'http://172.20.0.1:8000'
+    proxy_host = 'http://172.18.0.1:8000'
     source = 'api/v1/widget-lockers/%(widget_locker_uuid)s/widgets/%(widget_uuid)s/'
 
 
@@ -147,7 +147,7 @@ class WidgetDetailActionProxyViewSet(WidgetProxyViewSet):
         - `/runtimes/<r_id>/widgets/<w_id>/` should internally call
             `/widgets/<w_id>/` and update the session for the `Runtime`.
     """
-    proxy_host = 'http://172.20.0.1:8000'
+    proxy_host = 'http://172.18.0.1:8000'
     source = 'api/v1/widget-lockers/%(widget_locker_uuid)s/widgets/%(widget_uuid)s/%(action)s/'
 
     def create_response(self, response):

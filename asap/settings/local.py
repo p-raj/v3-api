@@ -32,7 +32,7 @@ DATABASES = {
         # is also available as django.db.backends.postgresql. :)
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'v3',
-        'HOST': '172.20.0.1',
+        'HOST': '172.18.0.1',
         'USER': 'veris',
         'PASSWORD': 'veris',
         'PORT': '5432'
