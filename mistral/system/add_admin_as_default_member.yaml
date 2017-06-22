@@ -4,7 +4,7 @@ add_admin_as_default_member:
   description: Add the User creating the organization as the member as well.
   type: direct
   input:
-    - api_server: http://172.20.0.1:8000
+    - api_server: http://172.18.0.1:8000
     - body
     - widget
     - process__create_organization: d6d4edf8-aab0-44b9-a3ee-a93d56008c4b

@@ -4,7 +4,7 @@ add_user_to_default_organization:
   description: Add the User creating the organization as the member as well.
   type: direct
   input:
-    - api_server: http://172.20.0.1:8000
+    - api_server: http://172.18.0.1:8000
     - body
     - headers: { 'Content-Type' : 'application/json' }
     - process__register: 123b299f-7766-426c-b892-41f8b3ade8d5

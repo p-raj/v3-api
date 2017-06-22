@@ -4,7 +4,7 @@ assign_default_apps_to_member:
   description: ''
   type: direct
   input:
-    - api_server: http://172.20.0.1:8000
+    - api_server: http://172.18.0.1:8000
     - body
     - headers: { 'Content-Type' : 'application/json' }
     - process__add_member: 2b4735da-9c43-4916-aae5-2e38755a6c8a

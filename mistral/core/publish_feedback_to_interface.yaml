@@ -1,0 +1,22 @@
+---
+version: '2.0'
+publish_feedback_to_interface:
+  description: ''
+  type: direct
+  input:
+    - widget
+    - session
+    - key
+    - value
+    - api_server: http://172.18.0.1:8000
+    - process__publish_result: 29c392aa-4181-4ad3-acbf-860c84405795
+  tasks:
+    publish_result:
+      action: std.http
+      input:
+        url: <% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process__publish_result %>/
+        method: POST
+        headers: {
+          Content-Type: 'application/json',
+        }
+        body: { "data": <% $.value %>, "key": "<% $.key %>", "uuid": "<% $.session %>" }

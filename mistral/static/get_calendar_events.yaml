@@ -1,0 +1,57 @@
+---
+version: '2.0'
+get_calendar_events:
+  description: Fetch the calendar events & check whether the room is available
+  type: direct
+  input:
+    - api_server: http://172.18.0.1:8000
+    - process__fetch_calendar_events: 91269c55-ee85-4720-87a9-aa2efc4222c9
+    - process__publish_result: 29c392aa-4181-4ad3-acbf-860c84405795
+    - headers: { 'Content-type': 'application/json' }
+    - session
+    - widget
+    - fetch_calendar_events
+  tasks:
+    fetch_calendar_events:
+      action: std.http
+      input:
+        url: <% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process__fetch_calendar_events %>/
+        method: POST
+        body: {
+            "minTime": "<% let(now() - timespan(hours => 1)) -> $.format('%Y-%m-%dT%H:%M:%S%z') %>",
+            "showDeleted": false,
+            "maxResults": 5
+          }
+        headers: <% $.headers %>
+      publish-on-error:
+        key: <% $.widget %>
+        value: {
+          "template": "busy"
+        }
+      on-success:
+        - available: <% task(fetch_calendar_events).result.content.items.takeWhile(datetime($.start.dateTime) < now() and now() < datetime($.end.dateTime)).count() = 0 %>
+        - unavailable: <% task(fetch_calendar_events).result.content.items.takeWhile(datetime($.start.dateTime) < now() and now() < datetime($.end.dateTime)).count() > 0 %>
+      on-error:
+        - publish_result
+    available:
+      action: std.noop
+      publish:
+        key: <% $.widget %>
+        value: {
+          "template": "available",
+          "events": <% task(fetch_calendar_events).result.content.items %>
+        }
+      on-complete:
+        - publish_result
+    unavailable:
+      action: std.noop
+      publish:
+        key: <% $.widget %>
+        value: {
+          "template": "busy",
+          "events": <% task(fetch_calendar_events).result.content.items %>
+        }
+      on-complete:
+        - publish_result
+    publish_result:
+      workflow: publish_feedback_to_interface widget=<% $.widget %> session=<% $.session %> key=<% $.key %> value=<% $.value %> api_server=<% $.api_server %> process__publish_result=<% $.process__publish_result %>

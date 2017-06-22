@@ -4,8 +4,8 @@ send_direct_link_of_app_to_member:
   description: ''
   type: direct
   input:
-    - api_server: http://172.20.0.1:8000
-    - app_server: http://172.20.0.1:8000
+    - api_server: http://172.18.0.1:8000
+    - app_server: http://172.18.0.1:8000
     - body
     - owner
     - headers: { 'Content-Type' : 'application/json' }
