@@ -104,38 +104,6 @@ class WidgetProxyViewSet(SessionMixin, ProxyView):
         return super(WidgetProxyViewSet, self).proxy(request, *args, **kwargs)
 
 
-class WidgetListProxyViewSet(WidgetProxyViewSet):
-    """
-    A Proxy ViewSet to fetch data from the Widgets Service
-    while maintaining a session.
-
-    Example:
-        - `/runtimes/<r_id>/widgets/` should internally call
-            `/widget-lockers/<wl_id>/widgets/` and start a session for the `Runtime`.
-        - `/runtimes/<r_id>/widgets/<w_id>/` should internally call
-            `/widgets/<w_id>/` and update the session for the `Runtime`.
-    """
-    allow_new = True
-
-    proxy_host = 'http://172.18.0.1:8000'
-    source = 'api/v1/widget-lockers/%(widget_locker_uuid)s/widgets/'
-
-
-class WidgetDetailProxyViewSet(WidgetProxyViewSet):
-    """
-    A Proxy ViewSet to fetch data from the Widgets Service
-    while maintaining a session.
-
-    Example:
-        - `/runtimes/<r_id>/widgets/` should internally call
-            `/widget-lockers/<wl_id>/widgets/` and start a session for the `Runtime`.
-        - `/runtimes/<r_id>/widgets/<w_id>/` should internally call
-            `/widgets/<w_id>/` and update the session for the `Runtime`.
-    """
-    proxy_host = 'http://172.18.0.1:8000'
-    source = 'api/v1/widget-lockers/%(widget_locker_uuid)s/widgets/%(widget_uuid)s/'
-
-
 class WidgetDetailActionProxyViewSet(WidgetProxyViewSet):
     """
     A Proxy ViewSet to fetch data from the Widgets Service
