@@ -3,6 +3,6 @@
 -r base.txt
 
 boto==2.38.0
-gunicorn==19.3.0
 newrelic==2.54.0.41
 python3-memcached==1.51
+uWSGI==2.0.15

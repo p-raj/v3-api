@@ -27,6 +27,7 @@ def get_env_setting(key):
 # ######### HOST CONFIGURATION
 # See: https://docs.djangoproject.com/en/1.5/releases/1.5/#allowed-hosts-required-in-production
 ALLOWED_HOSTS = [
+    'apis.noapp.mobi'
 ]
 # ######### END HOST CONFIGURATION
 
@@ -71,7 +72,7 @@ DATABASES = {
         'USER': get_env_setting('DATABASE_USER'),
         'PASSWORD': get_env_setting('DATABASE_PASSWORD'),
         'HOST': get_env_setting('DATABASE_HOST'),
-        'PORT': get_env_setting('DATABASE_PORT')
+        'PORT': getenv('DATABASE_PORT', 5432)
     }
 }
 # ######### END DATABASE CONFIGURATION
@@ -91,7 +92,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # ######### APP CONFIGURATION
 PRODUCTION_APPS = (
-    'gunicorn',
+    # 'gunicorn',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -117,24 +118,24 @@ CACHES = {
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer'
+    ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+        'rest_framework.permissions.IsAuthenticated'
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
+        'bouncer.rest_framework.VerisAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication'
     ),
     'DEFAULT_FILTER_BACKENDS': (
+        'asap.core.filters.django_filter.DjangoFilter',
         'rest_framework.filters.OrderingFilter',
         'rest_framework.filters.SearchFilter'
     ),
-    'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',
-    )
-}
-
-REST_FRAMEWORK_EXTENSIONS = {
-    'DEFAULT_CACHE_RESPONSE_TIMEOUT': 30
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 50
 }
 # ######### END DJANGO REST FRAMEWORK CONFIGURATION
 
@@ -163,7 +164,8 @@ V3__API_GATEWAY = get_env_setting('V3__API_GATEWAY')
 # identify on how to reach us (this server)!
 # we are generating mistral workflow dynamically
 # and we will need callbacks
-V3__HOST_SELF = get_env_setting('V3__HOST_SELF')
-V3__HOST_MISTRAL = get_env_setting('V3__HOST_MISTRAL')
+V3__HOST_SELF = getenv('V3__HOST_SELF', 'apis.veris.in')
+V3__HOST_MISTRAL = getenv('V3__HOST_MISTRAL', 'mistral.veris.in')
+V3__HOST_AUTHORIZATION = getenv('V3__HOST_AUTHORIZATION', 'am.veris.in')
 
 # ######### PROJECT SPECIFIC CONFIGURATION
