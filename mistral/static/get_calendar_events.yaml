@@ -79,6 +79,6 @@ get_calendar_events:
         access_token: <% task(refresh_token).result.content.access_token %>
         token_type: <% task(refresh_token).result.content.token_type %>
       on-success:
-        fetch_calendar_events
+        - fetch_calendar_events
     publish_result:
       workflow: publish_feedback_to_interface widget=<% $.widget %> session=<% $.session %> key=<% $.key %> value=<% $.value %> api_server=<% $.api_server %> process__publish_result=<% $.process__publish_result %>
