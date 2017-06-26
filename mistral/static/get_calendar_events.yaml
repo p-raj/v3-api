@@ -10,8 +10,19 @@ get_calendar_events:
     - headers: { 'Content-type': 'application/json' }
     - session
     - widget
-    - fetch_calendar_events
+    - calendar_event_api_data
   tasks:
+    publish_initial_data:
+      action: std.noop
+      publish:
+        token_endpoint: <% $.calendar_event_api_data.token_endpoint %>
+        client_id: <% $.calendar_event_api_data.client_id %>
+        client_secret: <% $.calendar_event_api_data.client_secret %>
+        refresh_token: <% $.calendar_event_api_data.refresh_token %>
+        access_token: <% $.calendar_event_api_data.access_token %>
+        token_type: "Bearer"
+      on-success:
+        - fetch_calendar_events
     fetch_calendar_events:
       action: std.http
       input:
@@ -20,7 +31,8 @@ get_calendar_events:
         body: {
             "minTime": "<% let(now() - timespan(hours => 1)) -> $.format('%Y-%m-%dT%H:%M:%S%z') %>",
             "showDeleted": false,
-            "maxResults": 5
+            "maxResults": 5,
+            "Authorization": "<% $.token_type %> <% $.access_token %>"
           }
         headers: <% $.headers %>
       publish-on-error:
@@ -33,13 +45,14 @@ get_calendar_events:
         - unavailable: <% task(fetch_calendar_events).result.content.items.takeWhile(datetime($.start.dateTime) < now() and now() < datetime($.end.dateTime)).count() > 0 %>
       on-error:
         - publish_result
+        - refresh_token: <% task(fetch_calendar_events).result.status = 401 %>
     available:
       action: std.noop
       publish:
         key: <% $.widget %>
         value: {
           "template": "available",
-          "events": <% task(fetch_calendar_events).result.content.items %>
+          "__events": <% task(fetch_calendar_events).result.content.items %>
         }
       on-complete:
         - publish_result
@@ -49,9 +62,21 @@ get_calendar_events:
         key: <% $.widget %>
         value: {
           "template": "busy",
-          "events": <% task(fetch_calendar_events).result.content.items %>
+          "__events": <% task(fetch_calendar_events).result.content.items %>
         }
       on-complete:
         - publish_result
+    refresh_token:
+      workflow: refresh_oauth_token
+      input:
+        token_endpoint: <% $.calendar_event_api_data.token_endpoint %>
+        client_id: <% $.calendar_event_api_data.client_id %>
+        client_secret: <% $.calendar_event_api_data.client_secret %>
+        refresh_token: <% $.calendar_event_api_data.refresh_token %>
+      publish:
+        access_token: <% task(refresh_token).result.content.access_token %>
+        token_type: <% task(refresh_token).result.content.token_type %>
+      on-success:
+        fetch_calendar_events
     publish_result:
       workflow: publish_feedback_to_interface widget=<% $.widget %> session=<% $.session %> key=<% $.key %> value=<% $.value %> api_server=<% $.api_server %> process__publish_result=<% $.process__publish_result %>
