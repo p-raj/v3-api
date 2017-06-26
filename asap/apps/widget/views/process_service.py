@@ -7,6 +7,7 @@ from functools import reduce
 
 from time import sleep
 
+import requests
 from mistralclient.api.v2.executions import ExecutionManager
 from rest_framework import response, views
 from rest_framework.permissions import AllowAny
@@ -98,33 +99,35 @@ class ProcessActionProxyViewSet(views.APIView):
                 workflow_data.get('workflow_name'),
                 workflow_input=workflow_data.get('input', {})
             )
+
+            while execution.state == 'RUNNING':
+                # FIXME
+                # wait for task completion
+                # make it async :)
+                sleep(1)
+                execution = em.get(execution.id)
+
+            result = json.loads(execution.output)
+            logger.debug('workflow result: %s', result)
+            return response.Response(
+                data=result.get('data') or result.get('error'),
+                status=result.get('status'),
+                template_name=None,
+                headers=result.get('headers')
+            )
+
         else:
-            execution = em.create(MISTRAL_PROCESS_EXECUTION_NAME, workflow_input={
-                'url': self.get_process_url(**kwargs),
-                'method': 'post',
-                'params': dict(request.query_params),
-                'body': body,
-                'cookies': raw_request.COOKIES,
-                'headers': {
-                    'Content-Type': 'application/json',
-                    'Authorization': widget.process_locker_token,
-                    'Process': kwargs.get('process_uuid'),
-                    'Widget': kwargs.get('uuid')
-                }
-            })
+            resp = requests.post(
+                self.get_process_url(**kwargs),
+                json=body,
+                params=dict(request.query_params)
+            )
 
-        while execution.state == 'RUNNING':
-            # FIXME
-            # wait for task completion
-            # make it async :)
-            sleep(1)
-            execution = em.get(execution.id)
-
-        result = json.loads(execution.output)
-        logger.debug('workflow result: %s', result)
-        return response.Response(
-            data=result.get('data') or result.get('error'),
-            status=result.get('status'),
-            template_name=None,
-            headers=result.get('headers')
-        )
+            data = resp.json()
+            logger.debug('process response: %s', data)
+            return response.Response(
+                data=data,
+                status=resp.status_code,
+                template_name=None,
+                headers=resp.headers
+            )
