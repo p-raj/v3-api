@@ -11,6 +11,7 @@ get_calendar_events:
     - session
     - widget
     - calendar_event_api_data
+    - widget_room_info: a705fec4-112f-4905-a26b-33fb64d39c2c
   tasks:
     publish_initial_data:
       action: std.noop
@@ -36,10 +37,8 @@ get_calendar_events:
           }
         headers: <% $.headers %>
       publish-on-error:
-        key: <% $.widget %>
-        value: {
-          "template": "busy"
-        }
+        key: <% $.widget_room_info %>
+        value: { "template": "init" }
       on-success:
         - available: <% task(fetch_calendar_events).result.content.items.takeWhile(datetime($.start.dateTime) < now() and now() < datetime($.end.dateTime)).count() = 0 %>
         - unavailable: <% task(fetch_calendar_events).result.content.items.takeWhile(datetime($.start.dateTime) < now() and now() < datetime($.end.dateTime)).count() > 0 %>
@@ -49,30 +48,33 @@ get_calendar_events:
     available:
       action: std.noop
       publish:
-        key: <% $.widget %>
-        value: {
-          "template": "available",
-          "__events": <% task(fetch_calendar_events).result.content.items %>
-        }
+        key: <% $.widget_room_info %>
+        value: { "template": "available" }
       on-complete:
         - publish_result
+        - publish_events
     unavailable:
       action: std.noop
       publish:
+        key: <% $.widget_room_info %>
+        value: { "template": "busy" }
+      on-complete:
+        - publish_result
+        - publish_events
+    publish_events:
+      action: std.noop
+      publish:
         key: <% $.widget %>
-        value: {
-          "template": "busy",
-          "__events": <% task(fetch_calendar_events).result.content.items %>
-        }
+        value: { "template": "schedule", "__events": <% task(fetch_calendar_events).result.content.items %> }
       on-complete:
         - publish_result
     refresh_token:
       workflow: refresh_oauth_token
       input:
-        token_endpoint: <% $.calendar_event_api_data.token_endpoint %>
-        client_id: <% $.calendar_event_api_data.client_id %>
-        client_secret: <% $.calendar_event_api_data.client_secret %>
-        refresh_token: <% $.calendar_event_api_data.refresh_token %>
+        token_endpoint: <% $.token_endpoint %>
+        client_id: <% $.client_id %>
+        client_secret: <% $.client_secret %>
+        refresh_token: <% $.refresh_token %>
       publish:
         access_token: <% task(refresh_token).result.content.access_token %>
         token_type: <% task(refresh_token).result.content.token_type %>
