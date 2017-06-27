@@ -15,6 +15,9 @@ refresh_oauth_token:
         url: <% $.token_endpoint %>
         method: POST
         headers: {
-          Content-Type: 'application/x-www-form-urlencoded',
+          Content-Type: 'application/x-www-form-urlencoded'
         }
         body: client_secret=<% $.client_secret %>&grant_type=refresh_token&refresh_token=<% $.refresh_token %>&client_id=<% $.client_id %>
+      publish:
+        access_token: <% task(refresh_token).result.content.access_token %>
+        token_type: <% task(refresh_token).result.content.token_type %>
