@@ -30,13 +30,14 @@ get_calendar_events:
         url: <% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process__fetch_calendar_events %>/
         method: POST
         body: {
-            "minTime": "<% let(now() - timespan(hours => 1)) -> $.format('%Y-%m-%dT%H:%M:%S%z') %>",
+            "timeMin": "<% let(now() - timespan(hours => 1)) -> $.format('%Y-%m-%dT%H:%M:%S%z') %>",
             "showDeleted": false,
             "maxResults": 5,
             "Authorization": "<% $.token_type %> <% $.access_token %>"
           }
         headers: <% $.headers %>
       publish:
+        data: <% task(fetch_calendar_events).result.content %>
         items: <% task(fetch_calendar_events).result.content.items %>
       publish-on-error:
         key: <% $.widget_room_info %>
@@ -70,9 +71,10 @@ get_calendar_events:
         key: <% $.widget %>
         value: {
           "template": "schedule",
+          "input.calendar_event_api_data.access_token": "<% $.access_token %>",
           "__date": "<% now() %>",
-          "__events": "<% $.items.select($.set('attendeesCount', $.attendees.takeWhile($.get('resource', false)).count())) %>",
-          "__info": "<% $.items.count() %> meetings scheduled for today."
+          "__events": "<% $.items.select($.set('attendeesCount', $.attendees.where($.get('resource', false) = false).count())) %>",
+          "__info": "<% switch($.items.count() > 0 => $.items.count(), $.items.count() = 0 => 'No') %> meetings scheduled for today."
         }
       on-complete:
         - publish_result
