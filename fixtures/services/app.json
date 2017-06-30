@@ -2,128 +2,52 @@
   "swagger": "2.0",
   "info": {
     "title": "Veris API",
-    "version": "0.1"
+    "version": ""
   },
   "host": "localhost:8000",
   "schemes": [
-    "http",
-    "https"
+    "http"
   ],
   "paths": {
-    "/api/v1/process-lockers/": {
+    "/api/v1/feedbacks/": {
       "get": {
         "responses": {
           "200": {
             "description": ""
           }
         },
+        "operationId": "feedbacks_list",
         "tags": [
-          "process-lockers"
+          "feedbacks"
         ],
-        "operationId": "process-lockers_list",
         "parameters": [
           {
             "required": false,
+            "type": "integer",
             "description": "Number of results to return per page.",
-            "in": "query",
             "name": "limit",
-            "type": "integer"
+            "in": "query"
           },
           {
             "required": false,
+            "type": "integer",
             "description": "The initial index from which to return the results.",
-            "in": "query",
             "name": "offset",
-            "type": "integer"
-          }
-        ]
-      },
-      "post": {
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "process-lockers"
-        ],
-        "operationId": "process-lockers_create",
-        "parameters": [
-          {
-            "in": "body",
-            "name": "data",
-            "schema": {
-              "type": "object",
-              "required": [
-                "processes"
-              ],
-              "properties": {
-                "processes": {
-                  "description": "",
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "rules": {
-                  "description": "Rules config, tells us which process will be called based on what rules.",
-                  "type": "string"
-                }
-              }
-            }
-          }
-        ],
-        "consumes": [
-          "application/json"
-        ]
-      }
-    },
-    "/api/v1/process-lockers/{process_locker_uuid}/processes/": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "process-lockers"
-        ],
-        "operationId": "process-lockers_processes_list",
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "process_locker_uuid",
-            "type": "string"
+            "in": "query"
           },
           {
             "required": false,
-            "description": "Number of results to return per page.",
-            "in": "query",
-            "name": "limit",
-            "type": "integer"
-          },
-          {
-            "required": false,
-            "description": "The initial index from which to return the results.",
-            "in": "query",
-            "name": "offset",
-            "type": "integer"
-          },
-          {
-            "required": false,
+            "type": "string",
             "description": "Which field to use when ordering the results.",
-            "in": "query",
             "name": "ordering",
-            "type": "string"
+            "in": "query"
           },
           {
             "required": false,
+            "type": "string",
             "description": "A search term.",
-            "in": "query",
             "name": "search",
-            "type": "string"
+            "in": "query"
           }
         ]
       },
@@ -133,100 +57,59 @@
             "description": ""
           }
         },
-        "tags": [
-          "process-lockers"
-        ],
-        "operationId": "process-lockers_processes_create",
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "process_locker_uuid",
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "data",
-            "schema": {
-              "type": "object",
-              "required": [
-                "schema",
-                "name"
-              ],
-              "properties": {
-                "description": {
-                  "description": "",
-                  "type": "string"
-                },
-                "type": {
-                  "description": "",
-                  "type": "string"
-                },
-                "schema": {
-                  "description": "",
-                  "type": "string"
-                },
-                "name": {
-                  "description": "",
-                  "type": "string"
-                }
-              }
-            }
-          }
-        ],
+        "operationId": "feedbacks_create",
         "consumes": [
           "application/json"
+        ],
+        "tags": [
+          "feedbacks"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "schema": {
+              "required": [
+                "app"
+              ],
+              "type": "object",
+              "properties": {
+                "comment": {
+                  "description": "",
+                  "type": "string"
+                },
+                "app": {
+                  "description": "",
+                  "type": "string"
+                },
+                "rating": {
+                  "description": "",
+                  "type": "integer"
+                }
+              }
+            },
+            "name": "data"
+          }
         ]
       }
     },
-    "/api/v1/process-lockers/{process_locker_uuid}/processes/system/": {
+    "/api/v1/feedbacks/{id}/": {
       "get": {
         "responses": {
           "200": {
             "description": ""
           }
         },
+        "operationId": "feedbacks_read",
         "tags": [
-          "process-lockers"
+          "feedbacks"
         ],
-        "operationId": "process-lockers_processes_system",
         "parameters": [
           {
             "required": true,
-            "description": "",
-            "in": "path",
-            "name": "process_locker_uuid",
-            "type": "string"
-          }
-        ]
-      }
-    },
-    "/api/v1/process-lockers/{process_locker_uuid}/processes/{uuid}/": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "process-lockers"
-        ],
-        "operationId": "process-lockers_processes_read",
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "process_locker_uuid",
-            "type": "string"
-          },
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
+            "type": "integer",
+            "description": "A unique integer value identifying this feedback.",
+            "name": "id",
+            "in": "path"
           }
         ]
       },
@@ -236,57 +119,45 @@
             "description": ""
           }
         },
-        "tags": [
-          "process-lockers"
+        "operationId": "feedbacks_update",
+        "consumes": [
+          "application/json"
         ],
-        "operationId": "process-lockers_processes_update",
+        "tags": [
+          "feedbacks"
+        ],
         "parameters": [
           {
             "required": true,
-            "description": "",
-            "in": "path",
-            "name": "process_locker_uuid",
-            "type": "string"
-          },
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
+            "type": "integer",
+            "description": "A unique integer value identifying this feedback.",
+            "name": "id",
+            "in": "path"
           },
           {
             "in": "body",
-            "name": "data",
             "schema": {
-              "type": "object",
               "required": [
-                "schema",
-                "name"
+                "app"
               ],
+              "type": "object",
               "properties": {
-                "description": {
+                "comment": {
                   "description": "",
                   "type": "string"
                 },
-                "type": {
+                "app": {
                   "description": "",
                   "type": "string"
                 },
-                "schema": {
+                "rating": {
                   "description": "",
-                  "type": "string"
-                },
-                "name": {
-                  "description": "",
-                  "type": "string"
+                  "type": "integer"
                 }
               }
-            }
+            },
+            "name": "data"
           }
-        ],
-        "consumes": [
-          "application/json"
         ]
       },
       "patch": {
@@ -295,53 +166,42 @@
             "description": ""
           }
         },
-        "tags": [
-          "process-lockers"
+        "operationId": "feedbacks_partial_update",
+        "consumes": [
+          "application/json"
         ],
-        "operationId": "process-lockers_processes_partial_update",
+        "tags": [
+          "feedbacks"
+        ],
         "parameters": [
           {
             "required": true,
-            "description": "",
-            "in": "path",
-            "name": "process_locker_uuid",
-            "type": "string"
-          },
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
+            "type": "integer",
+            "description": "A unique integer value identifying this feedback.",
+            "name": "id",
+            "in": "path"
           },
           {
             "in": "body",
-            "name": "data",
             "schema": {
               "type": "object",
               "properties": {
-                "description": {
+                "comment": {
                   "description": "",
                   "type": "string"
                 },
-                "type": {
+                "app": {
                   "description": "",
                   "type": "string"
                 },
-                "schema": {
+                "rating": {
                   "description": "",
-                  "type": "string"
-                },
-                "name": {
-                  "description": "",
-                  "type": "string"
+                  "type": "integer"
                 }
               }
-            }
+            },
+            "name": "data"
           }
-        ],
-        "consumes": [
-          "application/json"
         ]
       },
       "delete": {
@@ -350,379 +210,18 @@
             "description": ""
           }
         },
+        "operationId": "feedbacks_delete",
         "tags": [
-          "process-lockers"
+          "feedbacks"
         ],
-        "operationId": "process-lockers_processes_delete",
         "parameters": [
           {
             "required": true,
-            "description": "",
-            "in": "path",
-            "name": "process_locker_uuid",
-            "type": "string"
-          },
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
+            "type": "integer",
+            "description": "A unique integer value identifying this feedback.",
+            "name": "id",
+            "in": "path"
           }
-        ]
-      }
-    },
-    "/api/v1/process-lockers/{process_locker_uuid}/processes/{uuid}/client/": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "process-lockers"
-        ],
-        "operationId": "process-lockers_processes_client",
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "process_locker_uuid",
-            "type": "string"
-          },
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          }
-        ]
-      }
-    },
-    "/api/v1/process-lockers/{process_locker_uuid}/processes/{uuid}/execute/": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "process-lockers"
-        ],
-        "operationId": "process-lockers_processes_execute_read",
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "process_locker_uuid",
-            "type": "string"
-          },
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          }
-        ]
-      },
-      "post": {
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "process-lockers"
-        ],
-        "operationId": "process-lockers_processes_execute_create",
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "process_locker_uuid",
-            "type": "string"
-          },
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "data",
-            "schema": {
-              "type": "object",
-              "required": [
-                "schema",
-                "name"
-              ],
-              "properties": {
-                "description": {
-                  "description": "",
-                  "type": "string"
-                },
-                "type": {
-                  "description": "",
-                  "type": "string"
-                },
-                "schema": {
-                  "description": "",
-                  "type": "string"
-                },
-                "name": {
-                  "description": "",
-                  "type": "string"
-                }
-              }
-            }
-          }
-        ],
-        "consumes": [
-          "application/json"
-        ]
-      }
-    },
-    "/api/v1/process-lockers/{process_locker_uuid}/processes/{uuid}/schema/": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "process-lockers"
-        ],
-        "operationId": "process-lockers_processes_schema",
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "process_locker_uuid",
-            "type": "string"
-          },
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          }
-        ]
-      }
-    },
-    "/api/v1/process-lockers/{process_locker_uuid}/processes/{uuid}/server/": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "process-lockers"
-        ],
-        "operationId": "process-lockers_processes_server",
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "process_locker_uuid",
-            "type": "string"
-          },
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          }
-        ]
-      }
-    },
-    "/api/v1/process-lockers/{uuid}/": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "process-lockers"
-        ],
-        "operationId": "process-lockers_read",
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          }
-        ]
-      },
-      "put": {
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "process-lockers"
-        ],
-        "operationId": "process-lockers_update",
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "data",
-            "schema": {
-              "type": "object",
-              "required": [
-                "processes"
-              ],
-              "properties": {
-                "processes": {
-                  "description": "",
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "rules": {
-                  "description": "Rules config, tells us which process will be called based on what rules.",
-                  "type": "string"
-                }
-              }
-            }
-          }
-        ],
-        "consumes": [
-          "application/json"
-        ]
-      },
-      "patch": {
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "process-lockers"
-        ],
-        "operationId": "process-lockers_partial_update",
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "data",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "processes": {
-                  "description": "",
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "rules": {
-                  "description": "Rules config, tells us which process will be called based on what rules.",
-                  "type": "string"
-                }
-              }
-            }
-          }
-        ],
-        "consumes": [
-          "application/json"
-        ]
-      },
-      "delete": {
-        "responses": {
-          "204": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "process-lockers"
-        ],
-        "operationId": "process-lockers_delete",
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          }
-        ]
-      }
-    },
-    "/api/v1/process-lockers/{uuid}/add/": {
-      "post": {
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "process-lockers"
-        ],
-        "operationId": "process-lockers_add",
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "data",
-            "schema": {
-              "type": "object",
-              "required": [
-                "processes"
-              ],
-              "properties": {
-                "processes": {
-                  "description": "",
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "rules": {
-                  "description": "Rules config, tells us which process will be called based on what rules.",
-                  "type": "string"
-                }
-              }
-            }
-          }
-        ],
-        "consumes": [
-          "application/json"
         ]
       }
     },
@@ -733,38 +232,38 @@
             "description": ""
           }
         },
+        "operationId": "processes_list",
         "tags": [
           "processes"
         ],
-        "operationId": "processes_list",
         "parameters": [
           {
             "required": false,
+            "type": "integer",
             "description": "Number of results to return per page.",
-            "in": "query",
             "name": "limit",
-            "type": "integer"
+            "in": "query"
           },
           {
             "required": false,
+            "type": "integer",
             "description": "The initial index from which to return the results.",
-            "in": "query",
             "name": "offset",
-            "type": "integer"
+            "in": "query"
           },
           {
             "required": false,
+            "type": "string",
             "description": "Which field to use when ordering the results.",
-            "in": "query",
             "name": "ordering",
-            "type": "string"
+            "in": "query"
           },
           {
             "required": false,
+            "type": "string",
             "description": "A search term.",
-            "in": "query",
             "name": "search",
-            "type": "string"
+            "in": "query"
           }
         ]
       },
@@ -774,20 +273,22 @@
             "description": ""
           }
         },
+        "operationId": "processes_create",
+        "consumes": [
+          "application/json"
+        ],
         "tags": [
           "processes"
         ],
-        "operationId": "processes_create",
         "parameters": [
           {
             "in": "body",
-            "name": "data",
             "schema": {
-              "type": "object",
               "required": [
                 "schema",
                 "name"
               ],
+              "type": "object",
               "properties": {
                 "description": {
                   "description": "",
@@ -797,35 +298,23 @@
                   "description": "",
                   "type": "string"
                 },
-                "schema": {
+                "uuid": {
                   "description": "",
                   "type": "string"
                 },
                 "name": {
                   "description": "",
                   "type": "string"
+                },
+                "schema": {
+                  "description": "",
+                  "type": "string"
                 }
               }
-            }
+            },
+            "name": "data"
           }
-        ],
-        "consumes": [
-          "application/json"
         ]
-      }
-    },
-    "/api/v1/processes/system/": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "processes"
-        ],
-        "operationId": "processes_system",
-        "parameters": []
       }
     },
     "/api/v1/processes/{uuid}/": {
@@ -835,17 +324,17 @@
             "description": ""
           }
         },
+        "operationId": "processes_read",
         "tags": [
           "processes"
         ],
-        "operationId": "processes_read",
         "parameters": [
           {
             "required": true,
+            "type": "string",
             "description": "",
-            "in": "path",
             "name": "uuid",
-            "type": "string"
+            "in": "path"
           }
         ]
       },
@@ -855,27 +344,29 @@
             "description": ""
           }
         },
+        "operationId": "processes_update",
+        "consumes": [
+          "application/json"
+        ],
         "tags": [
           "processes"
         ],
-        "operationId": "processes_update",
         "parameters": [
           {
             "required": true,
+            "type": "string",
             "description": "",
-            "in": "path",
             "name": "uuid",
-            "type": "string"
+            "in": "path"
           },
           {
             "in": "body",
-            "name": "data",
             "schema": {
-              "type": "object",
               "required": [
                 "schema",
                 "name"
               ],
+              "type": "object",
               "properties": {
                 "description": {
                   "description": "",
@@ -885,20 +376,22 @@
                   "description": "",
                   "type": "string"
                 },
-                "schema": {
+                "uuid": {
                   "description": "",
                   "type": "string"
                 },
                 "name": {
                   "description": "",
                   "type": "string"
+                },
+                "schema": {
+                  "description": "",
+                  "type": "string"
                 }
               }
-            }
+            },
+            "name": "data"
           }
-        ],
-        "consumes": [
-          "application/json"
         ]
       },
       "patch": {
@@ -907,21 +400,23 @@
             "description": ""
           }
         },
+        "operationId": "processes_partial_update",
+        "consumes": [
+          "application/json"
+        ],
         "tags": [
           "processes"
         ],
-        "operationId": "processes_partial_update",
         "parameters": [
           {
             "required": true,
+            "type": "string",
             "description": "",
-            "in": "path",
             "name": "uuid",
-            "type": "string"
+            "in": "path"
           },
           {
             "in": "body",
-            "name": "data",
             "schema": {
               "type": "object",
               "properties": {
@@ -933,20 +428,22 @@
                   "description": "",
                   "type": "string"
                 },
-                "schema": {
+                "uuid": {
                   "description": "",
                   "type": "string"
                 },
                 "name": {
                   "description": "",
                   "type": "string"
+                },
+                "schema": {
+                  "description": "",
+                  "type": "string"
                 }
               }
-            }
+            },
+            "name": "data"
           }
-        ],
-        "consumes": [
-          "application/json"
         ]
       },
       "delete": {
@@ -955,17 +452,17 @@
             "description": ""
           }
         },
+        "operationId": "processes_delete",
         "tags": [
           "processes"
         ],
-        "operationId": "processes_delete",
         "parameters": [
           {
             "required": true,
+            "type": "string",
             "description": "",
-            "in": "path",
             "name": "uuid",
-            "type": "string"
+            "in": "path"
           }
         ]
       }
@@ -977,17 +474,17 @@
             "description": ""
           }
         },
+        "operationId": "processes_client",
         "tags": [
           "processes"
         ],
-        "operationId": "processes_client",
         "parameters": [
           {
             "required": true,
+            "type": "string",
             "description": "",
-            "in": "path",
             "name": "uuid",
-            "type": "string"
+            "in": "path"
           }
         ]
       }
@@ -999,17 +496,17 @@
             "description": ""
           }
         },
+        "operationId": "processes_execute_read",
         "tags": [
           "processes"
         ],
-        "operationId": "processes_execute_read",
         "parameters": [
           {
             "required": true,
+            "type": "string",
             "description": "",
-            "in": "path",
             "name": "uuid",
-            "type": "string"
+            "in": "path"
           }
         ]
       },
@@ -1019,27 +516,29 @@
             "description": ""
           }
         },
+        "operationId": "processes_execute_create",
+        "consumes": [
+          "application/json"
+        ],
         "tags": [
           "processes"
         ],
-        "operationId": "processes_execute_create",
         "parameters": [
           {
             "required": true,
+            "type": "string",
             "description": "",
-            "in": "path",
             "name": "uuid",
-            "type": "string"
+            "in": "path"
           },
           {
             "in": "body",
-            "name": "data",
             "schema": {
-              "type": "object",
               "required": [
                 "schema",
                 "name"
               ],
+              "type": "object",
               "properties": {
                 "description": {
                   "description": "",
@@ -1049,20 +548,22 @@
                   "description": "",
                   "type": "string"
                 },
-                "schema": {
+                "uuid": {
                   "description": "",
                   "type": "string"
                 },
                 "name": {
                   "description": "",
                   "type": "string"
+                },
+                "schema": {
+                  "description": "",
+                  "type": "string"
                 }
               }
-            }
+            },
+            "name": "data"
           }
-        ],
-        "consumes": [
-          "application/json"
         ]
       }
     },
@@ -1073,17 +574,17 @@
             "description": ""
           }
         },
+        "operationId": "processes_schema",
         "tags": [
           "processes"
         ],
-        "operationId": "processes_schema",
         "parameters": [
           {
             "required": true,
+            "type": "string",
             "description": "",
-            "in": "path",
             "name": "uuid",
-            "type": "string"
+            "in": "path"
           }
         ]
       }
@@ -1095,87 +596,87 @@
             "description": ""
           }
         },
+        "operationId": "processes_server",
         "tags": [
           "processes"
         ],
-        "operationId": "processes_server",
         "parameters": [
           {
             "required": true,
+            "type": "string",
             "description": "",
-            "in": "path",
             "name": "uuid",
-            "type": "string"
+            "in": "path"
           }
         ]
       }
     },
     "/api/v1/revision/": {
       "get": {
-        "operationId": "revision_list",
-        "summary": "ViewSet for ``Revision`` model.",
-        "description": "ViewSet for ``Revision`` model.",
         "responses": {
           "200": {
             "description": ""
           }
         },
-        "tags": [
-          "revision"
-        ],
+        "description": "ViewSet for ``Revision`` model.",
         "parameters": [
           {
             "required": false,
+            "type": "integer",
             "description": "Number of results to return per page.",
-            "in": "query",
             "name": "limit",
-            "type": "integer"
+            "in": "query"
           },
           {
             "required": false,
+            "type": "integer",
             "description": "The initial index from which to return the results.",
-            "in": "query",
             "name": "offset",
-            "type": "integer"
+            "in": "query"
           },
           {
             "required": false,
+            "type": "string",
             "description": "Which field to use when ordering the results.",
-            "in": "query",
             "name": "ordering",
-            "type": "string"
+            "in": "query"
           },
           {
             "required": false,
+            "type": "string",
             "description": "A search term.",
-            "in": "query",
             "name": "search",
-            "type": "string"
+            "in": "query"
           }
+        ],
+        "operationId": "revision_list",
+        "summary": "ViewSet for ``Revision`` model.",
+        "tags": [
+          "revision"
         ]
       }
     },
     "/api/v1/revision/{id}/": {
       "get": {
-        "operationId": "revision_read",
-        "summary": "ViewSet for ``Revision`` model.",
-        "description": "ViewSet for ``Revision`` model.",
         "responses": {
           "200": {
             "description": ""
           }
         },
-        "tags": [
-          "revision"
-        ],
+        "description": "ViewSet for ``Revision`` model.",
         "parameters": [
           {
             "required": true,
+            "type": "integer",
             "description": "A unique integer value identifying this revision.",
-            "in": "path",
             "name": "id",
-            "type": "integer"
+            "in": "path"
           }
+        ],
+        "operationId": "revision_read",
+        "summary": "ViewSet for ``Revision`` model.",
+        "tags": [
+          "revision"
         ]
       }
     },
@@ -1186,24 +687,38 @@
             "description": ""
           }
         },
+        "operationId": "runtimes_list",
         "tags": [
           "runtimes"
         ],
-        "operationId": "runtimes_list",
         "parameters": [
           {
             "required": false,
+            "type": "integer",
             "description": "Number of results to return per page.",
-            "in": "query",
             "name": "limit",
-            "type": "integer"
+            "in": "query"
           },
           {
             "required": false,
+            "type": "integer",
             "description": "The initial index from which to return the results.",
-            "in": "query",
             "name": "offset",
-            "type": "integer"
+            "in": "query"
+          },
+          {
+            "required": false,
+            "type": "string",
+            "description": "Which field to use when ordering the results.",
+            "name": "ordering",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "type": "string",
+            "description": "A search term.",
+            "name": "search",
+            "in": "query"
           }
         ]
       },
@@ -1213,21 +728,27 @@
             "description": ""
           }
         },
+        "operationId": "runtimes_create",
+        "consumes": [
+          "application/json"
+        ],
         "tags": [
           "runtimes"
         ],
-        "operationId": "runtimes_create",
         "parameters": [
           {
             "in": "body",
-            "name": "data",
             "schema": {
-              "type": "object",
               "required": [
                 "name"
               ],
+              "type": "object",
               "properties": {
                 "description": {
+                  "description": "",
+                  "type": "string"
+                },
+                "uuid": {
                   "description": "",
                   "type": "string"
                 },
@@ -1235,20 +756,280 @@
                   "description": "",
                   "type": "string"
                 },
-                "name": {
+                "logo": {
                   "description": "",
                   "type": "string"
                 },
                 "widget_locker_token": {
                   "description": "Token of Widget Locker to which will be loaded when a runtime is called.",
                   "type": "string"
+                },
+                "name": {
+                  "description": "",
+                  "type": "string"
                 }
               }
-            }
+            },
+            "name": "data"
           }
+        ]
+      }
+    },
+    "/api/v1/runtimes/{app_uuid}/feedbacks/": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "operationId": "runtimes_feedbacks_list",
+        "tags": [
+          "runtimes"
         ],
+        "parameters": [
+          {
+            "required": true,
+            "type": "string",
+            "description": "",
+            "name": "app_uuid",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "type": "integer",
+            "description": "Number of results to return per page.",
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "type": "integer",
+            "description": "The initial index from which to return the results.",
+            "name": "offset",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "type": "string",
+            "description": "Which field to use when ordering the results.",
+            "name": "ordering",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "type": "string",
+            "description": "A search term.",
+            "name": "search",
+            "in": "query"
+          }
+        ]
+      },
+      "post": {
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "operationId": "runtimes_feedbacks_create",
         "consumes": [
           "application/json"
+        ],
+        "tags": [
+          "runtimes"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "type": "string",
+            "description": "",
+            "name": "app_uuid",
+            "in": "path"
+          },
+          {
+            "in": "body",
+            "schema": {
+              "required": [
+                "app"
+              ],
+              "type": "object",
+              "properties": {
+                "comment": {
+                  "description": "",
+                  "type": "string"
+                },
+                "app": {
+                  "description": "",
+                  "type": "string"
+                },
+                "rating": {
+                  "description": "",
+                  "type": "integer"
+                }
+              }
+            },
+            "name": "data"
+          }
+        ]
+      }
+    },
+    "/api/v1/runtimes/{app_uuid}/feedbacks/{id}/": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "operationId": "runtimes_feedbacks_read",
+        "tags": [
+          "runtimes"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "type": "string",
+            "description": "",
+            "name": "app_uuid",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "type": "integer",
+            "description": "A unique integer value identifying this feedback.",
+            "name": "id",
+            "in": "path"
+          }
+        ]
+      },
+      "put": {
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "operationId": "runtimes_feedbacks_update",
+        "consumes": [
+          "application/json"
+        ],
+        "tags": [
+          "runtimes"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "type": "string",
+            "description": "",
+            "name": "app_uuid",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "type": "integer",
+            "description": "A unique integer value identifying this feedback.",
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "in": "body",
+            "schema": {
+              "required": [
+                "app"
+              ],
+              "type": "object",
+              "properties": {
+                "comment": {
+                  "description": "",
+                  "type": "string"
+                },
+                "app": {
+                  "description": "",
+                  "type": "string"
+                },
+                "rating": {
+                  "description": "",
+                  "type": "integer"
+                }
+              }
+            },
+            "name": "data"
+          }
+        ]
+      },
+      "patch": {
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "operationId": "runtimes_feedbacks_partial_update",
+        "consumes": [
+          "application/json"
+        ],
+        "tags": [
+          "runtimes"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "type": "string",
+            "description": "",
+            "name": "app_uuid",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "type": "integer",
+            "description": "A unique integer value identifying this feedback.",
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "comment": {
+                  "description": "",
+                  "type": "string"
+                },
+                "app": {
+                  "description": "",
+                  "type": "string"
+                },
+                "rating": {
+                  "description": "",
+                  "type": "integer"
+                }
+              }
+            },
+            "name": "data"
+          }
+        ]
+      },
+      "delete": {
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "operationId": "runtimes_feedbacks_delete",
+        "tags": [
+          "runtimes"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "type": "string",
+            "description": "",
+            "name": "app_uuid",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "type": "integer",
+            "description": "A unique integer value identifying this feedback.",
+            "name": "id",
+            "in": "path"
+          }
         ]
       }
     },
@@ -1259,45 +1040,45 @@
             "description": ""
           }
         },
+        "operationId": "runtimes_sessions_list",
         "tags": [
           "runtimes"
         ],
-        "operationId": "runtimes_sessions_list",
         "parameters": [
           {
             "required": true,
+            "type": "string",
             "description": "",
-            "in": "path",
             "name": "runtime_uuid",
-            "type": "string"
+            "in": "path"
           },
           {
             "required": false,
+            "type": "integer",
             "description": "Number of results to return per page.",
-            "in": "query",
             "name": "limit",
-            "type": "integer"
+            "in": "query"
           },
           {
             "required": false,
+            "type": "integer",
             "description": "The initial index from which to return the results.",
-            "in": "query",
             "name": "offset",
-            "type": "integer"
+            "in": "query"
           },
           {
             "required": false,
+            "type": "string",
             "description": "Which field to use when ordering the results.",
-            "in": "query",
             "name": "ordering",
-            "type": "string"
+            "in": "query"
           },
           {
             "required": false,
+            "type": "string",
             "description": "A search term.",
-            "in": "query",
             "name": "search",
-            "type": "string"
+            "in": "query"
           }
         ]
       },
@@ -1307,41 +1088,41 @@
             "description": ""
           }
         },
+        "operationId": "runtimes_sessions_create",
+        "consumes": [
+          "application/json"
+        ],
         "tags": [
           "runtimes"
         ],
-        "operationId": "runtimes_sessions_create",
         "parameters": [
           {
             "required": true,
+            "type": "string",
             "description": "",
-            "in": "path",
             "name": "runtime_uuid",
-            "type": "string"
+            "in": "path"
           },
           {
             "in": "body",
-            "name": "data",
             "schema": {
-              "type": "object",
               "required": [
                 "runtime"
               ],
+              "type": "object",
               "properties": {
-                "runtime": {
+                "data": {
                   "description": "",
                   "type": "string"
                 },
-                "data": {
+                "runtime": {
                   "description": "",
                   "type": "string"
                 }
               }
-            }
+            },
+            "name": "data"
           }
-        ],
-        "consumes": [
-          "application/json"
         ]
       }
     },
@@ -1352,48 +1133,48 @@
             "description": ""
           }
         },
+        "operationId": "runtimes_sessions_update",
+        "consumes": [
+          "application/json"
+        ],
         "tags": [
           "runtimes"
         ],
-        "operationId": "runtimes_sessions_update",
         "parameters": [
           {
             "required": true,
-            "description": "",
-            "in": "path",
-            "name": "runtime_uuid",
-            "type": "string"
+            "type": "string",
+            "description": "A unique identifier for each Session along with Runtime. Non-editable, to be generated by system itself.",
+            "name": "uuid",
+            "in": "path"
           },
           {
             "required": true,
-            "description": "A unique identifier for each Session along with Runtime. Non-editable, to be generated by system itself.",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
+            "type": "string",
+            "description": "",
+            "name": "runtime_uuid",
+            "in": "path"
           },
           {
             "in": "body",
-            "name": "data",
             "schema": {
-              "type": "object",
               "required": [
                 "runtime"
               ],
+              "type": "object",
               "properties": {
-                "runtime": {
+                "data": {
                   "description": "",
                   "type": "string"
                 },
-                "data": {
+                "runtime": {
                   "description": "",
                   "type": "string"
                 }
               }
-            }
+            },
+            "name": "data"
           }
-        ],
-        "consumes": [
-          "application/json"
         ]
       },
       "patch": {
@@ -1402,45 +1183,45 @@
             "description": ""
           }
         },
+        "operationId": "runtimes_sessions_partial_update",
+        "consumes": [
+          "application/json"
+        ],
         "tags": [
           "runtimes"
         ],
-        "operationId": "runtimes_sessions_partial_update",
         "parameters": [
           {
             "required": true,
-            "description": "",
-            "in": "path",
-            "name": "runtime_uuid",
-            "type": "string"
+            "type": "string",
+            "description": "A unique identifier for each Session along with Runtime. Non-editable, to be generated by system itself.",
+            "name": "uuid",
+            "in": "path"
           },
           {
             "required": true,
-            "description": "A unique identifier for each Session along with Runtime. Non-editable, to be generated by system itself.",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
+            "type": "string",
+            "description": "",
+            "name": "runtime_uuid",
+            "in": "path"
           },
           {
             "in": "body",
-            "name": "data",
             "schema": {
               "type": "object",
               "properties": {
-                "runtime": {
+                "data": {
                   "description": "",
                   "type": "string"
                 },
-                "data": {
+                "runtime": {
                   "description": "",
                   "type": "string"
                 }
               }
-            }
+            },
+            "name": "data"
           }
-        ],
-        "consumes": [
-          "application/json"
         ]
       },
       "delete": {
@@ -1449,56 +1230,108 @@
             "description": ""
           }
         },
+        "operationId": "runtimes_sessions_delete",
         "tags": [
           "runtimes"
         ],
-        "operationId": "runtimes_sessions_delete",
         "parameters": [
           {
             "required": true,
-            "description": "",
-            "in": "path",
-            "name": "runtime_uuid",
-            "type": "string"
+            "type": "string",
+            "description": "A unique identifier for each Session along with Runtime. Non-editable, to be generated by system itself.",
+            "name": "uuid",
+            "in": "path"
           },
           {
             "required": true,
+            "type": "string",
+            "description": "",
+            "name": "runtime_uuid",
+            "in": "path"
+          }
+        ]
+      }
+    },
+    "/api/v1/runtimes/{runtime_uuid}/sessions/{uuid}/cancel/": {
+      "post": {
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "operationId": "runtimes_sessions_cancel",
+        "consumes": [
+          "application/json"
+        ],
+        "tags": [
+          "runtimes"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "type": "string",
             "description": "A unique identifier for each Session along with Runtime. Non-editable, to be generated by system itself.",
-            "in": "path",
             "name": "uuid",
-            "type": "string"
+            "in": "path"
+          },
+          {
+            "required": true,
+            "type": "string",
+            "description": "",
+            "name": "runtime_uuid",
+            "in": "path"
+          },
+          {
+            "in": "body",
+            "schema": {
+              "required": [
+                "runtime"
+              ],
+              "type": "object",
+              "properties": {
+                "data": {
+                  "description": "",
+                  "type": "string"
+                },
+                "runtime": {
+                  "description": "",
+                  "type": "string"
+                }
+              }
+            },
+            "name": "data"
           }
         ]
       }
     },
     "/api/v1/runtimes/{runtime_uuid}/sessions/{uuid}/history/": {
       "get": {
-        "operationId": "runtimes_sessions_history",
-        "summary": "gets the history of a particular instance",
-        "description": "gets the history of a particular instance\n\n:param request:\n:param pk:\n:return:",
         "responses": {
           "200": {
             "description": ""
           }
         },
-        "tags": [
-          "runtimes"
-        ],
+        "description": "gets the history of a particular instance\n\n:param request:\n:param pk:\n:return:",
         "parameters": [
           {
             "required": true,
-            "description": "",
-            "in": "path",
-            "name": "runtime_uuid",
-            "type": "string"
+            "type": "string",
+            "description": "A unique identifier for each Session along with Runtime. Non-editable, to be generated by system itself.",
+            "name": "uuid",
+            "in": "path"
           },
           {
             "required": true,
-            "description": "A unique identifier for each Session along with Runtime. Non-editable, to be generated by system itself.",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
+            "type": "string",
+            "description": "",
+            "name": "runtime_uuid",
+            "in": "path"
           }
+        ],
+        "operationId": "runtimes_sessions_history",
+        "summary": "gets the history of a particular instance",
+        "tags": [
+          "runtimes"
         ]
       }
     },
@@ -1509,48 +1342,100 @@
             "description": ""
           }
         },
+        "operationId": "runtimes_sessions_read",
+        "consumes": [
+          "application/json"
+        ],
         "tags": [
           "runtimes"
         ],
-        "operationId": "runtimes_sessions_read",
         "parameters": [
           {
             "required": true,
-            "description": "",
-            "in": "path",
-            "name": "runtime_uuid",
-            "type": "string"
+            "type": "string",
+            "description": "A unique identifier for each Session along with Runtime. Non-editable, to be generated by system itself.",
+            "name": "uuid",
+            "in": "path"
           },
           {
             "required": true,
-            "description": "A unique identifier for each Session along with Runtime. Non-editable, to be generated by system itself.",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
+            "type": "string",
+            "description": "",
+            "name": "runtime_uuid",
+            "in": "path"
           },
           {
             "in": "body",
-            "name": "data",
             "schema": {
-              "type": "object",
               "required": [
                 "runtime"
               ],
+              "type": "object",
               "properties": {
-                "runtime": {
+                "data": {
                   "description": "",
                   "type": "string"
                 },
-                "data": {
+                "runtime": {
                   "description": "",
                   "type": "string"
                 }
               }
-            }
+            },
+            "name": "data"
           }
-        ],
+        ]
+      }
+    },
+    "/api/v1/runtimes/{runtime_uuid}/sessions/{uuid}/success/": {
+      "post": {
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "operationId": "runtimes_sessions_success",
         "consumes": [
           "application/json"
+        ],
+        "tags": [
+          "runtimes"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "type": "string",
+            "description": "A unique identifier for each Session along with Runtime. Non-editable, to be generated by system itself.",
+            "name": "uuid",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "type": "string",
+            "description": "",
+            "name": "runtime_uuid",
+            "in": "path"
+          },
+          {
+            "in": "body",
+            "schema": {
+              "required": [
+                "runtime"
+              ],
+              "type": "object",
+              "properties": {
+                "data": {
+                  "description": "",
+                  "type": "string"
+                },
+                "runtime": {
+                  "description": "",
+                  "type": "string"
+                }
+              }
+            },
+            "name": "data"
+          }
         ]
       }
     },
@@ -1561,48 +1446,357 @@
             "description": ""
           }
         },
+        "operationId": "runtimes_sessions_write",
+        "consumes": [
+          "application/json"
+        ],
         "tags": [
           "runtimes"
         ],
-        "operationId": "runtimes_sessions_write",
         "parameters": [
           {
             "required": true,
-            "description": "",
-            "in": "path",
-            "name": "runtime_uuid",
-            "type": "string"
+            "type": "string",
+            "description": "A unique identifier for each Session along with Runtime. Non-editable, to be generated by system itself.",
+            "name": "uuid",
+            "in": "path"
           },
           {
             "required": true,
-            "description": "A unique identifier for each Session along with Runtime. Non-editable, to be generated by system itself.",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
+            "type": "string",
+            "description": "",
+            "name": "runtime_uuid",
+            "in": "path"
           },
           {
             "in": "body",
-            "name": "data",
             "schema": {
-              "type": "object",
               "required": [
                 "runtime"
               ],
+              "type": "object",
               "properties": {
-                "runtime": {
+                "data": {
                   "description": "",
                   "type": "string"
                 },
-                "data": {
+                "runtime": {
                   "description": "",
                   "type": "string"
                 }
               }
-            }
+            },
+            "name": "data"
           }
+        ]
+      }
+    },
+    "/api/v1/runtimes/{runtime_uuid}/widgets/": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "operationId": "runtimes_widgets_list",
+        "tags": [
+          "runtimes"
         ],
+        "parameters": [
+          {
+            "required": true,
+            "type": "string",
+            "description": "",
+            "name": "runtime_uuid",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "type": "integer",
+            "description": "Number of results to return per page.",
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "type": "integer",
+            "description": "The initial index from which to return the results.",
+            "name": "offset",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "type": "string",
+            "description": "Which field to use when ordering the results.",
+            "name": "ordering",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "type": "string",
+            "description": "A search term.",
+            "name": "search",
+            "in": "query"
+          }
+        ]
+      }
+    },
+    "/api/v1/runtimes/{runtime_uuid}/widgets/system/": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "operationId": "runtimes_widgets_system",
+        "tags": [
+          "runtimes"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "type": "string",
+            "description": "",
+            "name": "runtime_uuid",
+            "in": "path"
+          }
+        ]
+      }
+    },
+    "/api/v1/runtimes/{runtime_uuid}/widgets/{uuid}/": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "operationId": "runtimes_widgets_read",
+        "tags": [
+          "runtimes"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "type": "string",
+            "description": "",
+            "name": "uuid",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "type": "string",
+            "description": "",
+            "name": "runtime_uuid",
+            "in": "path"
+          }
+        ]
+      },
+      "put": {
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "operationId": "runtimes_widgets_update",
         "consumes": [
           "application/json"
+        ],
+        "tags": [
+          "runtimes"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "type": "string",
+            "description": "",
+            "name": "uuid",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "type": "string",
+            "description": "",
+            "name": "runtime_uuid",
+            "in": "path"
+          },
+          {
+            "in": "body",
+            "schema": {
+              "required": [
+                "name"
+              ],
+              "type": "object",
+              "properties": {
+                "data": {
+                  "description": "Widget Data, the data to be filled by admin, using admin widget designed by developer",
+                  "type": "string"
+                },
+                "description": {
+                  "description": "",
+                  "type": "string"
+                },
+                "process_locker_token": {
+                  "description": "Token of Process Locker to which will be loaded when a Widget is called.",
+                  "type": "string"
+                },
+                "uuid": {
+                  "description": "",
+                  "type": "string"
+                },
+                "template": {
+                  "description": "Widget Template, the list of components with their layout & styles",
+                  "type": "string"
+                },
+                "process_locker_uuid": {
+                  "description": "",
+                  "type": "string"
+                },
+                "index": {
+                  "description": "",
+                  "type": "integer"
+                },
+                "name": {
+                  "description": "",
+                  "type": "string"
+                }
+              }
+            },
+            "name": "data"
+          }
+        ]
+      },
+      "patch": {
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "operationId": "runtimes_widgets_partial_update",
+        "consumes": [
+          "application/json"
+        ],
+        "tags": [
+          "runtimes"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "type": "string",
+            "description": "",
+            "name": "uuid",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "type": "string",
+            "description": "",
+            "name": "runtime_uuid",
+            "in": "path"
+          },
+          {
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "description": "Widget Data, the data to be filled by admin, using admin widget designed by developer",
+                  "type": "string"
+                },
+                "description": {
+                  "description": "",
+                  "type": "string"
+                },
+                "process_locker_token": {
+                  "description": "Token of Process Locker to which will be loaded when a Widget is called.",
+                  "type": "string"
+                },
+                "uuid": {
+                  "description": "",
+                  "type": "string"
+                },
+                "template": {
+                  "description": "Widget Template, the list of components with their layout & styles",
+                  "type": "string"
+                },
+                "process_locker_uuid": {
+                  "description": "",
+                  "type": "string"
+                },
+                "index": {
+                  "description": "",
+                  "type": "integer"
+                },
+                "name": {
+                  "description": "",
+                  "type": "string"
+                }
+              }
+            },
+            "name": "data"
+          }
+        ]
+      },
+      "delete": {
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "operationId": "runtimes_widgets_delete",
+        "tags": [
+          "runtimes"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "type": "string",
+            "description": "",
+            "name": "uuid",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "type": "string",
+            "description": "",
+            "name": "runtime_uuid",
+            "in": "path"
+          }
+        ]
+      }
+    },
+    "/api/v1/runtimes/{uuid})/widgets/{widget_uuid})/{action})/": {
+      "post": {
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "operationId": "runtimes_widgets_create",
+        "tags": [
+          "runtimes"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "type": "string",
+            "description": "",
+            "name": "widget_uuid",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "type": "string",
+            "description": "",
+            "name": "uuid",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "type": "string",
+            "description": "",
+            "name": "action",
+            "in": "path"
+          }
         ]
       }
     },
@@ -1613,17 +1807,17 @@
             "description": ""
           }
         },
+        "operationId": "runtimes_read",
         "tags": [
           "runtimes"
         ],
-        "operationId": "runtimes_read",
         "parameters": [
           {
             "required": true,
+            "type": "string",
             "description": "",
-            "in": "path",
             "name": "uuid",
-            "type": "string"
+            "in": "path"
           }
         ]
       },
@@ -1633,28 +1827,34 @@
             "description": ""
           }
         },
+        "operationId": "runtimes_update",
+        "consumes": [
+          "application/json"
+        ],
         "tags": [
           "runtimes"
         ],
-        "operationId": "runtimes_update",
         "parameters": [
           {
             "required": true,
+            "type": "string",
             "description": "",
-            "in": "path",
             "name": "uuid",
-            "type": "string"
+            "in": "path"
           },
           {
             "in": "body",
-            "name": "data",
             "schema": {
-              "type": "object",
               "required": [
                 "name"
               ],
+              "type": "object",
               "properties": {
                 "description": {
+                  "description": "",
+                  "type": "string"
+                },
+                "uuid": {
                   "description": "",
                   "type": "string"
                 },
@@ -1662,20 +1862,22 @@
                   "description": "",
                   "type": "string"
                 },
-                "name": {
+                "logo": {
                   "description": "",
                   "type": "string"
                 },
                 "widget_locker_token": {
                   "description": "Token of Widget Locker to which will be loaded when a runtime is called.",
                   "type": "string"
+                },
+                "name": {
+                  "description": "",
+                  "type": "string"
                 }
               }
-            }
+            },
+            "name": "data"
           }
-        ],
-        "consumes": [
-          "application/json"
         ]
       },
       "patch": {
@@ -1684,21 +1886,23 @@
             "description": ""
           }
         },
+        "operationId": "runtimes_partial_update",
+        "consumes": [
+          "application/json"
+        ],
         "tags": [
           "runtimes"
         ],
-        "operationId": "runtimes_partial_update",
         "parameters": [
           {
             "required": true,
+            "type": "string",
             "description": "",
-            "in": "path",
             "name": "uuid",
-            "type": "string"
+            "in": "path"
           },
           {
             "in": "body",
-            "name": "data",
             "schema": {
               "type": "object",
               "properties": {
@@ -1706,24 +1910,30 @@
                   "description": "",
                   "type": "string"
                 },
+                "uuid": {
+                  "description": "",
+                  "type": "string"
+                },
                 "widget_locker_uuid": {
                   "description": "",
                   "type": "string"
                 },
-                "name": {
+                "logo": {
                   "description": "",
                   "type": "string"
                 },
                 "widget_locker_token": {
                   "description": "Token of Widget Locker to which will be loaded when a runtime is called.",
                   "type": "string"
+                },
+                "name": {
+                  "description": "",
+                  "type": "string"
                 }
               }
-            }
+            },
+            "name": "data"
           }
-        ],
-        "consumes": [
-          "application/json"
         ]
       },
       "delete": {
@@ -1732,223 +1942,17 @@
             "description": ""
           }
         },
-        "tags": [
-          "runtimes"
-        ],
         "operationId": "runtimes_delete",
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          }
-        ]
-      }
-    },
-    "/api/v1/runtimes/{uuid}/widgets/": {
-      "get": {
-        "operationId": "runtimes_widgets_list",
-        "summary": "A Proxy ViewSet to fetch data from the Widgets Service",
-        "description": "A Proxy ViewSet to fetch data from the Widgets Service\nwhile maintaining a session.",
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
         "tags": [
           "runtimes"
         ],
         "parameters": [
           {
             "required": true,
+            "type": "string",
             "description": "",
-            "in": "path",
             "name": "uuid",
-            "type": "string"
-          }
-        ]
-      }
-    },
-    "/api/v1/runtimes/{uuid}/widgets/{widget_uuid}/{action}/": {
-      "get": {
-        "operationId": "runtimes_widgets_read",
-        "summary": "A Proxy ViewSet to fetch data from the Widgets Service",
-        "description": "A Proxy ViewSet to fetch data from the Widgets Service\nwhile maintaining a session.",
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "runtimes"
-        ],
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "action",
-            "type": "string"
-          },
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "widget_uuid",
-            "type": "string"
-          },
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          }
-        ]
-      },
-      "post": {
-        "operationId": "runtimes_widgets_create",
-        "summary": "A Proxy ViewSet to fetch data from the Widgets Service",
-        "description": "A Proxy ViewSet to fetch data from the Widgets Service\nwhile maintaining a session.",
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "runtimes"
-        ],
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "action",
-            "type": "string"
-          },
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "widget_uuid",
-            "type": "string"
-          },
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          }
-        ]
-      },
-      "put": {
-        "operationId": "runtimes_widgets_update",
-        "summary": "A Proxy ViewSet to fetch data from the Widgets Service",
-        "description": "A Proxy ViewSet to fetch data from the Widgets Service\nwhile maintaining a session.",
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "runtimes"
-        ],
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "action",
-            "type": "string"
-          },
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "widget_uuid",
-            "type": "string"
-          },
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          }
-        ]
-      },
-      "patch": {
-        "operationId": "runtimes_widgets_partial_update",
-        "summary": "A Proxy ViewSet to fetch data from the Widgets Service",
-        "description": "A Proxy ViewSet to fetch data from the Widgets Service\nwhile maintaining a session.",
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "runtimes"
-        ],
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "action",
-            "type": "string"
-          },
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "widget_uuid",
-            "type": "string"
-          },
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          }
-        ]
-      },
-      "delete": {
-        "operationId": "runtimes_widgets_delete",
-        "summary": "A Proxy ViewSet to fetch data from the Widgets Service",
-        "description": "A Proxy ViewSet to fetch data from the Widgets Service\nwhile maintaining a session.",
-        "responses": {
-          "204": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "runtimes"
-        ],
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "action",
-            "type": "string"
-          },
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "widget_uuid",
-            "type": "string"
-          },
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
+            "in": "path"
           }
         ]
       }
@@ -1960,38 +1964,38 @@
             "description": ""
           }
         },
+        "operationId": "sessions_list",
         "tags": [
           "sessions"
         ],
-        "operationId": "sessions_list",
         "parameters": [
           {
             "required": false,
+            "type": "integer",
             "description": "Number of results to return per page.",
-            "in": "query",
             "name": "limit",
-            "type": "integer"
+            "in": "query"
           },
           {
             "required": false,
+            "type": "integer",
             "description": "The initial index from which to return the results.",
-            "in": "query",
             "name": "offset",
-            "type": "integer"
+            "in": "query"
           },
           {
             "required": false,
+            "type": "string",
             "description": "Which field to use when ordering the results.",
-            "in": "query",
             "name": "ordering",
-            "type": "string"
+            "in": "query"
           },
           {
             "required": false,
+            "type": "string",
             "description": "A search term.",
-            "in": "query",
             "name": "search",
-            "type": "string"
+            "in": "query"
           }
         ]
       },
@@ -2001,34 +2005,34 @@
             "description": ""
           }
         },
+        "operationId": "sessions_create",
+        "consumes": [
+          "application/json"
+        ],
         "tags": [
           "sessions"
         ],
-        "operationId": "sessions_create",
         "parameters": [
           {
             "in": "body",
-            "name": "data",
             "schema": {
-              "type": "object",
               "required": [
                 "runtime"
               ],
+              "type": "object",
               "properties": {
-                "runtime": {
+                "data": {
                   "description": "",
                   "type": "string"
                 },
-                "data": {
+                "runtime": {
                   "description": "",
                   "type": "string"
                 }
               }
-            }
+            },
+            "name": "data"
           }
-        ],
-        "consumes": [
-          "application/json"
         ]
       }
     },
@@ -2039,41 +2043,41 @@
             "description": ""
           }
         },
+        "operationId": "sessions_update",
+        "consumes": [
+          "application/json"
+        ],
         "tags": [
           "sessions"
         ],
-        "operationId": "sessions_update",
         "parameters": [
           {
             "required": true,
+            "type": "string",
             "description": "A unique identifier for each Session along with Runtime. Non-editable, to be generated by system itself.",
-            "in": "path",
             "name": "uuid",
-            "type": "string"
+            "in": "path"
           },
           {
             "in": "body",
-            "name": "data",
             "schema": {
-              "type": "object",
               "required": [
                 "runtime"
               ],
+              "type": "object",
               "properties": {
-                "runtime": {
+                "data": {
                   "description": "",
                   "type": "string"
                 },
-                "data": {
+                "runtime": {
                   "description": "",
                   "type": "string"
                 }
               }
-            }
+            },
+            "name": "data"
           }
-        ],
-        "consumes": [
-          "application/json"
         ]
       },
       "patch": {
@@ -2082,38 +2086,38 @@
             "description": ""
           }
         },
+        "operationId": "sessions_partial_update",
+        "consumes": [
+          "application/json"
+        ],
         "tags": [
           "sessions"
         ],
-        "operationId": "sessions_partial_update",
         "parameters": [
           {
             "required": true,
+            "type": "string",
             "description": "A unique identifier for each Session along with Runtime. Non-editable, to be generated by system itself.",
-            "in": "path",
             "name": "uuid",
-            "type": "string"
+            "in": "path"
           },
           {
             "in": "body",
-            "name": "data",
             "schema": {
               "type": "object",
               "properties": {
-                "runtime": {
+                "data": {
                   "description": "",
                   "type": "string"
                 },
-                "data": {
+                "runtime": {
                   "description": "",
                   "type": "string"
                 }
               }
-            }
+            },
+            "name": "data"
           }
-        ],
-        "consumes": [
-          "application/json"
         ]
       },
       "delete": {
@@ -2122,92 +2126,87 @@
             "description": ""
           }
         },
+        "operationId": "sessions_delete",
         "tags": [
           "sessions"
         ],
-        "operationId": "sessions_delete",
         "parameters": [
           {
             "required": true,
+            "type": "string",
             "description": "A unique identifier for each Session along with Runtime. Non-editable, to be generated by system itself.",
-            "in": "path",
             "name": "uuid",
-            "type": "string"
+            "in": "path"
           }
         ]
       }
     },
     "/api/v1/sessions/{uuid}/cancel/": {
       "post": {
-        "parameters": [
-          {
-            "required": true,
-            "type": "string",
-            "in": "path",
-            "description": "A unique identifier for each Session along with Runtime. Non-editable, to be generated by system itself.",
-            "name": "uuid"
+        "responses": {
+          "201": {
+            "description": ""
           }
-        ],
+        },
         "operationId": "sessions_cancel",
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
+        "consumes": [
+          "application/json"
+        ],
         "tags": [
           "sessions"
         ],
-        "consumes": [
-          "application/json"
-        ]
-      }
-    },
-    "/api/v1/sessions/{uuid}/success/": {
-      "post": {
         "parameters": [
           {
             "required": true,
             "type": "string",
-            "in": "path",
             "description": "A unique identifier for each Session along with Runtime. Non-editable, to be generated by system itself.",
-            "name": "uuid"
+            "name": "uuid",
+            "in": "path"
+          },
+          {
+            "in": "body",
+            "schema": {
+              "required": [
+                "runtime"
+              ],
+              "type": "object",
+              "properties": {
+                "data": {
+                  "description": "",
+                  "type": "string"
+                },
+                "runtime": {
+                  "description": "",
+                  "type": "string"
+                }
+              }
+            },
+            "name": "data"
           }
-        ],
-        "operationId": "sessions_success",
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "sessions"
-        ],
-        "consumes": [
-          "application/json"
         ]
       }
     },
     "/api/v1/sessions/{uuid}/history/": {
       "get": {
-        "operationId": "sessions_history",
-        "summary": "gets the history of a particular instance",
-        "description": "gets the history of a particular instance\n\n:param request:\n:param pk:\n:return:",
         "responses": {
           "200": {
             "description": ""
           }
         },
-        "tags": [
-          "sessions"
-        ],
+        "description": "gets the history of a particular instance\n\n:param request:\n:param pk:\n:return:",
         "parameters": [
           {
             "required": true,
+            "type": "string",
             "description": "A unique identifier for each Session along with Runtime. Non-editable, to be generated by system itself.",
-            "in": "path",
             "name": "uuid",
-            "type": "string"
+            "in": "path"
           }
+        ],
+        "operationId": "sessions_history",
+        "summary": "gets the history of a particular instance",
+        "tags": [
+          "sessions"
         ]
       }
     },
@@ -2218,37 +2217,86 @@
             "description": ""
           }
         },
+        "operationId": "sessions_read",
+        "consumes": [
+          "application/json"
+        ],
         "tags": [
           "sessions"
         ],
-        "operationId": "sessions_read",
         "parameters": [
           {
             "required": true,
+            "type": "string",
             "description": "A unique identifier for each Session along with Runtime. Non-editable, to be generated by system itself.",
-            "in": "path",
             "name": "uuid",
-            "type": "string"
+            "in": "path"
           },
           {
             "in": "body",
-            "name": "data",
             "schema": {
-              "type": "object",
               "required": [
-                "key"
+                "runtime"
               ],
+              "type": "object",
               "properties": {
-                "key": {
+                "data": {
+                  "description": "",
+                  "type": "string"
+                },
+                "runtime": {
                   "description": "",
                   "type": "string"
                 }
               }
-            }
+            },
+            "name": "data"
           }
-        ],
+        ]
+      }
+    },
+    "/api/v1/sessions/{uuid}/success/": {
+      "post": {
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "operationId": "sessions_success",
         "consumes": [
           "application/json"
+        ],
+        "tags": [
+          "sessions"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "type": "string",
+            "description": "A unique identifier for each Session along with Runtime. Non-editable, to be generated by system itself.",
+            "name": "uuid",
+            "in": "path"
+          },
+          {
+            "in": "body",
+            "schema": {
+              "required": [
+                "runtime"
+              ],
+              "type": "object",
+              "properties": {
+                "data": {
+                  "description": "",
+                  "type": "string"
+                },
+                "runtime": {
+                  "description": "",
+                  "type": "string"
+                }
+              }
+            },
+            "name": "data"
+          }
         ]
       }
     },
@@ -2259,690 +2307,134 @@
             "description": ""
           }
         },
+        "operationId": "sessions_write",
+        "consumes": [
+          "application/json"
+        ],
         "tags": [
           "sessions"
         ],
-        "operationId": "sessions_write",
         "parameters": [
           {
             "required": true,
+            "type": "string",
             "description": "A unique identifier for each Session along with Runtime. Non-editable, to be generated by system itself.",
-            "in": "path",
             "name": "uuid",
-            "type": "string"
+            "in": "path"
           },
           {
             "in": "body",
-            "name": "data",
             "schema": {
-              "type": "object",
               "required": [
-                "key",
-                "value"
+                "runtime"
               ],
+              "type": "object",
               "properties": {
-                "key": {
+                "data": {
                   "description": "",
                   "type": "string"
                 },
-                "value": {
+                "runtime": {
                   "description": "",
                   "type": "string"
                 }
               }
-            }
+            },
+            "name": "data"
           }
-        ],
-        "consumes": [
-          "application/json"
         ]
       }
     },
     "/api/v1/version/": {
       "get": {
-        "operationId": "version_list",
-        "summary": "List all the versions of all the objects in the database.",
-        "description": "List all the versions of all the objects in the database.",
         "responses": {
           "200": {
             "description": ""
           }
         },
-        "tags": [
-          "version"
-        ],
+        "description": "List all the versions of all the objects in the database.",
         "parameters": [
           {
             "required": false,
+            "type": "integer",
             "description": "Number of results to return per page.",
-            "in": "query",
             "name": "limit",
-            "type": "integer"
+            "in": "query"
           },
           {
             "required": false,
+            "type": "integer",
             "description": "The initial index from which to return the results.",
-            "in": "query",
             "name": "offset",
-            "type": "integer"
+            "in": "query"
           },
           {
             "required": false,
+            "type": "string",
             "description": "Which field to use when ordering the results.",
-            "in": "query",
             "name": "ordering",
-            "type": "string"
+            "in": "query"
           },
           {
             "required": false,
+            "type": "string",
             "description": "A search term.",
-            "in": "query",
             "name": "search",
-            "type": "string"
+            "in": "query"
           }
+        ],
+        "operationId": "version_list",
+        "summary": "List all the versions of all the objects in the database.",
+        "tags": [
+          "version"
         ]
       }
     },
     "/api/v1/version/{id}/": {
       "get": {
-        "operationId": "version_read",
-        "summary": "List all the versions of all the objects in the database.",
-        "description": "List all the versions of all the objects in the database.",
         "responses": {
           "200": {
             "description": ""
           }
         },
-        "tags": [
-          "version"
-        ],
+        "description": "List all the versions of all the objects in the database.",
         "parameters": [
           {
             "required": true,
+            "type": "integer",
             "description": "A unique integer value identifying this version.",
-            "in": "path",
             "name": "id",
-            "type": "integer"
+            "in": "path"
           }
+        ],
+        "operationId": "version_read",
+        "summary": "List all the versions of all the objects in the database.",
+        "tags": [
+          "version"
         ]
       }
     },
     "/api/v1/version/{id}/revert/": {
       "get": {
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "description": "revert to the version specified\n\n:param request:\n:param pk:\n:return:",
+        "parameters": [
+          {
+            "required": true,
+            "type": "integer",
+            "description": "A unique integer value identifying this version.",
+            "name": "id",
+            "in": "path"
+          }
+        ],
         "operationId": "version_revert",
         "summary": "revert to the version specified",
-        "description": "revert to the version specified\n\n:param request:\n:param pk:\n:return:",
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
         "tags": [
           "version"
-        ],
-        "parameters": [
-          {
-            "required": true,
-            "description": "A unique integer value identifying this version.",
-            "in": "path",
-            "name": "id",
-            "type": "integer"
-          }
-        ]
-      }
-    },
-    "/api/v1/widget-lockers/": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "widget-lockers"
-        ],
-        "operationId": "widget-lockers_list",
-        "parameters": [
-          {
-            "required": false,
-            "description": "Number of results to return per page.",
-            "in": "query",
-            "name": "limit",
-            "type": "integer"
-          },
-          {
-            "required": false,
-            "description": "The initial index from which to return the results.",
-            "in": "query",
-            "name": "offset",
-            "type": "integer"
-          },
-          {
-            "required": false,
-            "description": "Which field to use when ordering the results.",
-            "in": "query",
-            "name": "ordering",
-            "type": "string"
-          },
-          {
-            "required": false,
-            "description": "A search term.",
-            "in": "query",
-            "name": "search",
-            "type": "string"
-          }
-        ]
-      },
-      "post": {
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "widget-lockers"
-        ],
-        "operationId": "widget-lockers_create",
-        "parameters": [
-          {
-            "in": "body",
-            "name": "data",
-            "schema": {
-              "type": "object",
-              "required": [
-                "widgets"
-              ],
-              "properties": {
-                "rules": {
-                  "description": "Rules config, tells us which widget will be called based on what rules.",
-                  "type": "string"
-                },
-                "widgets": {
-                  "description": "",
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        ],
-        "consumes": [
-          "application/json"
-        ]
-      }
-    },
-    "/api/v1/widget-lockers/{uuid}/": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "widget-lockers"
-        ],
-        "operationId": "widget-lockers_read",
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          }
-        ]
-      },
-      "put": {
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "widget-lockers"
-        ],
-        "operationId": "widget-lockers_update",
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "data",
-            "schema": {
-              "type": "object",
-              "required": [
-                "widgets"
-              ],
-              "properties": {
-                "rules": {
-                  "description": "Rules config, tells us which widget will be called based on what rules.",
-                  "type": "string"
-                },
-                "widgets": {
-                  "description": "",
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        ],
-        "consumes": [
-          "application/json"
-        ]
-      },
-      "patch": {
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "widget-lockers"
-        ],
-        "operationId": "widget-lockers_partial_update",
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "data",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "rules": {
-                  "description": "Rules config, tells us which widget will be called based on what rules.",
-                  "type": "string"
-                },
-                "widgets": {
-                  "description": "",
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        ],
-        "consumes": [
-          "application/json"
-        ]
-      },
-      "delete": {
-        "responses": {
-          "204": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "widget-lockers"
-        ],
-        "operationId": "widget-lockers_delete",
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          }
-        ]
-      }
-    },
-    "/api/v1/widget-lockers/{uuid}/add/": {
-      "post": {
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "widget-lockers"
-        ],
-        "operationId": "widget-lockers_add",
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "data",
-            "schema": {
-              "type": "object",
-              "required": [
-                "widgets"
-              ],
-              "properties": {
-                "rules": {
-                  "description": "Rules config, tells us which widget will be called based on what rules.",
-                  "type": "string"
-                },
-                "widgets": {
-                  "description": "",
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        ],
-        "consumes": [
-          "application/json"
-        ]
-      }
-    },
-    "/api/v1/widget-lockers/{widget_locker_uuid}/widgets/": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "widget-lockers"
-        ],
-        "operationId": "widget-lockers_widgets_list",
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "widget_locker_uuid",
-            "type": "string"
-          },
-          {
-            "required": false,
-            "description": "Number of results to return per page.",
-            "in": "query",
-            "name": "limit",
-            "type": "integer"
-          },
-          {
-            "required": false,
-            "description": "The initial index from which to return the results.",
-            "in": "query",
-            "name": "offset",
-            "type": "integer"
-          },
-          {
-            "required": false,
-            "description": "Which field to use when ordering the results.",
-            "in": "query",
-            "name": "ordering",
-            "type": "string"
-          },
-          {
-            "required": false,
-            "description": "A search term.",
-            "in": "query",
-            "name": "search",
-            "type": "string"
-          }
-        ]
-      },
-      "post": {
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "widget-lockers"
-        ],
-        "operationId": "widget-lockers_widgets_create",
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "widget_locker_uuid",
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "data",
-            "schema": {
-              "type": "object",
-              "required": [
-                "name"
-              ],
-              "properties": {
-                "name": {
-                  "description": "",
-                  "type": "string"
-                },
-                "data": {
-                  "description": "Widget Data, the data to be filled by admin, using admin widget designed by developer",
-                  "type": "string"
-                },
-                "template": {
-                  "description": "Widget Template, the list of components with their layout & styles",
-                  "type": "string"
-                },
-                "description": {
-                  "description": "",
-                  "type": "string"
-                },
-                "process_locker_token": {
-                  "description": "Token of Process Locker to which will be loaded when a Widget is called.",
-                  "type": "string"
-                },
-                "process_locker_uuid": {
-                  "description": "",
-                  "type": "string"
-                }
-              }
-            }
-          }
-        ],
-        "consumes": [
-          "application/json"
-        ]
-      }
-    },
-    "/api/v1/widget-lockers/{widget_locker_uuid}/widgets/{uuid}/": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "widget-lockers"
-        ],
-        "operationId": "widget-lockers_widgets_read",
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "widget_locker_uuid",
-            "type": "string"
-          },
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          }
-        ]
-      },
-      "put": {
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "widget-lockers"
-        ],
-        "operationId": "widget-lockers_widgets_update",
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "widget_locker_uuid",
-            "type": "string"
-          },
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "data",
-            "schema": {
-              "type": "object",
-              "required": [
-                "name"
-              ],
-              "properties": {
-                "name": {
-                  "description": "",
-                  "type": "string"
-                },
-                "data": {
-                  "description": "Widget Data, the data to be filled by admin, using admin widget designed by developer",
-                  "type": "string"
-                },
-                "template": {
-                  "description": "Widget Template, the list of components with their layout & styles",
-                  "type": "string"
-                },
-                "description": {
-                  "description": "",
-                  "type": "string"
-                },
-                "process_locker_token": {
-                  "description": "Token of Process Locker to which will be loaded when a Widget is called.",
-                  "type": "string"
-                },
-                "process_locker_uuid": {
-                  "description": "",
-                  "type": "string"
-                }
-              }
-            }
-          }
-        ],
-        "consumes": [
-          "application/json"
-        ]
-      },
-      "patch": {
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "widget-lockers"
-        ],
-        "operationId": "widget-lockers_widgets_partial_update",
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "widget_locker_uuid",
-            "type": "string"
-          },
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "data",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "description": "",
-                  "type": "string"
-                },
-                "data": {
-                  "description": "Widget Data, the data to be filled by admin, using admin widget designed by developer",
-                  "type": "string"
-                },
-                "template": {
-                  "description": "Widget Template, the list of components with their layout & styles",
-                  "type": "string"
-                },
-                "description": {
-                  "description": "",
-                  "type": "string"
-                },
-                "process_locker_token": {
-                  "description": "Token of Process Locker to which will be loaded when a Widget is called.",
-                  "type": "string"
-                },
-                "process_locker_uuid": {
-                  "description": "",
-                  "type": "string"
-                }
-              }
-            }
-          }
-        ],
-        "consumes": [
-          "application/json"
-        ]
-      },
-      "delete": {
-        "responses": {
-          "204": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "widget-lockers"
-        ],
-        "operationId": "widget-lockers_widgets_delete",
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "widget_locker_uuid",
-            "type": "string"
-          },
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          }
         ]
       }
     },
@@ -2953,40 +2445,54 @@
             "description": ""
           }
         },
+        "operationId": "widgets_list",
         "tags": [
           "widgets"
         ],
-        "operationId": "widgets_list",
         "parameters": [
           {
             "required": false,
+            "type": "integer",
             "description": "Number of results to return per page.",
-            "in": "query",
             "name": "limit",
-            "type": "integer"
+            "in": "query"
           },
           {
             "required": false,
+            "type": "integer",
             "description": "The initial index from which to return the results.",
-            "in": "query",
             "name": "offset",
-            "type": "integer"
+            "in": "query"
           },
           {
             "required": false,
+            "type": "string",
             "description": "Which field to use when ordering the results.",
-            "in": "query",
             "name": "ordering",
-            "type": "string"
+            "in": "query"
           },
           {
             "required": false,
+            "type": "string",
             "description": "A search term.",
-            "in": "query",
             "name": "search",
-            "type": "string"
+            "in": "query"
           }
         ]
+      }
+    },
+    "/api/v1/widgets/system/": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "operationId": "widgets_system",
+        "tags": [
+          "widgets"
+        ],
+        "parameters": []
       }
     },
     "/api/v1/widgets/{uuid}/": {
@@ -2996,17 +2502,17 @@
             "description": ""
           }
         },
+        "operationId": "widgets_read",
         "tags": [
           "widgets"
         ],
-        "operationId": "widgets_read",
         "parameters": [
           {
             "required": true,
+            "type": "string",
             "description": "",
-            "in": "path",
             "name": "uuid",
-            "type": "string"
+            "in": "path"
           }
         ]
       },
@@ -3016,37 +2522,31 @@
             "description": ""
           }
         },
+        "operationId": "widgets_update",
+        "consumes": [
+          "application/json"
+        ],
         "tags": [
           "widgets"
         ],
-        "operationId": "widgets_update",
         "parameters": [
           {
             "required": true,
+            "type": "string",
             "description": "",
-            "in": "path",
             "name": "uuid",
-            "type": "string"
+            "in": "path"
           },
           {
             "in": "body",
-            "name": "data",
             "schema": {
-              "type": "object",
               "required": [
                 "name"
               ],
+              "type": "object",
               "properties": {
-                "name": {
-                  "description": "",
-                  "type": "string"
-                },
                 "data": {
                   "description": "Widget Data, the data to be filled by admin, using admin widget designed by developer",
-                  "type": "string"
-                },
-                "template": {
-                  "description": "Widget Template, the list of components with their layout & styles",
                   "type": "string"
                 },
                 "description": {
@@ -3057,16 +2557,30 @@
                   "description": "Token of Process Locker to which will be loaded when a Widget is called.",
                   "type": "string"
                 },
+                "uuid": {
+                  "description": "",
+                  "type": "string"
+                },
+                "template": {
+                  "description": "Widget Template, the list of components with their layout & styles",
+                  "type": "string"
+                },
                 "process_locker_uuid": {
+                  "description": "",
+                  "type": "string"
+                },
+                "index": {
+                  "description": "",
+                  "type": "integer"
+                },
+                "name": {
                   "description": "",
                   "type": "string"
                 }
               }
-            }
+            },
+            "name": "data"
           }
-        ],
-        "consumes": [
-          "application/json"
         ]
       },
       "patch": {
@@ -3075,34 +2589,28 @@
             "description": ""
           }
         },
-        "tags": [
-          "widgets"
-        ],
         "operationId": "widgets_partial_update",
+        "consumes": [
+          "application/json"
+        ],
+        "tags": [
+          "widgets"
+        ],
         "parameters": [
           {
             "required": true,
+            "type": "string",
             "description": "",
-            "in": "path",
             "name": "uuid",
-            "type": "string"
+            "in": "path"
           },
           {
             "in": "body",
-            "name": "data",
             "schema": {
               "type": "object",
               "properties": {
-                "name": {
-                  "description": "",
-                  "type": "string"
-                },
                 "data": {
                   "description": "Widget Data, the data to be filled by admin, using admin widget designed by developer",
-                  "type": "string"
-                },
-                "template": {
-                  "description": "Widget Template, the list of components with their layout & styles",
                   "type": "string"
                 },
                 "description": {
@@ -3113,16 +2621,30 @@
                   "description": "Token of Process Locker to which will be loaded when a Widget is called.",
                   "type": "string"
                 },
+                "uuid": {
+                  "description": "",
+                  "type": "string"
+                },
+                "template": {
+                  "description": "Widget Template, the list of components with their layout & styles",
+                  "type": "string"
+                },
                 "process_locker_uuid": {
                   "description": "",
                   "type": "string"
+                },
+                "index": {
+                  "description": "",
+                  "type": "integer"
+                },
+                "name": {
+                  "description": "",
+                  "type": "string"
                 }
               }
-            }
+            },
+            "name": "data"
           }
-        ],
-        "consumes": [
-          "application/json"
         ]
       },
       "delete": {
@@ -3131,524 +2653,48 @@
             "description": ""
           }
         },
-        "tags": [
-          "widgets"
-        ],
         "operationId": "widgets_delete",
-        "parameters": [
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
-            "name": "uuid",
-            "type": "string"
-          }
-        ]
-      }
-    },
-    "/api/v1/widgets/{uuid}/{process_uuid}/": {
-      "post": {
-        "operationId": "widgets_create",
-        "summary": "A Proxy ViewSet to fetch data from the Processes Service",
-        "description": "A Proxy ViewSet to fetch data from the Processes Service\nwhile maintaining a session.",
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
         "tags": [
           "widgets"
         ],
         "parameters": [
           {
             "required": true,
+            "type": "string",
             "description": "",
-            "in": "path",
-            "name": "process_uuid",
-            "type": "string"
-          },
-          {
-            "required": true,
-            "description": "",
-            "in": "path",
             "name": "uuid",
-            "type": "string"
+            "in": "path"
           }
         ]
       }
     },
-    "/api/v1/feedbacks/": {
-      "get": {
-        "tags": [
-          "feedbacks"
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "parameters": [
-          {
-            "description": "Number of results to return per page.",
-            "in": "query",
-            "type": "integer",
-            "required": false,
-            "name": "limit"
-          },
-          {
-            "description": "The initial index from which to return the results.",
-            "in": "query",
-            "type": "integer",
-            "required": false,
-            "name": "offset"
-          },
-          {
-            "description": "Which field to use when ordering the results.",
-            "in": "query",
-            "type": "string",
-            "required": false,
-            "name": "ordering"
-          },
-          {
-            "description": "A search term.",
-            "in": "query",
-            "type": "string",
-            "required": false,
-            "name": "search"
-          }
-        ],
-        "operationId": "feedbacks_list"
-      },
+    "/api/v1/widgets/{widget_uuid})/{action})/": {
       "post": {
-        "tags": [
-          "feedbacks"
-        ],
-        "consumes": [
-          "application/json"
-        ],
         "responses": {
           "201": {
             "description": ""
           }
         },
-        "parameters": [
-          {
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "comment": {
-                  "description": "",
-                  "type": "string"
-                },
-                "rating": {
-                  "description": "",
-                  "type": "integer"
-                },
-                "app": {
-                  "description": "",
-                  "type": "string"
-                }
-              },
-              "required": [
-                "app"
-              ]
-            },
-            "name": "data"
-          }
-        ],
-        "operationId": "feedbacks_create"
-      }
-    },
-    "/api/v1/feedbacks/{id}/": {
-      "get": {
+        "operationId": "widgets_create",
         "tags": [
-          "feedbacks"
+          "widgets"
         ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
         "parameters": [
           {
-            "description": "A unique integer value identifying this feedback.",
-            "in": "path",
-            "type": "integer",
             "required": true,
-            "name": "id"
-          }
-        ],
-        "operationId": "feedbacks_read"
-      },
-      "put": {
-        "tags": [
-          "feedbacks"
-        ],
-        "consumes": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "parameters": [
-          {
-            "description": "A unique integer value identifying this feedback.",
-            "in": "path",
-            "type": "integer",
-            "required": true,
-            "name": "id"
-          },
-          {
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "comment": {
-                  "description": "",
-                  "type": "string"
-                },
-                "rating": {
-                  "description": "",
-                  "type": "integer"
-                },
-                "app": {
-                  "description": "",
-                  "type": "string"
-                }
-              },
-              "required": [
-                "app"
-              ]
-            },
-            "name": "data"
-          }
-        ],
-        "operationId": "feedbacks_update"
-      },
-      "patch": {
-        "tags": [
-          "feedbacks"
-        ],
-        "consumes": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "parameters": [
-          {
-            "description": "A unique integer value identifying this feedback.",
-            "in": "path",
-            "type": "integer",
-            "required": true,
-            "name": "id"
-          },
-          {
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "comment": {
-                  "description": "",
-                  "type": "string"
-                },
-                "rating": {
-                  "description": "",
-                  "type": "integer"
-                },
-                "app": {
-                  "description": "",
-                  "type": "string"
-                }
-              }
-            },
-            "name": "data"
-          }
-        ],
-        "operationId": "feedbacks_partial_update"
-      },
-      "delete": {
-        "tags": [
-          "feedbacks"
-        ],
-        "responses": {
-          "204": {
-            "description": ""
-          }
-        },
-        "parameters": [
-          {
-            "description": "A unique integer value identifying this feedback.",
-            "in": "path",
-            "type": "integer",
-            "required": true,
-            "name": "id"
-          }
-        ],
-        "operationId": "feedbacks_delete"
-      }
-    },
-    "/api/v1/runtimes/{app_uuid}/feedbacks/": {
-      "get": {
-        "tags": [
-          "runtimes"
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "parameters": [
-          {
+            "type": "string",
             "description": "",
-            "in": "path",
-            "type": "string",
+            "name": "widget_uuid",
+            "in": "path"
+          },
+          {
             "required": true,
-            "name": "app_uuid"
-          },
-          {
-            "description": "Number of results to return per page.",
-            "in": "query",
-            "type": "integer",
-            "required": false,
-            "name": "limit"
-          },
-          {
-            "description": "The initial index from which to return the results.",
-            "in": "query",
-            "type": "integer",
-            "required": false,
-            "name": "offset"
-          },
-          {
-            "description": "Which field to use when ordering the results.",
-            "in": "query",
             "type": "string",
-            "required": false,
-            "name": "ordering"
-          },
-          {
-            "description": "A search term.",
-            "in": "query",
-            "type": "string",
-            "required": false,
-            "name": "search"
-          }
-        ],
-        "operationId": "runtimes_feedbacks_list"
-      },
-      "post": {
-        "tags": [
-          "runtimes"
-        ],
-        "consumes": [
-          "application/json"
-        ],
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "parameters": [
-          {
             "description": "",
-            "in": "path",
-            "type": "string",
-            "required": true,
-            "name": "app_uuid"
-          },
-          {
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "comment": {
-                  "description": "",
-                  "type": "string"
-                },
-                "rating": {
-                  "description": "",
-                  "type": "integer"
-                },
-                "app": {
-                  "description": "",
-                  "type": "string"
-                }
-              },
-              "required": [
-                "app"
-              ]
-            },
-            "name": "data"
+            "name": "action",
+            "in": "path"
           }
-        ],
-        "operationId": "runtimes_feedbacks_create"
-      }
-    },
-    "/api/v1/runtimes/{app_uuid}/feedbacks/{id}/": {
-      "get": {
-        "tags": [
-          "runtimes"
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "parameters": [
-          {
-            "description": "",
-            "in": "path",
-            "type": "string",
-            "required": true,
-            "name": "app_uuid"
-          },
-          {
-            "description": "A unique integer value identifying this feedback.",
-            "in": "path",
-            "type": "integer",
-            "required": true,
-            "name": "id"
-          }
-        ],
-        "operationId": "runtimes_feedbacks_read"
-      },
-      "put": {
-        "tags": [
-          "runtimes"
-        ],
-        "consumes": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "parameters": [
-          {
-            "description": "",
-            "in": "path",
-            "type": "string",
-            "required": true,
-            "name": "app_uuid"
-          },
-          {
-            "description": "A unique integer value identifying this feedback.",
-            "in": "path",
-            "type": "integer",
-            "required": true,
-            "name": "id"
-          },
-          {
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "comment": {
-                  "description": "",
-                  "type": "string"
-                },
-                "rating": {
-                  "description": "",
-                  "type": "integer"
-                },
-                "app": {
-                  "description": "",
-                  "type": "string"
-                }
-              },
-              "required": [
-                "app"
-              ]
-            },
-            "name": "data"
-          }
-        ],
-        "operationId": "runtimes_feedbacks_update"
-      },
-      "patch": {
-        "tags": [
-          "runtimes"
-        ],
-        "consumes": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "parameters": [
-          {
-            "description": "",
-            "in": "path",
-            "type": "string",
-            "required": true,
-            "name": "app_uuid"
-          },
-          {
-            "description": "A unique integer value identifying this feedback.",
-            "in": "path",
-            "type": "integer",
-            "required": true,
-            "name": "id"
-          },
-          {
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "comment": {
-                  "description": "",
-                  "type": "string"
-                },
-                "rating": {
-                  "description": "",
-                  "type": "integer"
-                },
-                "app": {
-                  "description": "",
-                  "type": "string"
-                }
-              }
-            },
-            "name": "data"
-          }
-        ],
-        "operationId": "runtimes_feedbacks_partial_update"
-      },
-      "delete": {
-        "tags": [
-          "runtimes"
-        ],
-        "responses": {
-          "204": {
-            "description": ""
-          }
-        },
-        "parameters": [
-          {
-            "description": "",
-            "in": "path",
-            "type": "string",
-            "required": true,
-            "name": "app_uuid"
-          },
-          {
-            "description": "A unique integer value identifying this feedback.",
-            "in": "path",
-            "type": "integer",
-            "required": true,
-            "name": "id"
-          }
-        ],
-        "operationId": "runtimes_feedbacks_delete"
+        ]
       }
     }
   },
