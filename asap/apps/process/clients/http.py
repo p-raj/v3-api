@@ -4,6 +4,7 @@ import json
 import logging
 from functools import reduce
 
+import requests
 from coreapi import exceptions, Client
 from coreapi.transports import HTTPTransport
 from django.core.exceptions import ValidationError
@@ -45,7 +46,18 @@ class HttpClient(object):
                     __params[key] = body.pop(key, None)
 
             encoding = __params.get('__encoding', 'application/json')
+            headers = {'Host': self.document.url, 'Content-type': encoding}
             logger.debug('encoding: %s', encoding)
+
+            if encoding == 'text/plain':
+                # FIXME
+                resp = requests.request(
+                    self.document['api'].action,
+                    self.document['api'].url.format(**body),
+                    data=body.get('body'),
+                    headers=headers
+                )
+                return resp.json()
 
             # only for multipart/form-data
             if encoding == 'multipart/form-data':
@@ -53,7 +65,6 @@ class HttpClient(object):
                     # hack for json items in multipart/form-data :(
                     body[k] = v if type(v) != dict else json.dumps(v)
 
-            headers = {'Host': self.document.url, 'Content-type': encoding}
             for field in self.document['api'].fields:
                 if field.location == 'header' and body.get(field.name, None):
                     headers[field.name] = body[field.name]

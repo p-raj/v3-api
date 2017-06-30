@@ -6,9 +6,11 @@ from time import sleep
 import requests
 from mistralclient.api.v2.executions import ExecutionManager
 from rest_framework import response, views
+from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.permissions import AllowAny
 
 from asap.apps.runtime.models.session import Session
+from asap.core.parsers.plain_text import PlainTextParser
 from asap.libs.mistral.http_client import MistralHTTPClient
 
 # TODO
@@ -32,6 +34,10 @@ def dot_to_json(a):
 
 class WidgetProcessExecution(views.APIView):
     permission_classes = (AllowAny,)
+    parser_classes = (
+        PlainTextParser, FormParser,
+        JSONParser, MultiPartParser
+    )
 
     def get_session(self):
         return self.request.META.get('HTTP_X_VRT_SESSION', '')
@@ -73,8 +79,8 @@ class WidgetProcessExecution(views.APIView):
         body = data.get(self.kwargs.get('action'), {})
         body.update(**request.data)
 
-        em = ExecutionManager(MistralHTTPClient())
-        if body.pop('__sync', None):
+        if body.get('workflow_name', None):
+            em = ExecutionManager(MistralHTTPClient())
             workflow_data = dot_to_json(body)
             execution = em.create(
                 workflow_data.get('workflow_name'),
@@ -97,18 +103,17 @@ class WidgetProcessExecution(views.APIView):
                 headers=result.get('headers')
             )
 
-        else:
-            resp = requests.post(
-                self.get_process_url(**kwargs),
-                json=body,
-                params=dict(request.query_params)
-            )
+        resp = requests.post(
+            self.get_process_url(**kwargs),
+            json=body,
+            params=dict(request.query_params)
+        )
 
-            data = resp.json()
-            logger.debug('process response: %s', data)
-            return response.Response(
-                data=data,
-                status=resp.status_code,
-                template_name=None,
-                headers=resp.headers
-            )
+        data = resp.json()
+        logger.debug('process response: %s', data)
+        return response.Response(
+            data=data,
+            status=resp.status_code,
+            template_name=None,
+            headers=resp.headers
+        )
