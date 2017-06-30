@@ -1,0 +1,40 @@
+---
+version: '2.0'
+zomato_restaurant_menu_load:
+  description: Load Restraurent daily menu
+  type: direct
+  input:
+  - api_server: http://172.18.0.1:8000
+  - process__load_daily_menu: c1984e61-66da-4ab2-92e9-67f64ac0df64
+  - process__publish_result: 29c392aa-4181-4ad3-acbf-860c84405795
+  - headers: { 'Content-type': 'application/json' }
+  - session
+  - widget
+  - res_id
+  - api_key
+  - widget_zomato_app: bc2d607c-c326-4f99-a50b-052420a9d19c
+  tasks:
+    load_daily_menu:
+      action: std.http
+      input:
+        url: "<% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process__load_daily_menu %>/"
+        method: POST
+        body: { "res_id": "<% $.res_id %>", "user_key": "<% $.api_key %>" }
+        headers: <% $.headers %>
+      publish:
+        key: "<% $.widget_zomato_app %>"
+        value: {
+          template: 'menu', 
+          __menus: <% task(load_daily_menu).result.content.daily_menu" %>,
+          __message: 'Menu Successfully Fetched.'
+        }
+      publish-on-error:
+        key: "<% $.widget_zomato_app %>"
+        value: {
+          template: 'menu', 
+          __message: 'No Menu Found.'
+        }
+      on-complete:
+      - publish_result
+    publish_result:
+      workflow: publish_feedback_to_interface widget=<% $.widget %> session=<% $.session %> key=<% $.key %> value=<% $.value %> api_server=<% $.api_server %> process__publish_result=<% $.process__publish_result %>
