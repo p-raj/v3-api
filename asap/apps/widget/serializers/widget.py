@@ -57,9 +57,9 @@ class WidgetSerializer(TimestampableModelSerializer, serializers.HyperlinkedMode
                     process.schema_server, 'application/json', context
                 ).decode()
             )
-            widget_proxy = reverse_lazy('widget-process-proxy', kwargs={
-                'uuid': str(obj.uuid),
-                'process_uuid': process.uuid
+            widget_proxy = reverse_lazy('widget-action', kwargs={
+                'widget_uuid': str(obj.uuid),
+                'action': process.uuid
             })
             schema['paths'][str(widget_proxy)] = process_schema.get('paths') \
                 .get('/api/v1/processes/{0}/execute/'.format(process.uuid))

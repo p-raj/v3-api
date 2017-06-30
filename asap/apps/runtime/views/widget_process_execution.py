@@ -1,10 +1,6 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-
 import json
 import logging
 from functools import reduce
-
 from time import sleep
 
 import requests
@@ -14,9 +10,6 @@ from rest_framework.permissions import AllowAny
 
 from asap.apps.runtime.models.session import Session
 from asap.libs.mistral.http_client import MistralHTTPClient
-
-# TODO
-MISTRAL_PROCESS_EXECUTION_NAME = 'process'
 
 # TODO
 PROCESS_SERVER = 'http://172.18.0.1:8000/'
@@ -37,18 +30,7 @@ def dot_to_json(a):
     return output
 
 
-class ProcessActionProxyViewSet(views.APIView):
-    """
-    A Proxy ViewSet to fetch data from the Processes Service
-    while maintaining a session.
-
-    Example:
-        - `/widgets/<w_id>/process/` should internally call
-            `/widget-lockers/<wl_id>/process/` and start a session for the `Widget`.
-        - `/widgets/<w_id>/process/<p_id>/` should internally call
-            `/process/<p_id>/` and update the session for the `Widget`.
-    """
-
+class WidgetProcessExecution(views.APIView):
     permission_classes = (AllowAny,)
 
     def get_session(self):
@@ -58,15 +40,14 @@ class ProcessActionProxyViewSet(views.APIView):
         # direct
         return '{process_server}{path}'.format(**{
             'process_server': PROCESS_SERVER,
-            'path': 'api/v1/processes/%(process_uuid)s/execute/'
+            'path': 'api/v1/processes/%(action)s/execute/'
         }) % kwargs
 
     def post(self, request, *args, **kwargs):
-        raw_request = getattr(request, '_request')
         logger.debug('content-type: %s', request.content_type)
 
         from asap.apps.widget.models.widget import Widget
-        widget = Widget.objects.get(uuid=kwargs.get('uuid'))
+        widget = Widget.objects.get(uuid=kwargs.get('widget_uuid'))
         logger.debug('widget: %s', widget)
         data = widget.data or {}
         logger.debug('widget data: %s', data)
@@ -86,10 +67,10 @@ class ProcessActionProxyViewSet(views.APIView):
                 .replace('$.auth', username)
                 .replace('$.session', self.get_session())
                 .replace('$.widget', str(widget.uuid))
-                .replace('$.process', self.kwargs.get('process_uuid'))
+                .replace('$.process', self.kwargs.get('action'))
         )
 
-        body = data.get(self.kwargs.get('process_uuid'), {})
+        body = data.get(self.kwargs.get('action'), {})
         body.update(**request.data)
 
         em = ExecutionManager(MistralHTTPClient())
