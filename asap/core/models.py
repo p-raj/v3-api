@@ -5,6 +5,7 @@ import uuid
 
 from django.conf import settings
 from django.db import models
+from django.utils.text import slugify
 
 User = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
@@ -79,6 +80,25 @@ class UniversallyIdentifiable(models.Model):
     # TODO we'll make some rules to make sure it's urlencoded easily
     uuid = models.CharField(max_length=64, default=uuid.uuid4,
                             unique=True, editable=True)
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        if hasattr(self, 'name') \
+                and not self.id:
+            # make the unique identifier
+            # a bit more readable
+            # comes in handy when configuring
+            # widgets/processes
+            # timestamp from the uuid
+            # should help it make unique :)
+            splits = getattr(self, 'name', '').split()
+            self.uuid = '{slug}-{uuid_timestamp}'.format(
+                slug=slugify(
+                    ' '.join(splits[:min(2, len(splits))])
+                ),
+                uuid_timestamp=str(uuid.uuid4())[:8]
+            )
+        return super(UniversallyIdentifiable, self).save()
 
     class Meta:
         abstract = True
