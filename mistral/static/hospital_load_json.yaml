@@ -1,0 +1,75 @@
+---
+version: '2.0'
+hospital_load_json:
+  description: Load Hospital Data and change Template
+  type: direct
+  input:
+  - api_server: http://172.18.0.1:8000
+  - process__fetch_hospital_json: 27c842fb-2b24-4c8a-aa8e-e9bda3118198
+  - process__publish_result: 29c392aa-4181-4ad3-acbf-860c84405795
+  - headers: { 'Content-type': 'application/json' }
+  - session
+  - widget
+  - json_id
+  - key
+  - template
+  - record_id: 0
+  tasks:
+    make_task_decision:
+      action: std.noop
+      on-success:
+        - modify_template: <% $.key = 'medicines' and $.record_id != 0 %>
+        - fetch_complete_json_display_complete: <% $.record_id = 0 %>
+        - fetch_complete_json_display_individual: <% $.key != 'medicines' and $.record_id != 0 %>
+    modify_template:
+      action: std.noop
+      publish:
+        template: 'medicine_details'
+      on-success:
+        - fetch_complete_json_display_individual
+    fetch_complete_json_display_complete:
+      action: std.http
+      input:
+        url: "<% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process__fetch_hospital_json %>/"
+        method: POST
+        body: { "json-id": "<% $.json_id %>"}
+        headers: <% $.headers %>
+      publish:
+        key: "<% $.widget %>"
+        value: {
+          template: "<% $.template %>",
+          json_id: "<% $.json_id %>",
+          json_type: "<% $.key %>",
+          __data: <% task(fetch_complete_json_display_complete).result.content.get($.key) %>,
+        }
+      publish-on-error:
+        key: "<% $.widget %>"
+        value: {
+          template: "<% $.template %>",
+          __message: 'No <% $.key %> found.'
+        }
+      on-complete:
+      - publish_result
+    fetch_complete_json_display_individual:
+      action: std.http
+      input:
+        url: "<% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process__fetch_hospital_json %>/"
+        method: POST
+        body: { "json-id": "<% $.json_id %>"}
+        headers: <% $.headers %>
+      publish:
+        key: "<% $.widget %>"
+        value: {
+          template: "<% $.template %>",
+          __detail: "<% let(items => task(fetch_complete_json_display_individual).result.content.get($.key), record => $.record_id) -> $items.where($.id = $record).first() %>"
+        }
+      publish-on-error:
+        key: "<% $.widget %>"
+        value: {
+          template: "<% $.template %>",
+          __message: 'No <% $.key %> found.'
+        }
+      on-complete:
+      - publish_result
+    publish_result:
+      workflow: publish_feedback_to_interface widget=<% $.widget %> session=<% $.session %> key=<% $.key %> value=<% $.value %> api_server=<% $.api_server %> process__publish_result=<% $.process__publish_result %>
