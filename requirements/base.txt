@@ -50,3 +50,4 @@ stevedore==1.21.0
 Unidecode==0.4.20
 uritemplate==3.0.0
 wrapt==1.10.10
+yaql==1.1.3
