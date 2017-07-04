@@ -8,6 +8,7 @@ from mistralclient.api.v2.executions import ExecutionManager
 from rest_framework import response, views
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.permissions import AllowAny
+from rest_framework.reverse import reverse_lazy
 
 from asap.apps.runtime.models.session import Session
 from asap.core.parsers.plain_text import PlainTextParser
@@ -39,12 +40,14 @@ class WidgetProcessExecution(views.APIView):
     def get_session(self):
         return self.request.META.get('HTTP_X_VRT_SESSION', '')
 
-    def get_process_url(self, **kwargs):
-        # direct
-        return '{process_server}{path}'.format(**{
-            'process_server': 'http://127.0.0.1:8000',
-            'path': '/api/v1/processes/%(action)s/execute/'
-        }) % kwargs
+    def get_process_url(self, request, **kwargs):
+        return reverse_lazy(
+            'process-execute',
+            request=request,
+            kwargs={
+                'uuid': kwargs.get('action')
+            }
+        )
 
     def post(self, request, *args, **kwargs):
         logger.debug('content-type: %s', request.content_type)
@@ -101,7 +104,7 @@ class WidgetProcessExecution(views.APIView):
             )
 
         resp = requests.post(
-            self.get_process_url(**kwargs),
+            self.get_process_url(request, **kwargs),
             json=body,
             params=dict(request.query_params)
         )
