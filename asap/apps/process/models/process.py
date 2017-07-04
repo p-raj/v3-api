@@ -78,11 +78,13 @@ TYPES = [
 
 class ProcessManager(models.Manager):
     def get_by_natural_key(self, uuid):
-        return self.get(uuid=uuid),
+        return self.get(uuid=uuid)
 
 
 class Process(Authorable, Humanizable, Timestampable,
               UniversallyIdentifiable, models.Model):
+    objects = ProcessManager()
+
     # the process will eventually support different protocols
     # may be even direct scripts ?
     # only time will tell, so let's just create
@@ -128,7 +130,7 @@ class Process(Authorable, Humanizable, Timestampable,
         return ServerSchema(self).build()
 
     def natural_key(self):
-        return self.uuid
+        return self.uuid,
 
     class Meta:
         verbose_name_plural = _('Processes')

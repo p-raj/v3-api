@@ -26,6 +26,11 @@ from asap.core.models import Authorable, Humanizable, Publishable, \
 User = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
 
+class WidgetManager(models.Manager):
+    def get_by_natural_key(self, uuid):
+        return self.get(uuid=uuid)
+
+
 class Widget(Authorable, Humanizable, Publishable, Timestampable,
              UniversallyIdentifiable, models.Model):
     """
@@ -33,6 +38,8 @@ class Widget(Authorable, Humanizable, Publishable, Timestampable,
     Process can be called based on some rules.
     Widget consists of a predefined Workflow.
     """
+    objects = WidgetManager()
+
     # we need to have a secure token
     # to access the process service, currently its more of a hack
     # and needs to be automated using a OAuth flow
@@ -81,6 +88,11 @@ class Widget(Authorable, Humanizable, Publishable, Timestampable,
     # move to the through relation
     # between app/runtime/screen & widgets
     index = models.PositiveIntegerField(default=0, blank=True)
+
+    def natural_key(self):
+        return self.uuid,
+
+    natural_key.dependencies = ['process.Process']
 
     def __str__(self):
         return '{0}'.format(self.name)

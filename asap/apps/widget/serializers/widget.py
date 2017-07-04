@@ -33,10 +33,13 @@ class WidgetSerializer(TimestampableModelSerializer, serializers.HyperlinkedMode
 
     class Meta:
         model = Widget
-        exclude = ('author', 'is_published', 'processes')
+        exclude = ('author', 'is_published', )
 
         extra_kwargs = {
             'url': {
+                'lookup_field': 'uuid'
+            },
+            'processes': {
                 'lookup_field': 'uuid'
             }
         }

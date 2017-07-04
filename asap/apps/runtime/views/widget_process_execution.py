@@ -13,9 +13,6 @@ from asap.apps.runtime.models.session import Session
 from asap.core.parsers.plain_text import PlainTextParser
 from asap.libs.mistral.http_client import MistralHTTPClient
 
-# TODO
-PROCESS_SERVER = 'http://172.18.0.1:8000/'
-
 logger = logging.getLogger(__name__)
 
 
@@ -45,8 +42,8 @@ class WidgetProcessExecution(views.APIView):
     def get_process_url(self, **kwargs):
         # direct
         return '{process_server}{path}'.format(**{
-            'process_server': PROCESS_SERVER,
-            'path': 'api/v1/processes/%(action)s/execute/'
+            'process_server': 'http://127.0.0.1:8000',
+            'path': '/api/v1/processes/%(action)s/execute/'
         }) % kwargs
 
     def post(self, request, *args, **kwargs):
