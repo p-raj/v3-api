@@ -26,6 +26,6 @@ The client is responsible for:
 ---
 
 
-[Template]: template.md
-[Session]: session.md
+[Template]: ../template.md
+[Session]: ../session.md
 [Widget - Server]: ../server/widget.md
