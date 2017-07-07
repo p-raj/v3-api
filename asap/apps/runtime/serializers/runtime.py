@@ -9,10 +9,13 @@ class RuntimeSerializer(TimestampableModelSerializer, serializers.HyperlinkedMod
 
     class Meta:
         model = Runtime
-        exclude = ('author', 'is_published', 'widgets')
+        exclude = ('author', 'is_published',)
 
         extra_kwargs = {
             'url': {
+                'lookup_field': 'uuid'
+            },
+            'widgets': {
                 'lookup_field': 'uuid'
             }
         }
