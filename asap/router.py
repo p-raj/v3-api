@@ -8,11 +8,4 @@ if not getattr(settings, 'DEBUG', False):
 
 
 class Router(DefaultRouter):
-    """
-    Credits: http://stackoverflow.com/a/22684199/1796173
-    """
-    shared_router = DefaultRouter()
-
-    def register(self, *args, **kwargs):
-        self.shared_router.register(*args, **kwargs)
-        super(Router, self).register(*args, **kwargs)
+    pass

@@ -22,8 +22,7 @@ class WidgetViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelVi
 
     lookup_field = 'uuid'
     lookup_parent = [
-        ('widget_locker_uuid', 'widgetlocker__uuid'),
-        ('runtime_uuid', 'widget_runtime_runtime__uuid')
+        ('app_uuid', 'widget_runtime_runtime__uuid')
     ]
     lookup_fields = (
         'name', 'description'
@@ -69,7 +68,7 @@ class WidgetViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelVi
             return Session.objects.filter(uuid=session_uuid).first()
 
         runtime = Runtime.objects.filter(
-            uuid=self.kwargs.get('runtime_uuid')
+            uuid=self.kwargs.get('app_uuid')
         ).first()
         session = Session.objects.create(
             author=self.request.user, runtime=runtime
