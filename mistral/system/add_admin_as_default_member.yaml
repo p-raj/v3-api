@@ -48,26 +48,6 @@ add_admin_as_default_member:
         method: POST
         body: '{ "uuid": "<% task(create_organization).result.content.owner %>" }'
         headers: <% $.headers %>
-      publish:
-        data: <% task(fetch_user_profile).result.content %>
-        cookies: <% task(fetch_user_profile).result.cookies %>
-        elapsed: <% task(fetch_user_profile).result.elapsed %>
-        encoding: <% task(fetch_user_profile).result.encoding %>
-        headers: <% task(fetch_user_profile).result.headers %>
-        history: <% task(fetch_user_profile).result.history %>
-        reason: <% task(fetch_user_profile).result.reason %>
-        status: <% task(fetch_user_profile).result.status %>
-        url: <% task(fetch_user_profile).result.url %>
-      publish-on-error:
-        data: <% task(fetch_user_profile).result.content %>
-        cookies: <% task(fetch_user_profile).result.cookies %>
-        elapsed: <% task(fetch_user_profile).result.elapsed %>
-        encoding: <% task(fetch_user_profile).result.encoding %>
-        headers: <% task(fetch_user_profile).result.headers %>
-        history: <% task(fetch_user_profile).result.history %>
-        reason: <% task(fetch_user_profile).result.reason %>
-        status: <% task(fetch_user_profile).result.status %>
-        url: <% task(fetch_user_profile).result.url %>
       on-success:
         - add_member
     add_member:
