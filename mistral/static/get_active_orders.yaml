@@ -1,0 +1,84 @@
+---
+version: '2.0'
+get_active_orders:
+  description: Display the active orders
+  type: direct
+  input:
+    - api_server: http://172.18.0.1:8000
+    - process__fetch_calendar_events: 91269c55-ee85-4720-87a9-aa2efc4222c9
+    - process__publish_result: 29c392aa-4181-4ad3-acbf-860c84405795
+    - headers: { 'Content-type': 'application/json' }
+    - session
+    - widget
+    - calendar_event_api_data
+  tasks:
+    publish_initial_data:
+      action: std.noop
+      publish:
+        token_endpoint: <% $.calendar_event_api_data.token_endpoint %>
+        client_id: <% $.calendar_event_api_data.client_id %>
+        client_secret: <% $.calendar_event_api_data.client_secret %>
+        refresh_token: <% $.calendar_event_api_data.refresh_token %>
+        access_token: <% $.calendar_event_api_data.access_token %>
+        token_type: "Bearer"
+      on-success:
+        - fetch_calendar_events
+    fetch_calendar_events:
+      action: std.http
+      input:
+        url: <% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process__fetch_calendar_events %>/
+        method: POST
+        body: {
+            "timeMin": "<% let(now() - timespan(hours => 1)) -> $.format('%Y-%m-%dT%H:%M:%S%z') %>",
+            "showDeleted": false,
+            "maxResults": 5,
+            "Authorization": "<% $.token_type %> <% $.access_token %>"
+          }
+        headers: <% $.headers %>
+      publish:
+        data: <% task(fetch_calendar_events).result.content %>
+        items: <% task(fetch_calendar_events).result.content.items %>
+      publish-on-error:
+        key: <% $.widget %>
+        value: { "template": "init" }
+        items: []
+      on-success:
+        - modify_events
+      on-error:
+        - refresh_token: <% task(fetch_calendar_events).result.status = 401 %>
+    modify_events:
+      action: std.noop
+      publish:
+        key: <% $.widget %>
+        order: "<% switch($.items.count() > 0 => $.items.first(), $.items.count() = 0 => {}) %>"
+        value: {
+          "items": "<% $.items.select($.set('attendeesCount', $.attendees.where($.get('resource', false) = false).count())) %>"
+        }
+      on-complete:
+        - publish_events
+    publish_events:
+      action: std.noop
+      publish:
+        key: <% $.widget %>
+        value: {
+          "template": "schedule",
+          "input.calendar_event_api_data.access_token": "<% $.access_token %>",
+          "__order": "<% $.order.get('attendees', []).count() %>",
+          "__count": "<% $.order.get('attendees', []).count() %> Coffees required in Conference Room: GGN-860-8-Meetingroom1 (4)"
+        }
+      on-complete:
+        - publish_result
+    refresh_token:
+      workflow: refresh_oauth_token
+      input:
+        token_endpoint: <% $.token_endpoint %>
+        client_id: <% $.client_id %>
+        client_secret: <% $.client_secret %>
+        refresh_token: <% $.refresh_token %>
+      publish:
+        access_token: <% task(refresh_token).result.access_token %>
+        token_type: <% task(refresh_token).result.token_type %>
+      on-success:
+        - fetch_calendar_events
+    publish_result:
+      workflow: publish_feedback_to_interface widget=<% $.widget %> session=<% $.session %> key=<% $.key %> value=<% $.value %> api_server=<% $.api_server %> process__publish_result=<% $.process__publish_result %>

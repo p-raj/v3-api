@@ -4,6 +4,7 @@ send_verify_otp:
   description: Send the OTP & verify it.
   type: direct
   input:
+    - api_server: http://172.18.0.1:8000
     - process_generate_otp: 98dd9de9-3e47-4178-8ab1-8ea911a8b203
     - process_send_sms: a620893f-1b8c-49cd-b306-42c2708b4d5c
     - process_wait_for_input: 6a52d439-3053-46ca-bd3a-a825891ca501
@@ -15,20 +16,20 @@ send_verify_otp:
     - headers
   tasks:
     generate_otp:
-      workflow: process
+      action: std.http
       input:
-        url: http://172.20.0.1:8000/api/v1/widgets/<% $.widget %>/<% $.process_generate_otp %>/
+        url: <% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process_generate_otp %>/
         method: POST
-        body: '{ "time": 300, "__encoding": "application/json" }'
+        body: '{ "time": 300 }'
         headers: <% $.headers %>
       on-success:
         - send_sms
     send_sms:
-      workflow: process
+      action: std.http
       input:
-        url: http://172.20.0.1:8000/api/v1/widgets/<% $.widget %>/<% $.process_send_sms %>/
+        url: <% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process_send_sms %>/
         method: POST
-        body: '{ "to": "<% $.phone_number %>", "body": "OTP: <% task(generate_otp).result.data.otp %>", "provider": "plivo", "__encoding": "application/json" }'
+        body: '{ "to": "<% $.phone_number %>", "body": "OTP: <% task(generate_otp).result.content.otp %>", "provider": "plivo" }'
         headers: <% $.headers %>
       publish:
         key: <% $.widget %>
@@ -39,9 +40,9 @@ send_verify_otp:
     wait_for_input:
       workflow: wait_for_key
       input:
-        url: http://172.20.0.1:8000/api/v1/widgets/<% $.widget %>/<% $.process_wait_for_input %>/
+        url: <% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process_wait_for_input %>/
         method: POST
-        body: '{ "key": "input__otp", "uuid": "<% $.session %>", "__encoding": "application/json" }'
+        body: '{ "key": "input__otp", "uuid": "<% $.session %>" }'
         headers: <% $.headers %>
         key: "otp"
       retry: delay=10 count=30
@@ -57,11 +58,11 @@ send_verify_otp:
       on-error:
         - publish_result
     verify_otp:
-      workflow: process
+      action: std.http
       input:
-        url: http://172.20.0.1:8000/api/v1/widgets/<% $.widget %>/<% $.process_verify_otp %>/
+        url: <% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process_verify_otp %>/
         method: POST
-        body: '{ "uuid": "<% task(generate_otp).result.data.otp_uuid %>", "otp": "OTP: <% task(wait_for_input).result.data.otp %>", "otp_type": "totp", "__encoding": "application/json" }'
+        body: '{ "uuid": "<% task(generate_otp).result.content.otp_uuid %>", "otp": "OTP: <% task(wait_for_input).result.content.otp %>", "otp_type": "totp" }'
         headers: <% $.headers %>
       retry: delay=10 count=30
       publish:
@@ -73,11 +74,11 @@ send_verify_otp:
       on-complete:
         - publish_result
     publish_result:
-      workflow: process
+      action: std.http
       input:
-        url: http://172.20.0.1:8000/api/v1/widgets/<% $.widget %>/<% $.process_publish_result %>/
+        url: <% $.api_server %>/api/v1/widgets/<% $.widget %>/<% $.process_publish_result %>/
         method: POST
         headers: {
-          Content-Type: 'application/json',
+          Content-Type: 'application/json'
         }
-        body: '{ "data": <% $.value %>, "key": "<% $.key %>", "uuid": "<% $.session %>", "__encoding": "application/json"}'
+        body: '{ "data": <% $.value %>, "key": "<% $.key %>", "uuid": "<% $.session %>" }'
