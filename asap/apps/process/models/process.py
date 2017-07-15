@@ -157,4 +157,5 @@ class Process(Authorable, Humanizable, Timestampable,
 class Admin(VersionAdmin):
     list_display = ('pk', 'name', 'uuid')
     list_display_links = ('pk', 'name')
+    raw_id_fields = ('author',)
     search_fields = ('name', 'description', 'uuid')

@@ -44,6 +44,9 @@ r.register('sessions', SessionViewSet, base_name='runtimesession')
 r.register('version', VersionViewSet)
 r.register('revision', RevisionViewSet)
 
+r_widget = routers.NestedSimpleRouter(r, 'widgets', lookup='widget')
+r_widget.register('processes', ProcessViewSet)
+
 r_runtime = routers.NestedSimpleRouter(r, 'runtimes', lookup='app')
 r_runtime.register('feedbacks', FeedbackViewSet)
 r_runtime.register('sessions', SessionViewSet, base_name='runtime-session')
@@ -59,6 +62,7 @@ urlpatterns = [
     url(r'^auth/', include('rest_framework.urls', namespace='rest_framework')),
 
     url(r'^api/v1/', include(r.urls)),
+    url(r'^api/v1/', include(r_widget.urls)),
     url(r'^api/v1/', include(r_runtime.urls)),
 
     url(r'^api/v1/widgets/(?P<widget_uuid>.*(?=/))/(?P<action>.*(?=/))/$',

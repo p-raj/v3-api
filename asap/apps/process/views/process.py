@@ -18,6 +18,9 @@ class ProcessViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelV
     permission_classes = (AllowAny,)
 
     lookup_field = 'uuid'
+    lookup_parent = [
+        ('widget_uuid', 'widget_widget_widget__uuid')
+    ]
     lookup_fields = (
         'name', 'description'
     )
