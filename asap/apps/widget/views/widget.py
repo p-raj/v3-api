@@ -4,7 +4,7 @@
 import logging
 
 from rest_framework import viewsets, response
-from rest_framework.decorators import list_route
+from rest_framework.decorators import list_route, detail_route
 from rest_framework.permissions import AllowAny
 
 from asap.apps.runtime.models.runtime import Runtime
@@ -37,6 +37,10 @@ class WidgetViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelVi
                 self.request.user.is_authenticated:
             return queryset.filter(author=self.request.user)
         return queryset
+
+    @detail_route(permission_classes=(AllowAny,))
+    def schema(self, request, *args, **kwargs):
+        return response.Response(self.get_object().schema)
 
     @list_route(permission_classes=(AllowAny,))
     def system(self, request, *args, **kwargs):

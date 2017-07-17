@@ -18,6 +18,7 @@ from django.utils.translation import ugettext_lazy as _
 from reversion.admin import VersionAdmin
 
 from asap.apps.process.models.process import Process
+from asap.apps.widget import schema
 from asap.core.models import Authorable, Humanizable, Publishable, \
     Timestampable, UniversallyIdentifiable
 
@@ -78,6 +79,10 @@ class Widget(Authorable, Humanizable, Publishable, Timestampable,
         return self.uuid,
 
     natural_key.dependencies = ['process.Process']
+
+    @property
+    def schema(self):
+        return schema.generate(self)
 
     def __str__(self):
         return '{0}'.format(self.name)
