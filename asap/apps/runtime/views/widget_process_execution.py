@@ -11,6 +11,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.reverse import reverse_lazy
 
 from asap.apps.runtime.models.session import Session
+from asap.apps.widget.models.config import Config
 from asap.core.parsers.plain_text import PlainTextParser
 from asap.libs.mistral.http_client import MistralHTTPClient
 
@@ -52,11 +53,12 @@ class WidgetProcessExecution(views.APIView):
     def post(self, request, *args, **kwargs):
         logger.debug('content-type: %s', request.content_type)
 
-        from asap.apps.widget.models.widget import Widget
-        widget = Widget.objects.get(uuid=kwargs.get('widget_uuid'))
-        logger.debug('widget: %s', widget)
-        data = widget.data or {}
-        logger.debug('widget data: %s', data)
+        config = Config.objects.filter(
+            widget__uuid=kwargs.get('widget_uuid'),
+            process__uuid=kwargs.get('action')
+        ).first()
+        data = config.config or {} if config else {}
+        logger.debug('widget config: %s', data)
 
         username = ''
         if self.get_session():
@@ -68,15 +70,13 @@ class WidgetProcessExecution(views.APIView):
 
         # FIXME
         # use AST instead of this hack
-        data = json.loads(
+        body = json.loads(
             json.dumps(data)
                 .replace('$.auth', username)
                 .replace('$.session', self.get_session())
-                .replace('$.widget', str(widget.uuid))
-                .replace('$.process', self.kwargs.get('action'))
+                .replace('$.widget', kwargs.get('widget_uuid'))
+                .replace('$.process', kwargs.get('action'))
         )
-
-        body = data.get(self.kwargs.get('action'), {})
         body.update(**request.data)
 
         if body.get('workflow_name', None):

@@ -9,11 +9,12 @@ It is one of the most critical layers,
 responsible for mapping the UI components to the processes.
 
 """
-
 from django.conf import settings
 from django.contrib import admin
 from django.contrib.postgres.fields import JSONField
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 from reversion.admin import VersionAdmin
 
@@ -39,21 +40,13 @@ class Widget(Authorable, Humanizable, Publishable, Timestampable,
     """
     objects = WidgetManager()
 
-    # each process might need some additional
-    # data to be passed along, the widget data contains
-    # additional data per process
-    # for instance the Auth header
-    # for each service enabled (maybe)
-    # this maybe abstracted out, if we try and
-    # re-use the same widget with different data
-    # for instance, an organization may buy
-    # a service for its different departments
-    data = JSONField(
-        _('Widget Data'),
-        null=True, blank=True,
-        help_text=_('Widget Data, the data to be filled by admin, '
-                    'using admin widget designed by developer'),
-    )
+    # TODO
+    # deprecated
+    # this used to come in handy for storing
+    # the process config
+    # it makes sense to store that config on an
+    # object basis while adding relations
+    data = JSONField(null=True, blank=True)
 
     # the template consists of the layout of components
     # & their bindings to processes
@@ -67,6 +60,11 @@ class Widget(Authorable, Humanizable, Publishable, Timestampable,
 
     processes = models.ManyToManyField(
         Process, related_name='widget_%(app_label)s_%(class)s', blank=True
+    )
+
+    process_configs = models.ManyToManyField(
+        Process, blank=True,
+        through='widget.Config'
     )
 
     # FIXME
@@ -94,3 +92,21 @@ class WidgetAdmin(VersionAdmin):
     list_display = ('name', 'uuid',)
     list_display_links = ('name',)
     search_fields = ('name', 'description', 'uuid')
+
+
+# FIXME
+# hook for seamless transition
+# to the new API :)
+@receiver(post_save, sender=Widget)
+def add_process_config(sender, **kwargs):
+    instance = kwargs.get('instance')
+
+    from asap.apps.widget.models.config import Config
+    for key, value in (instance.data or {}).items():
+        config, created = Config.objects.get_or_create(
+            author=instance.author,
+            widget=instance,
+            process=Process.objects.get(uuid=key)
+        )
+        config.config = value
+        config.save()

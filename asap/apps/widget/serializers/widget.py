@@ -10,9 +10,13 @@ from asap.core.serializers import TimestampableModelSerializer
 class WidgetSerializer(TimestampableModelSerializer, serializers.HyperlinkedModelSerializer):
     schema = serializers.ReadOnlyField()
 
+    # TODO
+    # Multiple Serializers based on permissions/clients
+    # config should not be sent to client
+
     class Meta:
         model = Widget
-        exclude = ('author', 'is_published',)
+        exclude = ('author', 'is_published', 'process_configs')
 
         extra_kwargs = {
             'url': {
