@@ -1,0 +1,24 @@
+---
+version: '2.0'
+basic_vms:
+  description: Load VMS Data and change Template
+  type: direct
+  input:
+  - api_server: http://172.18.0.1:8000
+  - process__publish_result: 29c392aa-4181-4ad3-acbf-860c84405795
+  - headers: { 'Content-type': 'application/json' }
+  - session
+  - widget
+  - template
+  tasks:
+    make_task_decision:
+      action: std.noop
+      publish:
+        key: "<% $.widget %>"
+        value: {
+          template: "<% $.template %>",
+        }
+      on-success:
+        - publish_result
+    publish_result:
+      workflow: publish_feedback_to_interface widget=<% $.widget %> session=<% $.session %> key=<% $.key %> value=<% $.value %> api_server=<% $.api_server %> process__publish_result=<% $.process__publish_result %>
