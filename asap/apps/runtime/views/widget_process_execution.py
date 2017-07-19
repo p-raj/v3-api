@@ -12,6 +12,7 @@ from rest_framework.reverse import reverse_lazy
 
 from asap.apps.runtime.models.session import Session
 from asap.apps.widget.models.config import Config
+from asap.core import transform
 from asap.core.parsers.plain_text import PlainTextParser
 from asap.libs.mistral.http_client import MistralHTTPClient
 
@@ -78,6 +79,9 @@ class WidgetProcessExecution(views.APIView):
                 .replace('$.process', kwargs.get('action'))
         )
         body.update(**request.data)
+
+        if config and config.transform:
+            body = transform(body, config.transform.get('@request', {}))
 
         if body.get('workflow_name', None):
             em = ExecutionManager(MistralHTTPClient())

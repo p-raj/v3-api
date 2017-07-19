@@ -22,8 +22,8 @@ class Config(Authorable, Timestampable, models.Model):
     process = models.ForeignKey(Process)
     widget = models.ForeignKey(Widget)
 
-    config = JSONField(default={})
-    transform = JSONField(default={})
+    config = JSONField(default={}, blank=True)
+    transform = JSONField(default={}, blank=True)
 
     def natural_key(self):
         return self.widget, self.process
