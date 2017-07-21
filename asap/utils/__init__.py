@@ -1,9 +1,34 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-
-import re
 import os
+import re
 import uuid
+from functools import reduce
+
+import yaql
+
+engine = yaql.factory.YaqlFactory().create()
+
+
+def transform(data, expressions):
+    assert type(expressions) == dict, \
+        'expressions should be a dict'
+
+    res = {}
+    for key, value in expressions.items():
+        exp = engine(value)
+        res[key] = exp.evaluate(data)
+
+    return res
+
+
+def dot_to_json(a):
+    output = {}
+    for key, value in a.items():
+        path = key.split('.')
+        if path[0] == 'json':
+            path = path[1:]
+        target = reduce(lambda d, k: d.setdefault(k, {}), path[:-1], output)
+        target[path[-1]] = value
+    return output
 
 
 # noinspection PyProtectedMember
@@ -19,7 +44,7 @@ def media_folder(instance, filename):
     :return:            path of the file where it should be stored
     """
     extension = filename.split('.')[-1] if len(filename.split('.')) > 1 else 'jpg'
-    filename = "{}.{}".format(uuid.uuid1(), extension)
+    filename = '{}.{}'.format(uuid.uuid1(), extension)
 
     # content_type = ContentType.objects.get_for_model(instance)
     # app_label = content_type.app_label

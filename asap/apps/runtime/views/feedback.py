@@ -5,7 +5,7 @@ import logging
 from rest_framework import viewsets
 
 from asap.apps.runtime.serializers.feedback import Feedback, FeedbackSerializer
-from asap.core.views import AuthorableModelViewSet, DRFNestedViewMixin
+from asap.utils.views import AuthorableModelViewSet, DRFNestedViewMixin
 
 logger = logging.getLogger(__name__)
 

@@ -1,7 +1,7 @@
 from rest_framework.validators import UniqueTogetherValidator
 
 from asap.apps.runtime.models.feedback import Feedback
-from asap.core.serializers import TimestampableModelSerializer
+from asap.utils.serializers import TimestampableModelSerializer
 
 from rest_framework import serializers
 

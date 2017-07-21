@@ -5,7 +5,7 @@ from rest_framework import serializers
 
 from asap.apps.process.models import Process
 from asap.apps.process.schema.validator import SchemaValidator
-from asap.core.serializers import TimestampableModelSerializer
+from asap.utils.serializers import TimestampableModelSerializer
 
 
 class ProcessSerializer(TimestampableModelSerializer,

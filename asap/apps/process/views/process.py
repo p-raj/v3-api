@@ -9,7 +9,7 @@ from rest_framework_swagger.renderers import OpenAPIRenderer
 
 from asap.apps.process.models import Process
 from asap.apps.process.serializers import ProcessSerializer
-from asap.core.views import AuthorableModelViewSet, DRFNestedViewMixin
+from asap.utils.views import AuthorableModelViewSet, DRFNestedViewMixin
 
 
 class ProcessViewSet(AuthorableModelViewSet, DRFNestedViewMixin, viewsets.ModelViewSet):

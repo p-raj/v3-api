@@ -390,7 +390,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication'
     ),
     'DEFAULT_FILTER_BACKENDS': (
-        'asap.core.filters.django_filter.DjangoFilter',
+        'asap.utils.filters.django_filter.DjangoFilter',
         'rest_framework.filters.OrderingFilter',
         'rest_framework.filters.SearchFilter'
     ),

@@ -8,7 +8,7 @@ from reversion.admin import VersionAdmin
 
 from asap.apps.process.models.process import Process
 from asap.apps.widget.models.widget import Widget
-from asap.core.models import Authorable, Timestampable
+from asap.utils.models import Authorable, Timestampable
 
 
 class ConfigManager(models.Manager):

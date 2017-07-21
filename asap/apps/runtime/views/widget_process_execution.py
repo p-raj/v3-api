@@ -1,6 +1,5 @@
 import json
 import logging
-from functools import reduce
 from time import sleep
 
 import requests
@@ -12,24 +11,12 @@ from rest_framework.reverse import reverse_lazy
 
 from asap.apps.runtime.models.session import Session
 from asap.apps.widget.models.config import Config
-from asap.core import transform
-from asap.core.parsers.plain_text import PlainTextParser
 from asap.libs.mistral.http_client import MistralHTTPClient
+from asap.utils import dot_to_json
+from asap.utils import transform
+from asap.utils.parsers.plain_text import PlainTextParser
 
 logger = logging.getLogger(__name__)
-
-
-def dot_to_json(a):
-    # TODO
-    # move to utils
-    output = {}
-    for key, value in a.items():
-        path = key.split('.')
-        if path[0] == 'json':
-            path = path[1:]
-        target = reduce(lambda d, k: d.setdefault(k, {}), path[:-1], output)
-        target[path[-1]] = value
-    return output
 
 
 class WidgetProcessExecution(views.APIView):

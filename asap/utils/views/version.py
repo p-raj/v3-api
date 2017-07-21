@@ -3,7 +3,7 @@ from rest_framework import viewsets, response
 from rest_framework.decorators import detail_route
 from reversion.models import Version
 
-from asap.core.serializers import VersionSerializer
+from asap.utils.serializers import VersionSerializer
 
 
 class VersionableModelViewSet(viewsets.GenericViewSet):

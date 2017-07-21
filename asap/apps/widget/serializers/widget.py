@@ -4,7 +4,7 @@
 from rest_framework import serializers
 
 from asap.apps.widget.models.widget import Widget
-from asap.core.serializers import TimestampableModelSerializer
+from asap.utils.serializers import TimestampableModelSerializer
 
 
 class WidgetSerializer(TimestampableModelSerializer, serializers.HyperlinkedModelSerializer):

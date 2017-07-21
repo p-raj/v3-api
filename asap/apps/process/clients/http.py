@@ -2,27 +2,15 @@
 # -*- coding: utf-8 -*-
 import json
 import logging
-from functools import reduce
 
 import requests
-from coreapi import exceptions, Client
+from coreapi import Client, exceptions
 from coreapi.transports import HTTPTransport
 from django.core.exceptions import ValidationError
 
+from asap.utils import dot_to_json
+
 logger = logging.getLogger(__name__)
-
-
-def dot_to_json(a):
-    # TODO
-    # move to utils
-    output = {}
-    for key, value in a.items():
-        path = key.split('.')
-        if path[0] == 'json':
-            path = path[1:]
-        target = reduce(lambda d, k: d.setdefault(k, {}), path[:-1], output)
-        target[path[-1]] = value
-    return output
 
 
 class HttpClient(object):

@@ -11,7 +11,7 @@ from asap.apps.runtime.models.runtime import Runtime
 from asap.apps.runtime.models.session import Session
 from asap.apps.widget.models.widget import Widget
 from asap.apps.widget.serializers.widget import WidgetSerializer
-from asap.core.views import AuthorableModelViewSet, DRFNestedViewMixin
+from asap.utils.views import AuthorableModelViewSet, DRFNestedViewMixin
 
 logger = logging.getLogger(__name__)
 

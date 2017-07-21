@@ -20,7 +20,7 @@ from reversion.admin import VersionAdmin
 
 from asap.apps.process.models.process import Process
 from asap.apps.widget import schema
-from asap.core.models import Authorable, Humanizable, Publishable, \
+from asap.utils.models import Authorable, Humanizable, Publishable, \
     Timestampable, UniversallyIdentifiable
 
 User = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
