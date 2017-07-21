@@ -55,7 +55,7 @@ from reversion.admin import VersionAdmin
 
 from asap.apps.process.schema.spec import PSSpec
 from asap.apps.process.schema.validator import SchemaValidator
-from asap.core.models import Authorable, Humanizable, Timestampable, UniversallyIdentifiable
+from asap.utils.models import Authorable, Humanizable, Timestampable, UniversallyIdentifiable
 from asap.utils import to_pascal_case
 
 # TODO

@@ -8,7 +8,7 @@ from django.db.models import Case, When, Value
 from reversion.admin import VersionAdmin
 
 from asap.apps.widget.models.widget import Widget
-from asap.core.models import Authorable, Humanizable, Publishable, \
+from asap.utils.models import Authorable, Humanizable, Publishable, \
     Timestampable, UniversallyIdentifiable
 
 User = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')

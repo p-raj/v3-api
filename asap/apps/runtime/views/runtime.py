@@ -7,9 +7,9 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 
 from asap.apps.runtime.models.runtime import Runtime
 from asap.apps.runtime.serializers.runtime import RuntimeSerializer
-from asap.core.filters.am_filter import AMFilter
-from asap.core.filters.django_filter import DjangoFilter
-from asap.core.views import AuthorableModelViewSet, DRFNestedViewMixin
+from asap.utils.filters.am_filter import AMFilter
+from asap.utils.filters.django_filter import DjangoFilter
+from asap.utils.views import AuthorableModelViewSet, DRFNestedViewMixin
 
 logger = logging.getLogger(__name__)
 

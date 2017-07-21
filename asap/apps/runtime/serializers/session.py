@@ -1,5 +1,5 @@
 from asap.apps.runtime.models.session import Session
-from asap.core.serializers import TimestampableModelSerializer
+from asap.utils.serializers import TimestampableModelSerializer
 
 from rest_framework import serializers
 

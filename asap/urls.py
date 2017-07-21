@@ -28,8 +28,8 @@ from asap.apps.runtime.views import FeedbackViewSet, SessionViewSet
 from asap.apps.runtime.views.runtime import RuntimeViewSet
 from asap.apps.runtime.views.widget_process_execution import WidgetProcessExecution
 from asap.apps.widget.views import WidgetViewSet
-from asap.core.views.revision import RevisionViewSet
-from asap.core.views.version import VersionViewSet
+from asap.utils.views.revision import RevisionViewSet
+from asap.utils.views.version import VersionViewSet
 
 from .router import Router
 

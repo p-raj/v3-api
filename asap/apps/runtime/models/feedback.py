@@ -4,7 +4,7 @@ from django.db import models
 from reversion.admin import VersionAdmin
 
 from asap.apps.runtime.models.runtime import Runtime
-from asap.core.models import Authorable, Timestampable
+from asap.utils.models import Authorable, Timestampable
 
 
 class Feedback(Authorable, Timestampable, models.Model):

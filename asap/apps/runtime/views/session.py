@@ -10,8 +10,8 @@ from rest_framework.reverse import reverse_lazy
 
 from asap.apps.runtime.models.session import Session, STATE_SUCCESS, STATE_CANCELLED
 from asap.apps.runtime.serializers.session import SessionSerializer
-from asap.core.views import AuthorableModelViewSet, DRFNestedViewMixin
-from asap.core.views.version import VersionableModelViewSet
+from asap.utils.views import AuthorableModelViewSet, DRFNestedViewMixin
+from asap.utils.views.version import VersionableModelViewSet
 
 logger = logging.getLogger(__name__)
 
