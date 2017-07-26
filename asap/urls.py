@@ -24,6 +24,7 @@ from rest_framework_nested import routers
 from rest_framework_swagger.views import get_swagger_view
 
 from asap.apps.process.views import ProcessViewSet
+from asap.apps.process.views.process_execution import ProcessExecution
 from asap.apps.runtime.views import FeedbackViewSet, SessionViewSet
 from asap.apps.runtime.views.runtime import RuntimeViewSet
 from asap.apps.runtime.views.widget_process_execution import WidgetProcessExecution
@@ -65,6 +66,8 @@ urlpatterns = [
     url(r'^api/v1/', include(r_widget.urls)),
     url(r'^api/v1/', include(r_runtime.urls)),
 
+    url(r'^api/v1/processes/(?P<uuid>.*(?=/))/execute/$',
+        ProcessExecution.as_view(), name='process-execute'),
     url(r'^api/v1/widgets/(?P<widget_uuid>.*(?=/))/(?P<action>.*(?=/))/$',
         WidgetProcessExecution.as_view(), name='widget-action'),
     url(r'^api/v1/runtimes/(?P<uuid>.*(?=/))/widgets/(?P<widget_uuid>.*(?=/))/(?P<action>.*(?=/))/$',

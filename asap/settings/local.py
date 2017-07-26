@@ -85,7 +85,7 @@ CELERY_ALWAYS_EAGER = True
 # and might be removed
 # so for example the processes are fetched using
 # HTTP request rather than direct access :(
-V3__API_GATEWAY = 'http://172.20.0.1:8080'
+V3__API_GATEWAY = 'http://172.18.0.1:8080'
 
 # the api gateway looks for Host header
 # to perform the proxy
