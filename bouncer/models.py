@@ -4,6 +4,7 @@ from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.validators import UnicodeUsernameValidator
+from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -52,6 +53,10 @@ class User(AbstractBaseUser, PermissionsMixin):
             'unique': _("A user with that username already exists."),
         },
     )
+
+    # we have the authentication service sending us the info
+    # let's save the meta data :)
+    meta = JSONField(blank=True, default={})
 
     is_staff = models.BooleanField(
         _('staff status'),

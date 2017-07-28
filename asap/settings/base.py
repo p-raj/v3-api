@@ -398,19 +398,3 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 50
 }
 # ######### END DJANGO REST FRAMEWORK CONFIGURATION
-
-
-# ######### JWT CONFIGURATION
-# we need to create tokens for each service
-# and adding table for each service seems like a lot of work
-# so opting for simple JWT based library
-
-# See: https://pyjwt.readthedocs.io/en/latest/algorithms.html#digital-signature-algorithms
-JWT_ALGORITHM = 'HS256'
-JWT_SECRET = SECRET_KEY
-
-# for backward support decoding
-# don't remove a algorithm unless we want to
-# completely throw away the tokens
-JWT_ALGORITHMS = ['HS256']
-# ######### END JWT CONFIGURATION

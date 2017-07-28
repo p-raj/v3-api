@@ -73,6 +73,28 @@ DEBUG_TOOLBAR_CONFIG = {
 # ######### END TOOLBAR CONFIGURATION
 
 
+# ######### JWT CONFIGURATION
+# we need to create tokens for each service
+# and adding table for each service seems like a lot of work
+# so opting for simple JWT based library
+
+# See: https://pyjwt.readthedocs.io/en/latest/algorithms.html#digital-signature-algorithms
+AUDIENCE = 'noapp-services'
+JWT_SECRET = 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzj8vNzN+TPPeg4VJefx5dzvwJ' \
+             'VvjLgRs+bd7iZbOl2JJnyNlMcMc5pJ2CrN+78IvnAsr/Vh57ZJEwy5y+MPxjjf8U5Lmlg' \
+             'M65lpMN07I3SST8jRWYr1+KX50e7vvueYRY8y7sSkKVMIbqgu7tOfcsbsyk/MStuJQPFF' \
+             'PBun0CuqA4JXvtQwS+y4Qb7UbjhmkCsfRzBiV34uODja8QjXWvdF/n01VGG4wd0898Pzb' \
+             '7CogebMUvfGk7/3K82x1hZBotHxKDNYz/TPIr0+v/+MK5UxoLedHueMdwxJNtY2ska2wB' \
+             'QQ0avN6EV5NMGV2k/OrP0kQ7cQwi6MW71IrwtntKwIDAQAB'
+JWT_ALGORITHM = 'HS256'
+
+# for backward support decoding
+# don't remove a algorithm unless we want to
+# completely throw away the tokens
+JWT_ALGORITHMS = ['HS256']
+# ######### END JWT CONFIGURATION
+
+
 # ######### PROJECT SPECIFIC CONFIGURATION
 CELERY_ALWAYS_EAGER = True
 
