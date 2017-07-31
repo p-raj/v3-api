@@ -1,5 +1,6 @@
 import json
 import logging
+from json.decoder import JSONDecodeError
 from time import sleep
 
 import requests
@@ -60,8 +61,17 @@ class WidgetProcessExecution(views.APIView):
             json=body, params=dict(request.query_params)
         )
 
-        data = resp.json()
-        logger.debug('process response: %s', data)
+        try:
+            data = resp.json()
+        except JSONDecodeError as e:
+            error = 'unable to parse response from {process}: %s'.format(**{
+                'process': kwargs.get('action')
+            })
+            data = {'error': error}
+            logger.warning(error, e, exc_info=1)
+        else:
+            logger.debug('process response: %s', data)
+
         return response.Response(
             data=data,
             status=resp.status_code,
