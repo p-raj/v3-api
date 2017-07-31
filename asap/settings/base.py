@@ -386,7 +386,9 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'bouncer.rest_framework.VerisAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
+        'bouncer.rest_framework.JWTAuthentication',
+        # disabled due to client side bug (re-quests seems to be the culprit)
+        # 'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication'
     ),
     'DEFAULT_FILTER_BACKENDS': (
