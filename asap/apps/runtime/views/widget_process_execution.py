@@ -162,7 +162,7 @@ class WidgetProcessExecution(views.APIView):
 
         # TODO
         # separate expression for req/resp
-        self.expressions = config.transform or {}
+        self.expressions = config.transform or {} if config else {}
 
     @staticmethod
     def get_process_url(request, process_id):
