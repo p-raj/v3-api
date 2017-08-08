@@ -67,7 +67,7 @@ DATABASES = {
 
 # ######### ATOMICITY CONFIGURATION
 # https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-DATABASE-ATOMIC_REQUESTS
-ATOMIC_REQUESTS = True
+ATOMIC_REQUESTS = False
 # ######### END ATOMICITY CONFIGURATION
 
 
