@@ -1,4 +1,5 @@
 import logging
+from urllib.parse import urlencode
 from wsgiref.util import is_hop_by_hop
 
 import requests
@@ -56,24 +57,30 @@ class ProcessExecution(views.APIView):
         params = {}
         for field in self.link.fields:
             if field.location == 'query':
-                params[field.name] = \
-                    self.request.data.get(field.name)
-        return params
+                value = self.request.data.get(field.name)
+                if value is None:
+                    continue
+                params[field.name] = value
+        return urlencode(params)
 
     def outgoing_data(self):
         data = {}
         for field in self.link.fields:
             if field.location == 'form':
-                data[field.name] = \
-                    self.request.data.get(field.name)
+                value = self.request.data.get(field.name)
+                if value is None:
+                    continue
+                data[field.name] = value
         return data
 
     def outgoing_headers(self):
         headers = {'Host': self.client.url}
         for field in self.link.fields:
             if field.location == 'header':
-                headers[field.name] = \
-                    self.request.data.get(field.name)
+                value = self.request.data.get(field.name)
+                if value is None:
+                    continue
+                headers[field.name] = value
         return headers
 
     @cached_property
