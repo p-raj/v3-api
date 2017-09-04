@@ -1,8 +1,9 @@
 import logging
+from wsgiref.util import is_hop_by_hop
 
-from django.core.exceptions import ValidationError
+import requests
 from django.utils.functional import cached_property
-from rest_framework import renderers, response, status, views
+from rest_framework import response, views
 from rest_framework.permissions import AllowAny
 
 from asap.apps.process.models import Process
@@ -12,31 +13,81 @@ logger = logging.getLogger(__name__)
 
 class ProcessExecution(views.APIView):
     permission_classes = (AllowAny,)
-    renderer_classes = [renderers.CoreJSONRenderer]
 
     def post(self, request, *args, **kwargs):
-        try:
-            client = self.process.client
-
-            # default content-type is coreapi+json
-            data = client.execute(params=request.data, **kwargs)
-
-            # FIXME
-            meta = getattr(data, 'title', '200 OK') or '200 OK'
-            meta = meta if type(meta) == str else '200 OK'
-            return response.Response(
-                data,
-                status=int(meta.split()[0]),
-                content_type=request.content_type
+        if request.content_type != 'application/json':
+            resp = requests.request(
+                self.link.action,
+                self.outgoing_url,
+                data=request.data,
+                files=request.FILES,
+                headers=self.outgoing_headers()
             )
-        except ValidationError as e:
-            return response.Response({
-                'errors': e.message.args
-            },
-                status=status.HTTP_400_BAD_REQUEST,
-                content_type='application/json'
+        else:
+            resp = requests.request(
+                self.link.action,
+                self.outgoing_url,
+                json=self.outgoing_data(),
+                params=self.outgoing_params(),
+                headers=self.outgoing_headers()
             )
+
+        headers = {}
+        for key, value in resp.headers.items():
+            if is_hop_by_hop(key):
+                continue
+
+            if key.lower() in ['content-length']:
+                continue
+
+            headers[key] = value
+
+        data = resp.json() \
+            if resp.headers['Content-Type'].startswith('application/json') \
+            else resp.content
+
+        return response.Response(
+            data=data,
+            status=resp.status_code,
+            headers=headers
+        )
+
+    def outgoing_params(self):
+        params = {}
+        for field in self.link.fields:
+            if field.location == 'query':
+                params[field.name] = \
+                    self.request.data.get(field.name)
+        return params
+
+    def outgoing_data(self):
+        data = {}
+        for field in self.link.fields:
+            if field.location == 'form':
+                data[field.name] = \
+                    self.request.data.get(field.name)
+        return data
+
+    def outgoing_headers(self):
+        headers = {'Host': self.client.url}
+        for field in self.link.fields:
+            if field.location == 'header':
+                headers[field.name] = \
+                    self.request.data.get(field.name)
+        return headers
+
+    @cached_property
+    def outgoing_url(self):
+        return self.link.url.format(**self.request.data)
 
     @cached_property
     def process(self):
         return Process.objects.get(uuid=self.kwargs.get('uuid'))
+
+    @cached_property
+    def client(self):
+        return self.process.schema_client
+
+    @cached_property
+    def link(self):
+        return self.client.get('api')
